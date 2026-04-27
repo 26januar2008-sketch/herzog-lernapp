@@ -89,7 +89,22 @@ const CHARS = [
   {id:'rosalina',name:'Rosalina',icon:'⭐',color:'#7b1fa2',price:200,move:'spin-star',sound:'sparkle',
    sayings:['Hallo Sternchen!','Lumalee Lumalo!']},
   {id:'superstar',name:'Superstar',icon:'🌟',color:'#fbc02d',price:250,move:'rainbow',sound:'fanfare',
-   sayings:['SUPERSTAR!','Du bist EIN HELD!','GEWONNEN!']}
+   sayings:['SUPERSTAR!','Du bist EIN HELD!','GEWONNEN!']},
+  // ===== Ninjago-Welt =====
+  {id:'kai',name:'Kai (Feuer)',icon:'🔥',color:'#e53935',price:35,move:'roar',sound:'fire-whoosh',
+   sayings:['Ninja-Go!','Feuer frei!','Kai ist heiss!','Lass mich ran!']},
+  {id:'jay',name:'Jay (Blitz)',icon:'⚡',color:'#1976d2',price:45,move:'teleport',sound:'thunder',
+   sayings:['BZZZT!','Blitzschnell!','Jay-Style!','Voll geladen!']},
+  {id:'cole',name:'Cole (Erde)',icon:'🪨',color:'#5d4037',price:55,move:'punch',sound:'earth-stomp',
+   sayings:['BOOM!','Stein an Stein!','Cole rockt!','Erschuetterung!']},
+  {id:'zane',name:'Zane (Eis)',icon:'❄️',color:'#81d4fa',price:70,move:'float',sound:'ice-crystal',
+   sayings:['Eiskalt.','Zane berechnet alles.','Frost!','Mein System ist optimal.']},
+  {id:'lloyd',name:'Lloyd (Energie)',icon:'🟢',color:'#43a047',price:90,move:'spin-star',sound:'energy-burst',
+   sayings:['Gruener Ninja!','Lloyd kommt!','Energie raus!','Ich bin der Auserwaehlte!']},
+  {id:'nya',name:'Nya (Wasser)',icon:'🌊',color:'#0277bd',price:110,move:'float',sound:'water-splash',
+   sayings:['Wasser marsch!','Nya weiss wie es geht!','Spritzer!','Komm rein, das Wasser ist fein!']},
+  {id:'wu',name:'Master Wu',icon:'🍵',color:'#fff9c4',price:180,move:'spin',sound:'gong',
+   sayings:['Geduld, junger Schueler.','Der Tee ist heiss.','Niinja!','Weisheit ist Macht.']}
 ];
 
 // Outfits/Hintergründe die mit Münzen kaufbar sind (nach Charakter-Freischaltung)

@@ -72,7 +72,15 @@ const SOUND_PATTERNS = {
   'roar': () => { slide(80, 200, 0.4, 'sawtooth', 0.4); noise(0.4, 0.25, 0, 800); },
   'evil-laugh': () => { for (let i=0;i<5;i++) { tone(200 + i*30, 0.1, 'square', 0.25, i*0.13); tone(150 + i*30, 0.08, 'square', 0.2, i*0.13 + 0.04); } },
   'sparkle': () => { for (let i=0;i<8;i++) tone(800 + Math.random()*1200, 0.06, 'sine', 0.2, i*0.04); },
-  'fanfare': () => { tone(523, 0.2, 'square', 0.3); tone(659, 0.2, 'square', 0.3); tone(784, 0.4, 'square', 0.35, 0.2); tone(1047, 0.4, 'square', 0.35, 0.2); }
+  'fanfare': () => { tone(523, 0.2, 'square', 0.3); tone(659, 0.2, 'square', 0.3); tone(784, 0.4, 'square', 0.35, 0.2); tone(1047, 0.4, 'square', 0.35, 0.2); },
+  // Ninjago-Sounds
+  'fire-whoosh': () => { noise(0.5, 0.35, 0, 1500); slide(800, 200, 0.5, 'sawtooth', 0.2); },
+  'thunder': () => { slide(2500, 80, 0.18, 'sawtooth', 0.4); noise(0.3, 0.4, 0.15, 800); tone(60, 0.2, 'sawtooth', 0.4, 0.18); },
+  'earth-stomp': () => { tone(50, 0.4, 'sawtooth', 0.5); tone(80, 0.35, 'sawtooth', 0.4, 0.05); noise(0.3, 0.3, 0, 400); },
+  'ice-crystal': () => { for (let i=0;i<6;i++) tone(1500 + i*200, 0.08, 'sine', 0.18, i*0.05); tone(2500, 0.3, 'triangle', 0.15, 0.3); },
+  'energy-burst': () => { slide(440, 1760, 0.3, 'square', 0.3); for (let i=0;i<4;i++) tone(880 + i*220, 0.1, 'square', 0.2, 0.3 + i*0.05); },
+  'water-splash': () => { noise(0.4, 0.3, 0, 3000); slide(600, 200, 0.4, 'sine', 0.2); for (let i=0;i<5;i++) tone(400 + Math.random()*400, 0.08, 'sine', 0.15, i*0.06); },
+  'gong': () => { tone(110, 1.5, 'sine', 0.4); tone(165, 1.2, 'sine', 0.25, 0.02); tone(220, 1.0, 'sine', 0.15, 0.04); }
 };
 
 function playSound(name) {

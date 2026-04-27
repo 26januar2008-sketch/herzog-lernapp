@@ -86,6 +86,10 @@ function renderHome(){
     el('span',{class:'em', text:'🎵'}),
     document.createTextNode('Musik')
   ));
+  subs.appendChild(el('div',{class:'subject', onclick: renderTraceTask, attrs:{style:'grid-column:span 2;background:#7e57c2;color:#fff'}},
+    el('span',{class:'em', text:'✏️'}),
+    document.createTextNode('Schreiben (Finger nachfahren)')
+  ));
   subs.appendChild(el('div',{class:'subject', onclick: renderCollection, attrs:{style:'grid-column:span 2'}},
     el('span',{class:'em', text: currentProfile==='liam' ? '🏚️' : '🌟'}),
     document.createTextNode(currentProfile==='liam' ? 'Meine Garage' : 'Meine Charaktere')
@@ -193,7 +197,15 @@ async function renderTask(subject){
   }
   // RECHNEN
   else {
-    task.appendChild(el('div',{class:'task-text', text: item.q}));
+    const mathBox = el('div',{class:'task-text'});
+    // Auto-Visual: bei Mathe-Aufgaben mit Schlüsselwörtern visualisiere die kleinen Zahlen mit Emojis
+    const visual = item.visual || autoVisualForMath(item.q);
+    if (visual) {
+      const v = el('div',{html:`<div style="font-size:36px;margin-bottom:10px;line-height:1.3">${visual}</div>`});
+      mathBox.appendChild(v);
+    }
+    mathBox.appendChild(el('div',{text: item.q, attrs:{style:'font-size:24px'}}));
+    task.appendChild(mathBox);
     const inputBox = el('div',{class:'input-task'});
     const input = el('input',{attrs:{type:'tel', inputmode:'numeric', autocomplete:'off'}});
     const btn = el('button',{text:'✓ Fertig'});
@@ -270,6 +282,34 @@ function refreshPowerupBar(){
   });
 }
 function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} }
+
+// Auto-Visual für Mathe: erkennt Schlüsselwörter und macht Emoji-Reihen
+function autoVisualForMath(q) {
+  if (!q) return null;
+  const ql = q.toLowerCase();
+  const map = [
+    {kw:/münze|muenze/, em:'🪙'},
+    {kw:/ring/, em:'💍'},
+    {kw:/pilz/, em:'🍄'},
+    {kw:/kirsch/, em:'🍒'},
+    {kw:/bombe/, em:'💣'},
+    {kw:/stroh|ball/, em:'🟡'},
+    {kw:/küh|kuh|rind/, em:'🐮'},
+    {kw:/ei /, em:'🥚'},
+    {kw:/apfel/, em:'🍎'},
+    {kw:/stern/, em:'⭐'},
+    {kw:/blume/, em:'🌼'},
+    {kw:/edelstein/, em:'💎'}
+  ];
+  let emoji = null;
+  for (const m of map) if (m.kw.test(ql)) { emoji = m.em; break; }
+  if (!emoji) return null;
+  const nums = (q.match(/\d+/g) || []).map(n => parseInt(n,10)).filter(n => n > 0 && n <= 12);
+  if (nums.length < 1 || nums.length > 3) return null;
+  const isMinus = /weniger|verliert|minus|gibt|ab|wirft|ohne|abz/.test(ql);
+  const sign = isMinus ? ' − ' : ' + ';
+  return nums.map(n => emoji.repeat(n)).join(sign);
+}
 
 function answer(btn, correct, next){
   // alle Buttons disabled
