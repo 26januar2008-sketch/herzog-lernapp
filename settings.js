@@ -35,10 +35,59 @@ const DEFAULT_SETTINGS = {
 
   // ===== Pro-Profil-Settings =====
   per_profile: {
-    liam: { task_block_remaining: 0, time_used_today: 0, last_active_day: '' },
-    raik: { task_block_remaining: 0, time_used_today: 0, last_active_day: '' }
+    liam: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' },
+    raik: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' }
   }
 };
+
+// ===== TOKEN-SYSTEM für Mini-Spiele =====
+// 10 Min Lernen → 1 Token (= 5 Min Spielzeit)
+const LEARN_PER_TOKEN_SEC = 600; // 10 Min
+const PLAY_PER_TOKEN_SEC = 300;  // 5 Min
+
+function trackLearnTime(profileKey, seconds) {
+  const pp = Settings.data.per_profile[profileKey];
+  const today = new Date().toISOString().slice(0, 10);
+  if (pp.last_active_day !== today) {
+    pp.last_active_day = today;
+    pp.learn_time_today = 0;
+    pp.time_used_today = 0;
+    // game_tokens behalten - sind ein "Sparkonto"
+  }
+  pp.learn_time_today = (pp.learn_time_today||0) + seconds;
+  pp.time_used_today = (pp.time_used_today||0) + seconds;
+  // Tokens vergeben: alle 10 Min ein Token
+  const earned = Math.floor(pp.learn_time_today / LEARN_PER_TOKEN_SEC) - (pp.tokens_earned_today||0);
+  if (earned > 0) {
+    pp.game_tokens = (pp.game_tokens||0) + earned;
+    pp.tokens_earned_today = (pp.tokens_earned_today||0) + earned;
+  }
+  Settings.save();
+  return { newTokens: earned, totalTokens: pp.game_tokens };
+}
+
+function consumeGameTime(profileKey, seconds) {
+  const pp = Settings.data.per_profile[profileKey];
+  const tokensNeeded = Math.ceil(seconds / PLAY_PER_TOKEN_SEC);
+  if ((pp.game_tokens||0) < tokensNeeded) return false;
+  pp.game_tokens -= tokensNeeded;
+  Settings.save();
+  return true;
+}
+
+function getGameTokens(profileKey) {
+  return Settings.data.per_profile[profileKey].game_tokens || 0;
+}
+
+// Stoppuhr: misst seit wann Profil aktiv
+let _learnTimerStart = 0;
+function startLearnTimer() { _learnTimerStart = Date.now(); }
+function stopLearnTimer(profileKey) {
+  if (!_learnTimerStart) return;
+  const sec = Math.round((Date.now() - _learnTimerStart) / 1000);
+  _learnTimerStart = 0;
+  if (sec > 0 && sec < 600) trackLearnTime(profileKey, sec); // max 10 min am Stück
+}
 
 const Settings = {
   data: null,

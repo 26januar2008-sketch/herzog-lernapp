@@ -42,6 +42,12 @@ function renderPicker(){
 function openProfile(key){
   currentProfile = key;
   if (Settings.isEnabled('night_mode') && typeof applyTimeTheme === 'function') applyTimeTheme();
+  startLearnTimer?.();
+  // Auto-stop bei Tab-Wechsel
+  document.addEventListener('visibilitychange', ()=> {
+    if (document.hidden) stopLearnTimer?.(currentProfile);
+    else startLearnTimer?.();
+  });
   renderHome();
   if (typeof hydrateFromRemote === 'function') {
     hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderHome(); });
@@ -54,11 +60,17 @@ function renderHome(){
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
 
+  // Avatar wenn gesetzt
+  const avatarId = Settings.isEnabled('custom_avatar') && Settings.data.per_profile[currentProfile].custom_avatar;
+  const avatarItem = avatarId ? (currentProfile==='liam' ? MACHINES : CHARS).find(x=>x.id===avatarId) : null;
   const top = el('div',{class:'topbar'},
     el('button',{class:'back', text:'⬅️', onclick: renderPicker}),
-    el('div',{text: 'Hi ' + p.name + '!'}),
+    el('div',{attrs:{style:'display:flex;align-items:center;gap:8px'}},
+      avatarItem?.img ? (() => { const i = document.createElement('img'); i.src = avatarItem.img; i.style.cssText='width:36px;height:36px;object-fit:contain;border-radius:50%;background:#fff'; return i; })() : null,
+      el('span',{text: 'Hi ' + p.name + '!'})
+    ),
     el('div',{class:'score'},
-      el('span',{class:'icon', text: currentProfile==='liam' ? '🪙' : '🪙'}),
+      el('span',{class:'icon', text:'🪙'}),
       el('span',{text: p.coins})
     )
   );
@@ -115,6 +127,21 @@ function renderHome(){
     el('span',{class:'em', text: currentProfile==='liam' ? '🏚️' : '🌟'}),
     document.createTextNode(currentProfile==='liam' ? 'Meine Garage' : 'Meine Charaktere')
   ));
+
+  // SPIEL-Button (mit Token-Anzeige)
+  const tokens = getGameTokens(currentProfile);
+  const gameTitle = currentProfile==='liam' ? '🚜 Mein Hof' : '🏃 Speed Run';
+  const gameDesc = tokens > 0 ? `${tokens} × 5 Min Spielzeit verfügbar` : 'Lerne 10 Min für 5 Min Spielen';
+  const gameBtn = el('div',{
+    class:'subject',
+    attrs:{style:`grid-column:span 2;background:${tokens>0?'linear-gradient(135deg,#ffd700,#ff9800)':'rgba(255,255,255,.15)'};color:${tokens>0?'#222':'#fff'};border:3px solid ${tokens>0?'#ff9800':'rgba(255,255,255,.3)'}`},
+    onclick: () => currentProfile==='liam' ? renderFarmGame() : renderRunnerGame()
+  },
+    el('span',{class:'em', text: tokens > 0 ? '🎮' : '🔒'}),
+    document.createTextNode(gameTitle),
+    el('div',{text: gameDesc, attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
+  );
+  subs.appendChild(gameBtn);
   home.appendChild(subs);
   root.appendChild(home);
 }
@@ -314,6 +341,23 @@ async function renderTask(subject){
   );
   root.appendChild(top);
 
+  // Sanduhr-Timer (wenn Setting on)
+  if (Settings.isEnabled('hourglass_timer')) {
+    const sec = currentProfile==='raik' ? 45 : 60;
+    const timerBar = el('div',{attrs:{style:'background:rgba(0,0,0,.3);height:6px;width:100%'}});
+    const fill = el('div',{attrs:{style:`width:100%;height:100%;background:linear-gradient(90deg,#4caf50,#ffc107,#e53935);transition:width 1s linear`}});
+    timerBar.appendChild(fill);
+    root.appendChild(timerBar);
+    let left = sec;
+    const iv = setInterval(()=>{
+      left--;
+      fill.style.width = (left/sec*100)+'%';
+      if (left <= 0) { clearInterval(iv); }
+    }, 1000);
+    if (!currentTask) currentTask = {};
+    currentTask._timer = iv;
+  }
+
   // Power-Up-Leiste (nur wenn Setting on)
   if (!Settings.isEnabled('powerups')) { /* skip */ } else {
   const pwrBar = el('div',{class:'powerups'});
@@ -511,6 +555,8 @@ function answer(btn, correct, next){
     });
   }
   const result = recordAnswer(currentProfile, currentTask.subject, correct);
+  // Lern-Zeit tracken: 30 Sek pro Antwort als Schätzung
+  trackLearnTime?.(currentProfile, 30);
   if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
   if (typeof schedulePush === 'function') schedulePush(currentProfile);
   setTimeout(() => {
@@ -813,6 +859,7 @@ function renderDashboard(){
   nav.appendChild(el('button',{text:'⚙️ Einstellungen', onclick: renderSettings, attrs:{style:'padding:10px 18px;background:#1976d2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
   nav.appendChild(el('button',{text:'📝 Eigene Aufgaben', onclick: renderCustomTasks, attrs:{style:'padding:10px 18px;background:#7e57c2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
   nav.appendChild(el('button',{text:'📊 Wochen-Report', onclick: renderWeeklyReport, attrs:{style:'padding:10px 18px;background:#43a047;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  nav.appendChild(el('button',{text:'👤 Profilbilder', onclick: renderAvatarPicker, attrs:{style:'padding:10px 18px;background:#ec407a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
   wrap.appendChild(nav);
   for (const k of ['liam','raik']) {
     const p = State.data.profiles[k];
@@ -839,6 +886,44 @@ function renderDashboard(){
 
 function rowDash(label, val){
   return el('div',{class:'dash-row'}, el('div',{text:label}), el('div',{text:val,attrs:{style:'font-weight:700'}}));
+}
+
+// ===== Profilbild-Picker (Eltern) =====
+function renderAvatarPicker(){
+  clear();
+  const wrap = el('div',{class:'dash'});
+  wrap.appendChild(el('h2',{text:'👤 Profilbilder wählen'}));
+  wrap.appendChild(el('p',{text:'Wähle pro Junge sein Lieblings-Bild. Erscheint im Spiel oben.', attrs:{style:'opacity:.85;margin-bottom:14px'}}));
+
+  for (const profile of ['liam','raik']) {
+    wrap.appendChild(el('h3',{text: profile==='liam'?'🚜 Liam':'💨 Raik', attrs:{style:'margin:12px 0 8px'}}));
+    const collection = profile==='liam' ? MACHINES : CHARS;
+    const grid = el('div',{attrs:{style:'display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px'}});
+    const current = Settings.data.per_profile[profile].custom_avatar;
+    collection.forEach(item => {
+      const cell = el('div',{
+        attrs:{style:`aspect-ratio:1;background:${current===item.id?'#ffd700':'rgba(255,255,255,.1)'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:6px;border:${current===item.id?'3px solid #ff9800':'1px solid rgba(255,255,255,.2)'}`},
+        onclick: () => {
+          Settings.data.per_profile[profile].custom_avatar = current===item.id ? '' : item.id;
+          Settings.save();
+          renderAvatarPicker();
+        }
+      });
+      if (item.img) {
+        const img = document.createElement('img');
+        img.src = item.img;
+        img.style.cssText = 'width:60%;height:auto;max-height:60px;object-fit:contain';
+        cell.appendChild(img);
+      } else {
+        cell.appendChild(el('div',{text:item.icon,attrs:{style:'font-size:36px'}}));
+      }
+      cell.appendChild(el('div',{text:item.name, attrs:{style:'font-size:10px;text-align:center;color:'+(current===item.id?'#222':'#fff')+';margin-top:4px'}}));
+      grid.appendChild(cell);
+    });
+    wrap.appendChild(grid);
+  }
+  wrap.appendChild(el('button',{text:'⬅️ Zurück', onclick: renderDashboard, attrs:{style:'padding:12px 24px;background:#666;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  root.appendChild(wrap);
 }
 
 // ===== Maschinen-Tagebuch (Liam) =====
