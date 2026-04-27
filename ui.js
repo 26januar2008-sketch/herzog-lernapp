@@ -41,7 +41,7 @@ function renderPicker(){
 
 function openProfile(key){
   currentProfile = key;
-  if (typeof applyTimeTheme === 'function') applyTimeTheme();
+  if (Settings.isEnabled('night_mode') && typeof applyTimeTheme === 'function') applyTimeTheme();
   renderHome();
   if (typeof hydrateFromRemote === 'function') {
     hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderHome(); });
@@ -70,13 +70,37 @@ function renderHome(){
     : '⚡ Bereit zum Speed Run?';
   home.appendChild(el('div',{class:'greeting', text: greet}));
 
-  // Tagesziel-Anzeige
-  const today = todayStats(currentProfile);
-  const goal = 10;
-  const todayBar = el('div',{attrs:{style:'background:rgba(255,255,255,.15);padding:10px 14px;border-radius:14px;margin-bottom:14px;text-align:center;font-weight:700'}});
-  const streak = currentStreak(currentProfile);
-  todayBar.innerHTML = `📅 Heute: <b>${today.total}</b> / ${goal} Aufgaben` + (streak ? ` &nbsp; 🔥 Streak: <b>${streak}</b> Tage` : '');
-  home.appendChild(todayBar);
+  // Tagesziel + Streak + Karriere – jeweils nur wenn Setting on
+  const showGoal = Settings.isEnabled('daily_goal');
+  const showStreak = Settings.isEnabled('streak');
+  const showCareer = Settings.isEnabled('career_mode');
+  if (showGoal || showStreak || showCareer) {
+    const today = todayStats(currentProfile);
+    const goal = Settings.get('daily_goal')?.value || 10;
+    const streak = currentStreak(currentProfile);
+    const career = getCareerRank(currentProfile);
+    const bar = el('div',{attrs:{style:'background:rgba(255,255,255,.15);padding:10px 14px;border-radius:14px;margin-bottom:14px;text-align:center;font-weight:700'}});
+    let html = '';
+    if (showGoal) html += `📅 Heute: <b>${today.total}</b> / ${goal} Aufgaben`;
+    if (showStreak && streak) html += (html?' &nbsp; ':'') + `🔥 Streak: <b>${streak}</b> Tage`;
+    if (showCareer && career) html += (html?'<br>':'') + `<span style="color:${career.color}">${career.name}</span>` + (career.nextAt ? ` <small>(noch ${career.nextAt - career.totalCorrect} bis ${career.nextName})</small>` : '');
+    bar.innerHTML = html;
+    home.appendChild(bar);
+  }
+
+  // Zeitlimit-Warnung
+  if (Settings.isEnabled('time_limit')) {
+    const left = timeLeftToday(currentProfile);
+    const total = (Settings.get('time_limit').value||30)*60;
+    const used = total - left;
+    const pct = Math.min(100, Math.round(used/total*100));
+    const tlBar = el('div',{attrs:{style:'background:rgba(255,255,255,.1);padding:8px 12px;border-radius:10px;margin-bottom:14px;font-size:13px;text-align:center'}});
+    tlBar.innerHTML = `⏱ ${Math.round(used/60)} / ${Math.round(total/60)} Min heute &nbsp; <div style="margin-top:4px;height:6px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${pct>80?'#e53935':pct>50?'#ffc107':'#4caf50'}"></div></div>`;
+    home.appendChild(tlBar);
+    if (left <= 0) {
+      home.appendChild(el('div',{text:'⛔ Tageszeit aufgebraucht. Komm morgen wieder!', attrs:{style:'background:#e53935;color:#fff;padding:14px;border-radius:10px;text-align:center;font-weight:800;margin-bottom:14px'}}));
+    }
+  }
 
   const subs = el('div',{class:'subjects'});
   const tree = SUBJECTS_TREE[currentProfile];
@@ -114,6 +138,7 @@ function renderSubjectHub(topKey){
   home.appendChild(el('div',{class:'greeting', text: 'Was üben wir?', attrs:{style:'font-size:24px'}}));
   const subs = el('div',{class:'subjects'});
   for (const sub of top.subs) {
+    if (!Settings.isSubjectEnabled(topKey, sub.id)) continue;
     const cell = el('div',{class:'subject', onclick: ()=> startSub(topKey, sub)},
       el('span',{class:'em', text:(sub.label.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u)||['📚'])[0]}),
       el('div',{text: sub.label.replace(/^[^\sA-Za-zÄÖÜäöüß]+\s?/,''), attrs:{style:'font-size:16px'}}),
@@ -132,6 +157,14 @@ function startSub(topKey, sub) {
   if (sub.special === 'clock') return renderClockTask();
   if (sub.special === 'money') return renderMoneyTask();
   if (sub.special === 'tools') return renderQuizTask(topKey, sub, TOOLS_QUIZ, 'sach');
+  if (sub.special === 'hofproblems') {
+    if (!Settings.isEnabled('hof_problems')) { alert('In Einstellungen aktivieren'); return renderHome(); }
+    return renderQuizTask(topKey, sub, HOF_PROBLEMS, 'sach');
+  }
+  if (sub.special === 'machinediary') {
+    if (!Settings.isEnabled('machine_diary')) { alert('In Einstellungen aktivieren'); return renderHome(); }
+    return renderMachineDiaryTask(topKey, sub);
+  }
   if (sub.special === 'odd') return renderQuizTask(topKey, sub, ODD_ONE_OUT, 'extra');
   if (sub.special === 'spot') return renderSpotTask();
   if (sub.special === 'focus') return renderFocusTask();
@@ -226,6 +259,7 @@ function renderQuizTask(topKey, sub, pool, statKey) {
 }
 
 function renderPowerupBar() {
+  if (!Settings.isEnabled('powerups')) return;
   const p = State.data.profiles[currentProfile];
   const pwrBar = el('div',{class:'powerups'});
   POWERUPS.forEach(pu => {
@@ -280,7 +314,8 @@ async function renderTask(subject){
   );
   root.appendChild(top);
 
-  // Power-Up-Leiste
+  // Power-Up-Leiste (nur wenn Setting on)
+  if (!Settings.isEnabled('powerups')) { /* skip */ } else {
   const pwrBar = el('div',{class:'powerups'});
   POWERUPS.forEach(pu => {
     const canAfford = p.coins >= pu.price;
@@ -302,6 +337,7 @@ async function renderTask(subject){
     pwrBar.appendChild(btn);
   });
   root.appendChild(pwrBar);
+  }
 
   const task = el('div',{class:'task'});
 
@@ -323,7 +359,7 @@ async function renderTask(subject){
       // Story + Vorlese-Button + 4 Optionen
       const story = el('div',{class:'task-text story', text: item.text});
       task.appendChild(story);
-      task.appendChild(el('button',{
+      if (Settings.isEnabled('tts')) task.appendChild(el('button',{
         text:'🔊 Vorlesen',
         onclick: ()=> speak(item.text + '. ' + item.q),
         attrs:{style:'align-self:center;padding:10px 20px;background:#1976d2;color:#fff;border:none;border-radius:12px;font-weight:700;margin-bottom:10px;cursor:pointer'}
@@ -352,10 +388,9 @@ async function renderTask(subject){
   else {
     const mathBox = el('div',{class:'task-text'});
     // Auto-Visual: bei Mathe-Aufgaben mit Schlüsselwörtern visualisiere die kleinen Zahlen mit Emojis
-    const visual = item.visual || autoVisualForMath(item.q);
-    if (visual) {
-      const v = el('div',{html:`<div style="font-size:36px;margin-bottom:10px;line-height:1.3">${visual}</div>`});
-      mathBox.appendChild(v);
+    if (Settings.isEnabled('visuals')) {
+      const visual = item.visual || autoVisualForMath(item.q);
+      if (visual) mathBox.appendChild(el('div',{html:`<div style="font-size:36px;margin-bottom:10px;line-height:1.3">${visual}</div>`}));
     }
     mathBox.appendChild(el('div',{text: item.q, attrs:{style:'font-size:24px'}}));
     task.appendChild(mathBox);
@@ -489,7 +524,7 @@ function maybePauseOrContinue(subject, next){
   // Raik: Pause nach 5 richtigen Aufgaben (ADHS-Modus)
   // Liam: Bewegungs-Pause nach 10 Aufgaben
   const trigger = currentProfile==='raik' ? 5 : 10;
-  if ((p.sessionCount||0) >= trigger) {
+  if (Settings.isEnabled('movement_pause') && (p.sessionCount||0) >= trigger) {
     p.sessionCount = 0;
     State.save();
     showPauseScreen(()=> next ? next() : renderTask(subject));
@@ -772,6 +807,13 @@ function renderDashboard(){
   clear();
   const wrap = el('div',{class:'dash'});
   wrap.appendChild(el('h2',{text:'📊 Eltern-Dashboard'}));
+
+  // Schnell-Navigation
+  const nav = el('div',{attrs:{style:'display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap'}});
+  nav.appendChild(el('button',{text:'⚙️ Einstellungen', onclick: renderSettings, attrs:{style:'padding:10px 18px;background:#1976d2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  nav.appendChild(el('button',{text:'📝 Eigene Aufgaben', onclick: renderCustomTasks, attrs:{style:'padding:10px 18px;background:#7e57c2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  nav.appendChild(el('button',{text:'📊 Wochen-Report', onclick: renderWeeklyReport, attrs:{style:'padding:10px 18px;background:#43a047;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  wrap.appendChild(nav);
   for (const k of ['liam','raik']) {
     const p = State.data.profiles[k];
     const today = todayStats(k);
@@ -797,6 +839,207 @@ function renderDashboard(){
 
 function rowDash(label, val){
   return el('div',{class:'dash-row'}, el('div',{text:label}), el('div',{text:val,attrs:{style:'font-weight:700'}}));
+}
+
+// ===== Maschinen-Tagebuch (Liam) =====
+function renderMachineDiaryTask(topKey, sub) {
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const item = MACHINE_DIARY[Math.floor(Math.random()*MACHINE_DIARY.length)];
+  currentTask = { subject:'read', item, fiftyUsed:false };
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=>renderSubjectHub(topKey)}),
+    el('div',{text: '📔 Tagebuch'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+  renderPowerupBar();
+  const task = el('div',{class:'task'});
+  task.appendChild(el('div',{class:'task-text story', text:item.text}));
+  if (Settings.isEnabled('tts')) task.appendChild(el('button',{
+    text:'🔊 Vorlesen',
+    onclick: ()=> speak(item.text + '. ' + item.q),
+    attrs:{style:'align-self:center;padding:10px 20px;background:#1976d2;color:#fff;border:none;border-radius:12px;font-weight:700;margin-bottom:10px;cursor:pointer'}
+  }));
+  task.appendChild(el('div',{class:'task-text', text:item.q, attrs:{style:'min-height:50px;font-size:20px'}}));
+  const opts = el('div',{class:'options'});
+  item.options.forEach((o,i) => {
+    opts.appendChild(el('button',{class:'opt', text:o, onclick:(e)=>answer(e.target, i===item.correct, ()=>renderMachineDiaryTask(topKey, sub))}));
+  });
+  task.appendChild(opts);
+  root.appendChild(task);
+}
+
+// ===== Settings-Page =====
+function renderSettings(){
+  clear();
+  const wrap = el('div',{class:'dash'});
+  wrap.appendChild(el('h2',{text:'⚙️ Einstellungen'}));
+  wrap.appendChild(el('p',{text:'Schalte einzelne Features ein/aus. Änderungen wirken sofort.', attrs:{style:'opacity:.85;margin-bottom:14px'}}));
+
+  // Sektionen
+  const sections = [
+    {title:'🎮 Spielmechanik', keys:['daily_goal','streak','movement_pause','hourglass_timer','night_mode','tts','powerups','visuals']},
+    {title:'🏆 Belohnungen', keys:['collection_cards','custom_avatar','career_mode','sound_packs','hof_dojo','endless_runner','hof_problems','machine_diary']},
+    {title:'👨‍👩‍👦 Eltern-Kontrolle', keys:['task_block','time_limit','weekly_report','custom_tasks','teacher_mode']}
+  ];
+  for (const sec of sections) {
+    wrap.appendChild(el('h3',{text:sec.title, attrs:{style:'margin:18px 0 8px;color:#90caf9'}}));
+    for (const k of sec.keys) {
+      const s = Settings.data[k];
+      if (!s) continue;
+      const row = el('div',{attrs:{style:'background:rgba(255,255,255,.08);padding:12px;border-radius:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap'}});
+      row.appendChild(el('div',{text:s.label,attrs:{style:'flex:1;font-weight:600'}}));
+      // Wert (für solche mit value)
+      if ('value' in s && typeof s.value === 'number') {
+        const inp = el('input',{attrs:{type:'number',min:'1',value:s.value,style:'width:70px;padding:6px;border-radius:6px;border:none;font-size:14px'}});
+        inp.addEventListener('change', ()=> { s.value = parseInt(inp.value)||s.value; Settings.save(); });
+        row.appendChild(inp);
+      }
+      if ('email' in s) {
+        const inp = el('input',{attrs:{type:'email',placeholder:'mail@beispiel.de',value:s.email||'',style:'flex:1;padding:6px;border-radius:6px;border:none;font-size:14px;min-width:140px'}});
+        inp.addEventListener('change', ()=> { s.email = inp.value; Settings.save(); });
+        row.appendChild(inp);
+      }
+      if ('code' in s) {
+        const inp = el('input',{attrs:{type:'text',placeholder:'4-stellig',value:s.code||'',style:'width:100px;padding:6px;border-radius:6px;border:none;font-size:14px'}});
+        inp.addEventListener('change', ()=> { s.code = inp.value; Settings.save(); });
+        row.appendChild(inp);
+      }
+      // Toggle
+      const tgl = el('label',{attrs:{style:'position:relative;display:inline-block;width:54px;height:30px;cursor:pointer'}});
+      const cb = el('input',{attrs:{type:'checkbox',style:'opacity:0;width:0;height:0'}});
+      cb.checked = !!s.enabled;
+      cb.addEventListener('change', ()=>{ s.enabled = cb.checked; Settings.save(); slider.style.background = cb.checked?'#4caf50':'#666'; knob.style.left = cb.checked?'27px':'3px'; });
+      const slider = el('span',{attrs:{style:`position:absolute;inset:0;background:${cb.checked?'#4caf50':'#666'};border-radius:30px;transition:.2s`}});
+      const knob = el('span',{attrs:{style:`position:absolute;top:3px;left:${cb.checked?'27px':'3px'};width:24px;height:24px;background:#fff;border-radius:50%;transition:.2s`}});
+      tgl.appendChild(cb); tgl.appendChild(slider); tgl.appendChild(knob);
+      row.appendChild(tgl);
+      wrap.appendChild(row);
+    }
+  }
+
+  // Sub-Fächer ausblenden
+  wrap.appendChild(el('h3',{text:'🚫 Sub-Fächer aus-/einblenden', attrs:{style:'margin:18px 0 8px;color:#90caf9'}}));
+  wrap.appendChild(el('p',{text:'Tippe ein Sub-Fach um es im Spiel auszublenden (z.B. wenn der Lehrer diese Woche keine Geometrie macht).', attrs:{style:'font-size:13px;opacity:.7;margin-bottom:8px'}}));
+  for (const profile of ['liam','raik']) {
+    wrap.appendChild(el('h4',{text: profile==='liam'?'🚜 Liam':'💨 Raik', attrs:{style:'margin:8px 0 4px'}}));
+    const tree = SUBJECTS_TREE[profile];
+    for (const topKey of Object.keys(tree)) {
+      for (const sub of tree[topKey].subs) {
+        const enabled = Settings.isSubjectEnabled(topKey, sub.id);
+        const chip = el('button',{text:sub.label, attrs:{style:`margin:3px;padding:6px 12px;font-size:12px;border:none;border-radius:14px;cursor:pointer;background:${enabled?'#4caf50':'#666'};color:#fff;font-weight:600`}});
+        chip.addEventListener('click', ()=>{
+          Settings.toggleSubject(topKey, sub.id);
+          const e = Settings.isSubjectEnabled(topKey, sub.id);
+          chip.style.background = e?'#4caf50':'#666';
+        });
+        wrap.appendChild(chip);
+      }
+    }
+  }
+
+  wrap.appendChild(el('div',{attrs:{style:'margin-top:24px'}},
+    el('button',{text:'⬅️ Zurück zum Dashboard', onclick: renderDashboard, attrs:{style:'padding:12px 24px;background:#666;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}})
+  ));
+  root.appendChild(wrap);
+}
+
+// ===== Eigene Aufgaben hochladen =====
+function renderCustomTasks(){
+  clear();
+  const wrap = el('div',{class:'dash'});
+  wrap.appendChild(el('h2',{text:'📝 Eigene Aufgaben'}));
+  wrap.appendChild(el('p',{text:'Hier kannst du eigene Aufgaben für die Jungs hinzufügen (z.B. aus dem Mathebuch).', attrs:{style:'opacity:.85;margin-bottom:14px'}}));
+
+  const list = JSON.parse(localStorage.getItem('herzog_lernapp_custom_tasks') || '[]');
+  // Liste anzeigen
+  const listBox = el('div',{attrs:{style:'margin-bottom:18px'}});
+  if (list.length === 0) {
+    listBox.appendChild(el('p',{text:'Noch keine eigenen Aufgaben.', attrs:{style:'opacity:.6'}}));
+  } else {
+    for (let i = 0; i < list.length; i++) {
+      const t = list[i];
+      const row = el('div',{attrs:{style:'background:rgba(255,255,255,.08);padding:10px;border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px'}});
+      row.appendChild(el('div',{attrs:{style:'flex:1'}},
+        el('div',{text:`[${t.profile}] ${t.q}`, attrs:{style:'font-weight:600'}}),
+        el('div',{text:`Antwort: ${t.a}`, attrs:{style:'font-size:13px;opacity:.7'}})
+      ));
+      row.appendChild(el('button',{text:'🗑️', onclick:()=>{ list.splice(i,1); localStorage.setItem('herzog_lernapp_custom_tasks', JSON.stringify(list)); renderCustomTasks(); }, attrs:{style:'background:#e53935;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer'}}));
+      listBox.appendChild(row);
+    }
+  }
+  wrap.appendChild(listBox);
+
+  // Formular
+  wrap.appendChild(el('h3',{text:'+ Neue Aufgabe', attrs:{style:'margin-bottom:8px'}}));
+  const form = el('div',{attrs:{style:'background:rgba(255,255,255,.08);padding:14px;border-radius:12px;display:flex;flex-direction:column;gap:8px'}});
+  const profSel = el('select',{attrs:{style:'padding:8px;border-radius:6px;border:none'}},
+    el('option',{text:'Liam',attrs:{value:'liam'}}),
+    el('option',{text:'Raik',attrs:{value:'raik'}})
+  );
+  const qInp = el('input',{attrs:{type:'text',placeholder:'Frage (z.B. 7+8 oder Was ist...)',style:'padding:8px;border-radius:6px;border:none'}});
+  const aInp = el('input',{attrs:{type:'text',placeholder:'Richtige Antwort',style:'padding:8px;border-radius:6px;border:none'}});
+  const optsInp = el('input',{attrs:{type:'text',placeholder:'Falsche Antworten, mit Komma getrennt (für Multiple-Choice). Leer = Eingabe-Aufgabe',style:'padding:8px;border-radius:6px;border:none'}});
+  form.appendChild(el('label',{text:'Für wen:'})); form.appendChild(profSel);
+  form.appendChild(el('label',{text:'Frage:'})); form.appendChild(qInp);
+  form.appendChild(el('label',{text:'Richtige Antwort:'})); form.appendChild(aInp);
+  form.appendChild(el('label',{text:'Falsche Antworten (optional):'})); form.appendChild(optsInp);
+  form.appendChild(el('button',{text:'+ Speichern', onclick:()=>{
+    if (!qInp.value || !aInp.value) return alert('Frage und Antwort sind Pflicht');
+    const wrong = optsInp.value.split(',').map(s=>s.trim()).filter(Boolean);
+    const task = {profile:profSel.value, q:qInp.value, a:aInp.value, wrong, ts:Date.now()};
+    list.push(task);
+    localStorage.setItem('herzog_lernapp_custom_tasks', JSON.stringify(list));
+    renderCustomTasks();
+  }, attrs:{style:'padding:12px;background:#4caf50;color:#fff;border:none;border-radius:8px;font-weight:800;cursor:pointer;margin-top:8px'}}));
+  wrap.appendChild(form);
+  wrap.appendChild(el('button',{text:'⬅️ Zurück', onclick: renderDashboard, attrs:{style:'margin-top:18px;padding:12px 24px;background:#666;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  root.appendChild(wrap);
+}
+
+// ===== Wochen-Report (Live + optional Mail) =====
+function renderWeeklyReport(){
+  clear();
+  const wrap = el('div',{class:'dash'});
+  wrap.appendChild(el('h2',{text:'📊 Wochen-Report'}));
+  const week = 7 * 86400000;
+  const since = Date.now() - week;
+  for (const k of ['liam','raik']) {
+    const p = State.data.profiles[k];
+    const wHist = (p.history||[]).filter(h => h.ts >= since);
+    const subjs = {};
+    for (const h of wHist) {
+      if (!subjs[h.subject]) subjs[h.subject] = {tries:0, correct:0};
+      subjs[h.subject].tries++;
+      if (h.correct) subjs[h.subject].correct++;
+    }
+    const days = new Set(wHist.map(h => new Date(h.ts).toISOString().slice(0,10))).size;
+    const card = el('div',{attrs:{style:'background:rgba(255,255,255,.08);padding:16px;border-radius:14px;margin-bottom:14px'}});
+    card.appendChild(el('h3',{text:`${p.name} – letzte 7 Tage`}));
+    card.appendChild(rowDash('Aktive Tage', `${days} / 7`));
+    card.appendChild(rowDash('Aufgaben gesamt', `${wHist.length} (${wHist.filter(h=>h.correct).length} richtig)`));
+    card.appendChild(rowDash('Münzen gesamt', `${p.coins} 🪙`));
+    const career = getCareerRank(k);
+    if (career) card.appendChild(rowDash('Rang', `${career.name}` + (career.nextAt ? ` (noch ${career.nextAt - career.totalCorrect} bis ${career.nextName})` : ' MAX')));
+    for (const sk of Object.keys(subjs)) {
+      const s = subjs[sk];
+      const r = s.tries ? Math.round(s.correct/s.tries*100) : 0;
+      card.appendChild(rowDash('  · '+sk, `${s.tries} · ${r}% richtig`));
+    }
+    // Empfehlung
+    const weakest = Object.entries(subjs).sort((a,b) => (a[1].correct/a[1].tries) - (b[1].correct/b[1].tries))[0];
+    if (weakest) card.appendChild(el('div',{text:'💡 Schwachstelle: ' + weakest[0] + ' – Fokus diese Woche?', attrs:{style:'margin-top:8px;padding:10px;background:#fff9c4;color:#333;border-radius:8px;font-weight:600'}}));
+    wrap.appendChild(card);
+  }
+  if (Settings.isEnabled('weekly_report') && Settings.get('weekly_report').email) {
+    wrap.appendChild(el('div',{text:`📧 Mail-Versand an ${Settings.get('weekly_report').email} ist aktiviert (jeden Sonntag 18:00).`, attrs:{style:'background:rgba(76,175,80,.2);padding:12px;border-radius:10px;margin-bottom:14px'}}));
+  } else {
+    wrap.appendChild(el('div',{text:'ℹ️ Mail-Versand nicht aktiv. In Einstellungen aktivierbar.', attrs:{style:'background:rgba(255,255,255,.06);padding:12px;border-radius:10px;margin-bottom:14px;font-size:13px'}}));
+  }
+  wrap.appendChild(el('button',{text:'⬅️ Zurück', onclick: renderDashboard, attrs:{style:'padding:12px 24px;background:#666;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  root.appendChild(wrap);
 }
 
 // Start: Wenn auto-profile gesetzt (liam.html / raik.html), direkt rein.

@@ -117,7 +117,11 @@ const SHOP_ITEMS = [
   {id:'hat_cap',name:'Baseball-Cap',icon:'🧢',price:15,kind:'outfit'},
   {id:'fx_fire',name:'Feuer-Effekt',icon:'🔥',price:25,kind:'effect'},
   {id:'fx_rainbow',name:'Regenbogen-Spur',icon:'🌈',price:25,kind:'effect'},
-  {id:'fx_lightning',name:'Blitz-Effekt',icon:'⚡',price:25,kind:'effect'}
+  {id:'fx_lightning',name:'Blitz-Effekt',icon:'⚡',price:25,kind:'effect'},
+  // Sound-Pakete
+  {id:'sp_animals',name:'Tier-Sound-Paket',icon:'🐮',price:60,kind:'sound'},
+  {id:'sp_starwars',name:'Weltraum-Sounds',icon:'🚀',price:80,kind:'sound'},
+  {id:'sp_ninja',name:'Ninja-Sounds',icon:'🥷',price:80,kind:'sound'}
 ];
 
 // Power-Ups die WÄHREND einer Aufgabe nutzbar sind
@@ -150,7 +154,9 @@ const SUBJECTS_TREE = {
     ]},
     sach: {label:'🌍 Sachkunde', emoji:'🌍', subs: [
       {id:'allgemein', label:'🌾 Allgemein', desc:'Hof, Tiere, Natur', backend:'sach'},
-      {id:'werkzeug', label:'🔧 Werkzeug', desc:'Hammer, Säge, Wasserwaage', special:'tools'}
+      {id:'werkzeug', label:'🔧 Werkzeug', desc:'Hammer, Säge, Wasserwaage', special:'tools'},
+      {id:'hofprobleme', label:'🚜 Hof-Probleme', desc:'Was tun wenn?', special:'hofproblems'},
+      {id:'maschinendiary', label:'📔 Maschinen-Tagebuch', desc:'Lesen + Frage zur Maschine', special:'machinediary'}
     ]},
     musik: {label:'🎵 Musik', emoji:'🎵', subs: [
       {id:'allgemein', label:'🎼 Noten & Instrumente', desc:'Allgemein', backend:'musik'}
@@ -340,6 +346,44 @@ const TOOLS_QUIZ = [
   {q:"Was klemmt etwas fest?",options:["Schraubzwinge","Hammer","Pinsel","Säge"],correct:0},
   {q:"Was hält eine Schraube an Ort und Stelle?",options:["Mutter","Pflug","Reifen","Säge"],correct:0},
   {q:"Womit zeichnet man eine gerade Linie?",options:["Pinsel","Lineal","Wasserwaage","Hammer"],correct:1,img:"📐"}
+];
+
+// ===== Hof-Probleme (Liam, Sachkunde-Sub) =====
+const HOF_PROBLEMS = [
+  {q:"Der Trecker startet nicht. Was schaust du zuerst nach?",
+   options:["Ob er aufgepumpt ist","Ob Diesel im Tank ist","Ob die Sonne scheint","Ob das Radio aus ist"],correct:1},
+  {q:"Eine Kuh frisst nicht und steht müde. Was tust du?",
+   options:["Mehr Futter ihr hinwerfen","Tierarzt anrufen","Selber operieren","Sie laufen lassen"],correct:1},
+  {q:"Beim Pflügen geht der Pflug nicht tief genug. Was kann es sein?",
+   options:["Pflug ist zu schwer","Schar ist stumpf","Trecker zu langsam","Erde ist nass"],correct:1},
+  {q:"Der Mähdrescher verliert vorne Korn. Was prüfst du?",
+   options:["Ob die Tankuhr stimmt","Ob das Schneidwerk richtig hoch ist","Ob die Sitze gepolstert sind","Ob das Funkgerät an ist"],correct:1},
+  {q:"Ein Strohballen rollt vom Anhänger. Was hättest du tun müssen?",
+   options:["Schneller fahren","Mit Spanngurten sichern","Ihn anpinseln","Ihm zureden"],correct:1},
+  {q:"Auf der Strasse: Hinter dir ein Auto. Was machst du?",
+   options:["Ignorieren","Bei nächster Möglichkeit rechts ranfahren und vorbeilassen","Mitten anhalten","Schneller fahren"],correct:1},
+  {q:"Das Hydraulik-Öl tropft. Was sofort tun?",
+   options:["Weiterfahren","Anhalten und Werkstatt anrufen","Ein Tuch drumwickeln","Mit Kaffee auffüllen"],correct:1},
+  {q:"Bei der Heuernte zieht ein Gewitter auf. Was machst du?",
+   options:["Trotzdem ernten","Heu schnell schwadeln und abtransportieren","Pause machen","Das Heu liegen lassen"],correct:1},
+  {q:"Im Stall blitzt eine Lampe komisch. Was als Erstes?",
+   options:["Ignorieren","Strom abschalten und Elektriker rufen","Lampe rausschrauben","Drauflackieren"],correct:1},
+  {q:"Der Reifen vom Anhänger wird platt. Was nicht tun?",
+   options:["Anhalten","Pannenhilfe rufen","Mit halbem Druck weiterfahren - GEFAHR","Ersatzrad montieren"],correct:2}
+];
+
+// ===== Maschinen-Tagebuch: kurze Lese-Texte über Maschinen mit Frage =====
+const MACHINE_DIARY = [
+  {text:"Der Fendt 1050 Vario hat 517 PS und 13,5 Tonnen Eigengewicht. Damit zieht er auch grosse Pflüge mühelos. Sein Vario-Getriebe wechselt stufenlos die Geschwindigkeit - der Fahrer muss nie schalten.",
+   q:"Wie viele PS hat der Fendt 1050?",options:["517","1050","350","250"],correct:0},
+  {text:"Der Claas Lexion 8900 ist ein Mähdrescher. Sein Korntank fasst 18.000 Liter. Wenn er voll ist, fährt ein LKW oder Wagen heran und der Lexion entlädt im Fahren - er muss nicht stehenbleiben.",
+   q:"Was passiert wenn der Korntank voll ist?",options:["Lexion hält an","Wagen fährt ran und übernimmt","Korn wird auf den Acker geschüttet","Lexion explodiert"],correct:1},
+  {text:"Der Krone Big X 1180 ist ein Häcksler mit 1156 PS. Er häckselt Mais oder Gras klein und wirft es durch das lange Rohr direkt in einen LKW oder Anhänger der nebenher fährt.",
+   q:"Was macht der Krone Big X?",options:["Pflügt","Säht","Häckselt Mais & Gras","Mäht Wiese"],correct:2},
+  {text:"Der MB-trac 1500 von Mercedes wurde von 1980 bis 1991 gebaut. Er hat vier gleich grosse Räder und die Kabine in der Mitte. Vorne UND hinten kann man Geräte anbauen - ungewöhnlich für einen Schlepper.",
+   q:"Was ist beim MB-trac besonders?",options:["Vier gleich grosse Räder, Kabine mittig","Er fliegt","Er fährt rückwärts schneller","Er hat ein Solardach"],correct:0},
+  {text:"Der John Deere 8R 410 hat statt Reifen Gummi-Raupen. Damit drückt er den Boden weniger fest - die Wurzeln der Pflanzen können besser wachsen und der Acker wird nicht so verdichtet.",
+   q:"Warum hat der 8R Raupen?",options:["Damit er schneller ist","Damit er den Boden weniger festdrückt","Damit er auf Eis fährt","Damit er rückwärts kann"],correct:1}
 ];
 
 // ===== Logik (Liam + Raik) - was passt nicht? =====
