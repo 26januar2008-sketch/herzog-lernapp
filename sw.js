@@ -1,6 +1,11 @@
-const CACHE = 'lernapp-v3';
+const CACHE = 'lernapp-v4';
 const ASSETS = [
-  '.', 'index.html', 'style.css', 'data.js', 'engine.js', 'sync.js', 'sounds.js', 'ui.js', 'manifest.json'
+  '.', 'index.html', 'liam.html', 'raik.html',
+  'style.css', 'data.js', 'engine.js', 'sync.js', 'sounds.js', 'ui.js',
+  'manifest.json', 'manifest-liam.json', 'manifest-raik.json',
+  'img/icons/icon-192.png', 'img/icons/icon-512.png',
+  'img/icons/liam-192.png', 'img/icons/liam-512.png',
+  'img/icons/raik-192.png', 'img/icons/raik-512.png'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(()=>self.skipWaiting()));

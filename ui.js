@@ -579,5 +579,12 @@ function rowDash(label, val){
   return el('div',{class:'dash-row'}, el('div',{text:label}), el('div',{text:val,attrs:{style:'font-weight:700'}}));
 }
 
-// Start
-renderPicker();
+// Start: Wenn auto-profile gesetzt (liam.html / raik.html), direkt rein.
+// Sonst Profil-Auswahl.
+if (typeof window !== 'undefined' && window.__autoProfile === 'liam') {
+  openProfile('liam');
+} else if (typeof window !== 'undefined' && window.__autoProfile === 'raik') {
+  openProfile('raik');
+} else {
+  renderPicker();
+}
