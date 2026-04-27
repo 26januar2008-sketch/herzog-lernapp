@@ -42,6 +42,9 @@ function renderPicker(){
 function openProfile(key){
   currentProfile = key;
   renderHome();
+  if (typeof hydrateFromRemote === 'function') {
+    hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderHome(); });
+  }
 }
 
 // ===== Home =====
@@ -93,11 +96,29 @@ function renderHome(){
 
 // ===== Aufgabe =====
 let currentTask = null;
-function renderTask(subject){
+async function renderTask(subject){
   clear();
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
-  const { item } = pickTask(currentProfile, subject);
+
+  // 50% Chance: KI-Aufgabe vom Server holen (wenn Sync verfügbar). Fallback: lokal.
+  let item;
+  const useAI = typeof Sync !== 'undefined' && Sync.online && Math.random() < 0.5;
+  if (useAI) {
+    const aiPayload = await Promise.race([
+      Sync.fetchAITask(currentProfile, subject),
+      new Promise(res => setTimeout(()=>res(null), 4000))
+    ]);
+    if (aiPayload && (aiPayload.q || aiPayload.text)) {
+      // Normalisiere Felder: Mathe braucht 'a', andere 'options/correct'; Lese hat 'text'
+      item = aiPayload;
+      if (subject === 'read' && currentProfile === 'liam' && !item.text) item.text = item.q || '';
+    }
+  }
+  if (!item) {
+    const picked = pickTask(currentProfile, subject);
+    item = picked.item;
+  }
   currentTask = { subject, item };
 
   const titles = {read:'📖 Lesen', math:'➕ Rechnen', sach:'🌍 Sachkunde', musik:'🎵 Musik'};
@@ -160,6 +181,7 @@ function renderTask(subject){
       btn.style.background = correct ? '#4caf50' : '#e53935';
       btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig wäre: ${item.a}`;
       const result = recordAnswer(currentProfile, currentTask.subject, correct);
+      if (typeof schedulePush === 'function') schedulePush(currentProfile);
       setTimeout(() => {
         if (result.unlocked) showReward(result.unlocked, ()=>maybePauseOrContinue('math'));
         else maybePauseOrContinue('math');
@@ -187,6 +209,7 @@ function answer(btn, correct, next){
     });
   }
   const result = recordAnswer(currentProfile, currentTask.subject, correct);
+  if (typeof schedulePush === 'function') schedulePush(currentProfile);
   setTimeout(() => {
     if (result.unlocked) showReward(result.unlocked, ()=>maybePauseOrContinue(currentTask.subject, next));
     else maybePauseOrContinue(currentTask.subject, next);
