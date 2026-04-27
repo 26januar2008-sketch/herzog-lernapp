@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cache löschen</title>
+<style>
+  body{font-family:-apple-system,sans-serif;background:#0a0e27;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px}
+  .box{max-width:400px}
+  h1{font-size:24px;margin-bottom:14px}
+  .status{font-size:18px;margin:20px 0;padding:14px;background:rgba(255,255,255,.1);border-radius:12px}
+  .ok{color:#81c784}
+  a{display:inline-block;margin:10px 6px;padding:14px 22px;background:#4caf50;color:#fff;text-decoration:none;border-radius:14px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🔄 Lernapp Update</h1>
+  <div id="status" class="status">Lösche alten Cache…</div>
+  <div id="links" style="display:none">
+    <p>Fertig! Wähle:</p>
+    <a href="liam.html">🚜 Liam</a>
+    <a href="raik.html">💨 Raik</a>
+    <a href="index.html">👨 Eltern</a>
+  </div>
+</div>
+<script>
+(async () => {
+  const status = document.getElementById('status');
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) await r.unregister();
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      for (const k of keys) await caches.delete(k);
+    }
+    status.innerHTML = '<span class="ok">✅ Alter Cache gelöscht!</span>';
+    document.getElementById('links').style.display = 'block';
+  } catch (e) {
+    status.textContent = 'Fehler: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>
