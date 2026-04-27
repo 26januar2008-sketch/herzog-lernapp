@@ -1,7 +1,7 @@
-const CACHE = 'lernapp-v7';
+const CACHE = 'lernapp-v8';
 const ASSETS = [
   '.', 'index.html', 'liam.html', 'raik.html',
-  'style.css', 'data.js', 'engine.js', 'sync.js', 'sounds.js', 'trace.js', 'ui.js',
+  'style.css', 'data.js', 'engine.js', 'sync.js', 'sounds.js', 'trace.js', 'specials.js', 'ui.js',
   'manifest.json', 'manifest-liam.json', 'manifest-raik.json',
   'img/icons/icon-192.png', 'img/icons/icon-512.png',
   'img/icons/liam-192.png', 'img/icons/liam-512.png',

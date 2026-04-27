@@ -127,6 +127,262 @@ const POWERUPS = [
   {id:'double',name:'Doppel-Münzen',icon:'💰',price:4,desc:'Nächste richtige Antwort: doppelt Münzen'}
 ];
 
+// ============================================================
+// FÄCHER-HIERARCHIE: Top-Fach → Sub-Fächer
+// ============================================================
+const SUBJECTS_TREE = {
+  liam: {
+    deutsch: {label:'📚 Deutsch', emoji:'📚', subs: [
+      {id:'lesen', label:'📖 Lesen', desc:'Texte verstehen', backend:'read'},
+      {id:'rechtschreibung', label:'✏️ Rechtschreibung', desc:'-ck/-tz, ß, Doppellaute'},
+      {id:'wortarten', label:'🔤 Wortarten', desc:'Nomen, Verb, Adjektiv'},
+      {id:'wortschatz', label:'🎯 Wortschatz', desc:'Synonyme, Gegenteile'},
+      {id:'lueckentext', label:'🧩 Lückentext', desc:'Wörter einsetzen'},
+      {id:'schreiben', label:'✍️ Schreiben', desc:'Wörter nachfahren', special:'trace'}
+    ]},
+    mathe: {label:'➕ Mathe', emoji:'➕', subs: [
+      {id:'plus_minus', label:'➕ Plus & Minus', desc:'bis 1000', backend:'math'},
+      {id:'mal_geteilt', label:'✖️ Mal & Geteilt', desc:'1×1, schriftlich'},
+      {id:'zahlenraum', label:'🔢 Zahlenraum', desc:'Vorgänger, Nachfolger, Stellenwert'},
+      {id:'sachaufgabe', label:'📊 Sachaufgaben', desc:'2-Schritt-Probleme'},
+      {id:'zahlenmuster', label:'🧮 Zahlenmuster', desc:'Reihen weiterführen'},
+      {id:'geometrie', label:'📐 Geometrie', desc:'Formen, Symmetrie'}
+    ]},
+    sach: {label:'🌍 Sachkunde', emoji:'🌍', subs: [
+      {id:'allgemein', label:'🌾 Allgemein', desc:'Hof, Tiere, Natur', backend:'sach'},
+      {id:'werkzeug', label:'🔧 Werkzeug', desc:'Hammer, Säge, Wasserwaage', special:'tools'}
+    ]},
+    musik: {label:'🎵 Musik', emoji:'🎵', subs: [
+      {id:'allgemein', label:'🎼 Noten & Instrumente', desc:'Allgemein', backend:'musik'}
+    ]},
+    extra: {label:'🧠 Knobeln', emoji:'🧠', subs: [
+      {id:'konzentration', label:'🃏 Memory', desc:'Karten umdrehen', special:'memory'},
+      {id:'zeit', label:'⏰ Zeit', desc:'Uhr lesen', special:'clock'},
+      {id:'geld', label:'💰 Geld', desc:'Münzen & Cent', special:'money'},
+      {id:'logik', label:'🧩 Logik', desc:'Was passt nicht?', special:'odd'}
+    ]}
+  },
+  raik: {
+    deutsch: {label:'📚 Deutsch', emoji:'📚', subs: [
+      {id:'lesen', label:'📖 Silben & Sätze', desc:'Mario/Sonic/Ninjago', backend:'read'},
+      {id:'rechtschreibung', label:'✏️ Rechtschreibung', desc:'a/A, au/ei/ie'},
+      {id:'wortschatz', label:'🎯 Wörter', desc:'Bild → Wort'},
+      {id:'schreiben', label:'✍️ Schreiben', desc:'Buchstaben nachfahren', special:'trace'}
+    ]},
+    mathe: {label:'➕ Mathe', emoji:'➕', subs: [
+      {id:'plus_minus', label:'➕ Plus & Minus', desc:'bis 20', backend:'math'},
+      {id:'zahlenraum', label:'🔢 Zahlenraum', desc:'Nachbarn, Nachfolger'},
+      {id:'sachaufgabe', label:'📊 Sachaufgaben', desc:'1 Schritt'},
+      {id:'geometrie', label:'📐 Formen', desc:'Kreis, Quadrat, Dreieck'}
+    ]},
+    sach: {label:'🌍 Sachkunde', emoji:'🌍', subs: [
+      {id:'allgemein', label:'🦁 Tiere & Natur', desc:'Bauernhof, Wald, Wasser', backend:'sach'}
+    ]},
+    musik: {label:'🎵 Musik', emoji:'🎵', subs: [
+      {id:'allgemein', label:'🥁 Instrumente & Töne', desc:'Allgemein', backend:'musik'}
+    ]},
+    extra: {label:'🧠 Knobeln', emoji:'🧠', subs: [
+      {id:'konzentration', label:'🃏 Memory', desc:'Karten merken (ADHS-Training!)', special:'memory'},
+      {id:'wahrnehmung', label:'👀 Suchen', desc:'Was ist anders?', special:'spot'},
+      {id:'zeit', label:'⏰ Uhr lernen', desc:'Volle und halbe Stunde', special:'clock'},
+      {id:'geld', label:'💰 Geld', desc:'Münzen zählen', special:'money'},
+      {id:'logik', label:'🧩 Logik', desc:'Was passt nicht?', special:'odd'},
+      {id:'fokus', label:'🎯 Fokus-Spiel', desc:'Tippe nur grüne Punkte', special:'focus'}
+    ]}
+  }
+};
+
+// ============================================================
+// ZUSÄTZLICHE KURATIERTE AUFGABEN-POOLS pro Sub-Fach
+// ============================================================
+
+// --- LIAM Mathe Sub-Pools ---
+const LIAM_MAL_GETEILT = [
+  {q:"7 × 8 = ?",a:56},{q:"6 × 9 = ?",a:54},{q:"4 × 12 = ?",a:48},
+  {q:"63 : 9 = ?",a:7},{q:"81 : 9 = ?",a:9},{q:"144 : 12 = ?",a:12},
+  {q:"15 × 6 = ?",a:90},{q:"25 × 4 = ?",a:100},{q:"100 : 4 = ?",a:25},
+  {q:"Auf 5 Höfen wohnen je 8 Kühe. Wie viele insgesamt?",a:40},
+  {q:"144 Eier in 12er-Schachteln. Wie viele Schachteln?",a:12},
+  {q:"6 × 12 = ?",a:72},{q:"96 : 8 = ?",a:12},{q:"7 × 9 = ?",a:63},
+  {q:"8 × 8 = ?",a:64},{q:"9 × 9 = ?",a:81},{q:"108 : 12 = ?",a:9},
+  {q:"3 Bauern teilen 24 Strohballen gleich. Jeder bekommt?",a:8}
+];
+const LIAM_ZAHLENRAUM = [
+  {q:"Was ist der Vorgänger von 700?",a:699},
+  {q:"Was ist der Nachfolger von 999?",a:1000},
+  {q:"Welche Hunderter-Zahl liegt zwischen 450 und 550?",a:500},
+  {q:"Schreibe als Zahl: 4 Hunderter, 3 Zehner, 7 Einer.",a:437},
+  {q:"Wie viele Zehner hat 580?",a:58},
+  {q:"Runde 367 auf den nächsten Zehner.",a:370},
+  {q:"Runde 234 auf den nächsten Hunderter.",a:200},
+  {q:"Verdopple 145.",a:290},
+  {q:"Halbiere 480.",a:240},
+  {q:"Was ist die größte 3-stellige Zahl?",a:999}
+];
+const LIAM_ZAHLENMUSTER = [
+  {q:"Welche Zahl folgt? 5, 10, 15, 20, ?",a:25},
+  {q:"Welche Zahl folgt? 100, 90, 80, 70, ?",a:60},
+  {q:"Welche Zahl folgt? 3, 6, 9, 12, ?",a:15},
+  {q:"Welche Zahl folgt? 2, 4, 8, 16, ?",a:32},
+  {q:"Welche Zahl folgt? 100, 95, 90, 85, ?",a:80},
+  {q:"Welche Zahl folgt? 7, 14, 21, 28, ?",a:35}
+];
+
+// --- LIAM Deutsch Sub-Pools ---
+const LIAM_RECHTSCHREIBUNG = [
+  {q:"Welches Wort ist richtig?",options:["Ferner","Verner","Vehrner","Ferrner"],correct:0},
+  {q:"-ck oder -k? Pa___",options:["ck","k","kk","gk"],correct:0},
+  {q:"-tz oder -z? Spi___e",options:["tz","z","ts","zz"],correct:0},
+  {q:"Welche Schreibung ist richtig?",options:["Strase","Straße","Strasse","Strate"],correct:1},
+  {q:"Wann schreibt man groß?",options:["Verben","Adjektive","Nomen/Substantive","Pronomen"],correct:2},
+  {q:"Wie viele f in 'Schiff'?",options:["1","2","3","keins"],correct:1},
+  {q:"Welches Wort ist richtig?",options:["Ferd","Pferd","Pfärd","Pferdt"],correct:1},
+  {q:"-ie oder -i? S___ben",options:["ie","i","ii","y"],correct:0},
+  {q:"Welche Schreibung?",options:["Tracktor","Traktor","Trraktor","Trackdor"],correct:1},
+  {q:"groß oder klein? 'Auf dem ___ steht der Trecker.'",options:["Hof","hof","HOF","höf"],correct:0}
+];
+const LIAM_WORTARTEN = [
+  {q:"Welches ist ein NOMEN?",options:["laufen","Trecker","schnell","gross"],correct:1},
+  {q:"Welches ist ein VERB?",options:["Hof","schwer","melken","grün"],correct:2},
+  {q:"Welches ist ein ADJEKTIV?",options:["Pferd","reiten","schnell","Stall"],correct:2},
+  {q:"Was ist 'Mähdrescher'?",options:["Verb","Nomen","Adjektiv","Pronomen"],correct:1},
+  {q:"Was ist 'pflügen'?",options:["Verb","Nomen","Adjektiv","Artikel"],correct:0},
+  {q:"Was ist 'rot'?",options:["Verb","Nomen","Adjektiv","Pronomen"],correct:2},
+  {q:"Welcher Artikel passt? ___ Trecker",options:["der","die","das","dem"],correct:0},
+  {q:"Welcher Artikel passt? ___ Kuh",options:["der","die","das","den"],correct:1},
+  {q:"Welcher Artikel passt? ___ Pferd",options:["der","die","das","den"],correct:2}
+];
+const LIAM_WORTSCHATZ = [
+  {q:"Was ist das Gegenteil von 'gross'?",options:["dick","klein","weit","laut"],correct:1},
+  {q:"Was ist das Gegenteil von 'schnell'?",options:["langsam","müde","schwer","weich"],correct:0},
+  {q:"Synonym für 'rennen'?",options:["sitzen","laufen","schlafen","essen"],correct:1},
+  {q:"Synonym für 'müde'?",options:["wach","erschöpft","fröhlich","stark"],correct:1},
+  {q:"Was bedeutet 'Ernte'?",options:["Aussäen","Pflügen","Einsammeln","Pflanzen"],correct:2},
+  {q:"Was ist ein 'Stall'?",options:["Eine Wiese","Ein Haus für Tiere","Ein Feld","Ein Bach"],correct:1},
+  {q:"Was bedeutet 'Silage'?",options:["Holzlager","Futterkonserve","Milchkanne","Heuhaufen"],correct:1},
+  {q:"Synonym für 'gross'?",options:["riesig","klein","leise","kalt"],correct:0}
+];
+const LIAM_LUECKENTEXT = [
+  {q:"Der ___ pflügt das Feld.",options:["Trecker","Kuh","Hahn","Eimer"],correct:0},
+  {q:"Auf dem Hof leben viele ___.",options:["Autos","Tiere","Bücher","Häuser"],correct:1},
+  {q:"Der Mähdrescher ___ das Korn.",options:["frisst","drischt","trinkt","singt"],correct:1},
+  {q:"Im Frühling wird ___.",options:["geerntet","gesät","gebremst","geföhnt"],correct:1},
+  {q:"Die Kuh gibt uns ___.",options:["Eier","Wolle","Milch","Honig"],correct:2},
+  {q:"Im Winter steht das Vieh im ___.",options:["Wald","Stall","Bach","Feld"],correct:1}
+];
+
+// --- LIAM Geometrie ---
+const LIAM_GEOMETRIE = [
+  {q:"Wie viele Ecken hat ein Quadrat?",options:["3","4","5","6"],correct:1},
+  {q:"Wie viele Ecken hat ein Dreieck?",options:["2","3","4","5"],correct:1},
+  {q:"Wie viele gleiche Seiten hat ein Quadrat?",options:["2","3","4","alle"],correct:3},
+  {q:"Welche Form hat ein Rad?",options:["Quadrat","Kreis","Dreieck","Stern"],correct:1},
+  {q:"Wie viele Flächen hat ein Würfel?",options:["4","6","8","12"],correct:1},
+  {q:"Wie viele Kanten hat ein Würfel?",options:["6","8","12","16"],correct:2},
+  {q:"Was ist symmetrisch?",options:["Schmetterling","Wolke","Stein","Blatt zerrissen"],correct:0}
+];
+
+// --- RAIK Mathe Sub-Pools ---
+const RAIK_ZAHLENRAUM = [
+  {q:"Vorgänger von 7?",a:6},{q:"Nachfolger von 9?",a:10},
+  {q:"Vorgänger von 15?",a:14},{q:"Nachfolger von 19?",a:20},
+  {q:"Welche Zahl liegt zwischen 4 und 6?",a:5},
+  {q:"Welche Zahl liegt zwischen 12 und 14?",a:13},
+  {q:"Verdopple 4.",a:8},{q:"Verdopple 7.",a:14},
+  {q:"Halbiere 10.",a:5},{q:"Halbiere 16.",a:8}
+];
+const RAIK_SACHAUFGABE = [
+  {q:"Mario sammelt 5 Münzen, dann 4 mehr.",a:9},
+  {q:"Sonic verliert 3 von 10 Ringen.",a:7},
+  {q:"Yoshi frisst 2 Kirschen, dann 6 mehr.",a:8},
+  {q:"Kai zündet 4 Feuer, 2 erlöschen.",a:2},
+  {q:"Lloyd findet 7 Energiekugeln, gibt 2 ab.",a:5},
+  {q:"Bowser hat 9 Bomben, wirft 4.",a:5},
+  {q:"Tails sammelt 6 Edelsteine, findet 5 mehr.",a:11}
+];
+const RAIK_GEOMETRIE = [
+  {q:"Wie heißt diese Form? ⬛",options:["Kreis","Quadrat","Dreieck","Stern"],correct:1},
+  {q:"Wie heißt diese Form? ⚫",options:["Quadrat","Dreieck","Kreis","Stern"],correct:2},
+  {q:"Wie heißt diese Form? 🔺",options:["Kreis","Quadrat","Dreieck","Pfeil"],correct:2},
+  {q:"Wie heißt diese Form? ⭐",options:["Stern","Mond","Sonne","Herz"],correct:0},
+  {q:"Wie viele Ecken hat ein Quadrat?",options:["3","4","5","viele"],correct:1},
+  {q:"Wie viele Ecken hat ein Dreieck?",options:["2","3","4","5"],correct:1}
+];
+
+// --- RAIK Deutsch Sub-Pools ---
+const RAIK_RECHTSCHREIBUNG = [
+  {q:"Wie schreibt man? Mein A___to.",options:["u","au","oh","ou"],correct:1,img:"🚗"},
+  {q:"Wie schreibt man? Das B___t.",options:["o","oo","oh","oot"],correct:1,img:"⛵"},
+  {q:"Wie schreibt man? Die K___tze.",options:["a","ah","aa","ä"],correct:0,img:"🐱"},
+  {q:"Was schreibt man groß?",options:["mama","kuh","Mario","alles"],correct:2},
+  {q:"Welcher Anfangsbuchstabe? __ans (Hund-Name)",options:["h","H","B","K"],correct:1},
+  {q:"Wie endet das Wort? Die Son___.",options:["ne","na","nu","ni"],correct:0,img:"☀️"},
+  {q:"ie oder i? Das Sp___l.",options:["i","ie","ii","y"],correct:1}
+];
+const RAIK_WORTSCHATZ = [
+  {q:"Welches Wort gehört zu diesem Bild? 🍎",options:["Auto","Apfel","Hut","Schere"],correct:1,img:"🍎"},
+  {q:"Welches Wort gehört zu diesem Bild? 🐶",options:["Katze","Pferd","Hund","Kuh"],correct:2,img:"🐶"},
+  {q:"Welches Wort gehört zu diesem Bild? ☀️",options:["Mond","Stern","Sonne","Wolke"],correct:2,img:"☀️"},
+  {q:"Welches Wort gehört zu diesem Bild? 🍕",options:["Pasta","Pizza","Brot","Banane"],correct:1,img:"🍕"},
+  {q:"Welches Wort gehört zu diesem Bild? 🚗",options:["Bus","Bagger","Auto","Boot"],correct:2,img:"🚗"},
+  {q:"Welches Wort gehört zu diesem Bild? 🦁",options:["Tiger","Bär","Wolf","Löwe"],correct:3,img:"🦁"}
+];
+
+// ===== Werkzeug-Quiz (Liam) =====
+const TOOLS_QUIZ = [
+  {q:"Welches Werkzeug schlägt Nägel ein?",options:["Säge","Hammer","Bohrer","Zange"],correct:1,img:"🔨"},
+  {q:"Womit dreht man eine Schraube ein?",options:["Hammer","Schraubenzieher","Bohrer","Hobel"],correct:1,img:"🪛"},
+  {q:"Welches Werkzeug schneidet Holz?",options:["Hammer","Säge","Zange","Pinsel"],correct:1,img:"🪚"},
+  {q:"Was misst man mit einer Wasserwaage?",options:["Länge","Gewicht","Ob es waagerecht ist","Temperatur"],correct:2},
+  {q:"Was machst du mit dem Bohrer?",options:["Schrauben","Löcher bohren","Schneiden","Hämmern"],correct:1,img:"🪛"},
+  {q:"Womit dreht man Muttern fest?",options:["Hammer","Säge","Schraubenschlüssel","Pinsel"],correct:2,img:"🔧"},
+  {q:"Womit misst man die Länge eines Brettes?",options:["Wasserwaage","Zollstock","Pinsel","Hammer"],correct:1,img:"📏"},
+  {q:"Was klemmt etwas fest?",options:["Schraubzwinge","Hammer","Pinsel","Säge"],correct:0},
+  {q:"Was hält eine Schraube an Ort und Stelle?",options:["Mutter","Pflug","Reifen","Säge"],correct:0},
+  {q:"Womit zeichnet man eine gerade Linie?",options:["Pinsel","Lineal","Wasserwaage","Hammer"],correct:1,img:"📐"}
+];
+
+// ===== Logik (Liam + Raik) - was passt nicht? =====
+const ODD_ONE_OUT = [
+  {q:"Was passt NICHT?",options:["Apfel 🍎","Birne 🍐","Banane 🍌","Hammer 🔨"],correct:3},
+  {q:"Was passt NICHT?",options:["Hund 🐶","Katze 🐱","Auto 🚗","Pferd 🐴"],correct:2},
+  {q:"Was passt NICHT?",options:["Stuhl","Tisch","Sofa","Trecker"],correct:3},
+  {q:"Was passt NICHT?",options:["rot","blau","grün","schnell"],correct:3},
+  {q:"Was passt NICHT?",options:["Mario","Sonic","Yoshi","Pizza"],correct:3},
+  {q:"Was passt NICHT?",options:["Sommer","Winter","Herbst","Fahrrad"],correct:3},
+  {q:"Was passt NICHT?",options:["Hammer","Säge","Bohrer","Banane"],correct:3},
+  {q:"Was passt NICHT?",options:["Fendt","John Deere","Claas","Bowser"],correct:3}
+];
+
+// ============================================================
+// MEMORY-Spiel-Karten (Konzentration)
+// ============================================================
+const MEMORY_DECK_LIAM = ['🚜','🐮','🌾','🍞','🥚','🥕','🐔','🌽'];
+const MEMORY_DECK_RAIK = ['🍄','🟢','💨','🦊','🦖','🔥','⚡','🪨'];
+
+// ============================================================
+// UHR-Aufgaben (Zeit lesen)
+// ============================================================
+const CLOCK_LIAM = [
+  {h:9, m:30}, {h:14, m:15}, {h:7, m:45}, {h:12, m:0},
+  {h:18, m:30}, {h:10, m:15}, {h:6, m:0}, {h:21, m:45},
+  {h:11, m:30}, {h:15, m:0}, {h:16, m:15}, {h:8, m:45}
+];
+const CLOCK_RAIK = [
+  {h:3, m:0}, {h:6, m:0}, {h:9, m:0}, {h:12, m:0},
+  {h:8, m:30}, {h:10, m:30}, {h:7, m:30}, {h:5, m:0}
+];
+
+// ============================================================
+// GELD-Aufgaben (Münzen zählen)
+// ============================================================
+const COINS = [
+  {val:1, label:'1ct', img:'🟫'}, {val:2, label:'2ct', img:'🟫'},
+  {val:5, label:'5ct', img:'🟫'}, {val:10, label:'10ct', img:'🟡'},
+  {val:20, label:'20ct', img:'🟡'}, {val:50, label:'50ct', img:'🟡'},
+  {val:100, label:'1€', img:'⚪'}, {val:200, label:'2€', img:'⚪'}
+];
+
 // ===== LIAM (9, 3. Klasse, Bauernhof / Maschinen) =====
 const LIAM_STORIES = [
   {

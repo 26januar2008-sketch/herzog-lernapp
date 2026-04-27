@@ -78,7 +78,7 @@ function recordAnswer(profileKey, subject, correct) {
       : (subject === 'read' ? 2 : 1);
     if (p.powerup_double) { reward *= 2; p.powerup_double = false; }
     p.coins += reward;
-    if (profileKey === 'raik') p.sessionCount = (p.sessionCount||0) + 1;
+    p.sessionCount = (p.sessionCount||0) + 1;
   }
   // Adaptive Level (einfach gehalten)
   const ratio = s.correct / Math.max(s.tries, 1);

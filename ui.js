@@ -41,6 +41,7 @@ function renderPicker(){
 
 function openProfile(key){
   currentProfile = key;
+  if (typeof applyTimeTheme === 'function') applyTimeTheme();
   renderHome();
   if (typeof hydrateFromRemote === 'function') {
     hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderHome(); });
@@ -69,33 +70,179 @@ function renderHome(){
     : '⚡ Bereit zum Speed Run?';
   home.appendChild(el('div',{class:'greeting', text: greet}));
 
+  // Tagesziel-Anzeige
+  const today = todayStats(currentProfile);
+  const goal = 10;
+  const todayBar = el('div',{attrs:{style:'background:rgba(255,255,255,.15);padding:10px 14px;border-radius:14px;margin-bottom:14px;text-align:center;font-weight:700'}});
+  const streak = currentStreak(currentProfile);
+  todayBar.innerHTML = `📅 Heute: <b>${today.total}</b> / ${goal} Aufgaben` + (streak ? ` &nbsp; 🔥 Streak: <b>${streak}</b> Tage` : '');
+  home.appendChild(todayBar);
+
   const subs = el('div',{class:'subjects'});
-  subs.appendChild(el('div',{class:'subject read', onclick: ()=>renderTask('read')},
-    el('span',{class:'em', text:'📖'}),
-    document.createTextNode('Lesen')
-  ));
-  subs.appendChild(el('div',{class:'subject', onclick: ()=>renderTask('math')},
-    el('span',{class:'em', text:'➕'}),
-    document.createTextNode('Rechnen')
-  ));
-  subs.appendChild(el('div',{class:'subject', onclick: ()=>renderTask('sach')},
-    el('span',{class:'em', text: currentProfile==='liam' ? '🌾' : '🌍'}),
-    document.createTextNode('Sachkunde')
-  ));
-  subs.appendChild(el('div',{class:'subject', onclick: ()=>renderTask('musik')},
-    el('span',{class:'em', text:'🎵'}),
-    document.createTextNode('Musik')
-  ));
-  subs.appendChild(el('div',{class:'subject', onclick: renderTraceTask, attrs:{style:'grid-column:span 2;background:#7e57c2;color:#fff'}},
-    el('span',{class:'em', text:'✏️'}),
-    document.createTextNode('Schreiben (Finger nachfahren)')
-  ));
+  const tree = SUBJECTS_TREE[currentProfile];
+  for (const topKey of Object.keys(tree)) {
+    const top = tree[topKey];
+    subs.appendChild(el('div',{class:'subject', onclick: ()=> renderSubjectHub(topKey)},
+      el('span',{class:'em', text: top.emoji}),
+      document.createTextNode(top.label.replace(/^.\s/, ''))
+    ));
+  }
   subs.appendChild(el('div',{class:'subject', onclick: renderCollection, attrs:{style:'grid-column:span 2'}},
     el('span',{class:'em', text: currentProfile==='liam' ? '🏚️' : '🌟'}),
     document.createTextNode(currentProfile==='liam' ? 'Meine Garage' : 'Meine Charaktere')
   ));
   home.appendChild(subs);
   root.appendChild(home);
+}
+
+// ===== Sub-Fach-Hub: zeigt z.B. 7 Mathe-Bereiche =====
+function renderSubjectHub(topKey){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const top = SUBJECTS_TREE[currentProfile][topKey];
+  if (!top) return renderHome();
+
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderHome}),
+    el('div',{text: top.label}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+
+  const home = el('div',{class:'home'});
+  home.appendChild(el('div',{class:'greeting', text: 'Was üben wir?', attrs:{style:'font-size:24px'}}));
+  const subs = el('div',{class:'subjects'});
+  for (const sub of top.subs) {
+    const cell = el('div',{class:'subject', onclick: ()=> startSub(topKey, sub)},
+      el('span',{class:'em', text:(sub.label.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u)||['📚'])[0]}),
+      el('div',{text: sub.label.replace(/^[^\sA-Za-zÄÖÜäöüß]+\s?/,''), attrs:{style:'font-size:16px'}}),
+      sub.desc ? el('div',{text: sub.desc, attrs:{style:'font-size:11px;opacity:.7;margin-top:4px;font-weight:400'}}) : null
+    );
+    subs.appendChild(cell);
+  }
+  home.appendChild(subs);
+  root.appendChild(home);
+}
+
+// Dispatcher: startet die richtige Aufgaben-Render basierend auf sub.special oder backend
+function startSub(topKey, sub) {
+  if (sub.special === 'trace') return renderTraceTask();
+  if (sub.special === 'memory') return renderMemoryGame();
+  if (sub.special === 'clock') return renderClockTask();
+  if (sub.special === 'money') return renderMoneyTask();
+  if (sub.special === 'tools') return renderQuizTask(topKey, sub, TOOLS_QUIZ, 'sach');
+  if (sub.special === 'odd') return renderQuizTask(topKey, sub, ODD_ONE_OUT, 'extra');
+  if (sub.special === 'spot') return renderSpotTask();
+  if (sub.special === 'focus') return renderFocusTask();
+  // Standard: Backend-Pool oder kuratierter Sub-Pool
+  if (sub.backend) return renderTask(sub.backend);
+  // Sub-Pool aus data.js
+  const poolMap = {
+    liam: {
+      'mathe.mal_geteilt': LIAM_MAL_GETEILT,
+      'mathe.zahlenraum': LIAM_ZAHLENRAUM,
+      'mathe.zahlenmuster': LIAM_ZAHLENMUSTER,
+      'mathe.geometrie': LIAM_GEOMETRIE,
+      'deutsch.rechtschreibung': LIAM_RECHTSCHREIBUNG,
+      'deutsch.wortarten': LIAM_WORTARTEN,
+      'deutsch.wortschatz': LIAM_WORTSCHATZ,
+      'deutsch.lueckentext': LIAM_LUECKENTEXT
+    },
+    raik: {
+      'mathe.zahlenraum': RAIK_ZAHLENRAUM,
+      'mathe.sachaufgabe': RAIK_SACHAUFGABE,
+      'mathe.geometrie': RAIK_GEOMETRIE,
+      'deutsch.rechtschreibung': RAIK_RECHTSCHREIBUNG,
+      'deutsch.wortschatz': RAIK_WORTSCHATZ
+    }
+  };
+  const key = `${topKey}.${sub.id}`;
+  const pool = poolMap[currentProfile]?.[key];
+  if (pool) {
+    const isMath = topKey === 'mathe';
+    return renderQuizTask(topKey, sub, pool, isMath ? 'math' : 'read');
+  }
+  // Fallback
+  alert('Diese Aufgabe kommt bald! 🚧');
+  renderHome();
+}
+
+// Generische Quiz-Render für kuratierte Pools (mit options/correct ODER q/a)
+function renderQuizTask(topKey, sub, pool, statKey) {
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  currentTask = { subject: statKey, item, fiftyUsed: false };
+
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=> renderSubjectHub(topKey)}),
+    el('div',{text: sub.label}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+  renderPowerupBar();
+  const task = el('div',{class:'task'});
+
+  if (item.options && typeof item.correct === 'number') {
+    const head = el('div',{class:'task-text'});
+    if (item.img) head.appendChild(el('div',{html:'<div style="font-size:80px;margin-bottom:12px">'+item.img+'</div>'}));
+    head.appendChild(el('div',{text:item.q,attrs:{style:'font-size:22px'}}));
+    task.appendChild(head);
+    const opts = el('div',{class:'options'});
+    item.options.forEach((o,i) => {
+      opts.appendChild(el('button',{class:'opt', text:o, onclick:(e)=>answer(e.target, i===item.correct, ()=>renderQuizTask(topKey, sub, pool, statKey))}));
+    });
+    task.appendChild(opts);
+  } else if (typeof item.a === 'number') {
+    const mathBox = el('div',{class:'task-text'});
+    const visual = item.visual || autoVisualForMath(item.q);
+    if (visual) mathBox.appendChild(el('div',{html:`<div style="font-size:36px;margin-bottom:10px;line-height:1.3">${visual}</div>`}));
+    mathBox.appendChild(el('div',{text:item.q, attrs:{style:'font-size:24px'}}));
+    task.appendChild(mathBox);
+    const inputBox = el('div',{class:'input-task'});
+    const input = el('input',{attrs:{type:'tel',inputmode:'numeric'}});
+    const btn = el('button',{text:'✓ Fertig'});
+    btn.addEventListener('click', () => {
+      const val = parseInt(input.value, 10);
+      const correct = val === item.a;
+      btn.style.background = correct ? '#4caf50' : '#e53935';
+      btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig: ${item.a}`;
+      const result = recordAnswer(currentProfile, statKey, correct);
+      if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
+      if (typeof schedulePush === 'function') schedulePush(currentProfile);
+      setTimeout(() => {
+        if (result.unlocked) { sfxUnlock?.(); showReward(result.unlocked, ()=> renderQuizTask(topKey, sub, pool, statKey)); }
+        else renderQuizTask(topKey, sub, pool, statKey);
+      }, correct ? 800 : 1800);
+    });
+    input.addEventListener('keyup', e => { if (e.key === 'Enter') btn.click(); });
+    inputBox.appendChild(input); inputBox.appendChild(btn);
+    task.appendChild(inputBox);
+    setTimeout(()=>input.focus(), 100);
+  }
+  root.appendChild(task);
+}
+
+function renderPowerupBar() {
+  const p = State.data.profiles[currentProfile];
+  const pwrBar = el('div',{class:'powerups'});
+  POWERUPS.forEach(pu => {
+    const canAfford = p.coins >= pu.price;
+    const isActive = pu.id === 'double' && p.powerup_double;
+    const usedThisTask = pu.id === 'fifty' && currentTask?.fiftyUsed;
+    pwrBar.appendChild(el('button',{
+      class:'pwr ' + (isActive?'active':'') + (!canAfford||usedThisTask?' disabled':''),
+      onclick:()=> {
+        if (!canAfford||usedThisTask) return;
+        if (pu.id==='fifty') applyFifty();
+        else if (pu.id==='skip') applySkip();
+        else if (pu.id==='double') applyDouble();
+      }
+    }, el('span',{class:'em',text:pu.icon}), el('span',{text:pu.price+'🪙'})));
+  });
+  root.appendChild(pwrBar);
 }
 
 // ===== Aufgabe =====
@@ -173,8 +320,14 @@ async function renderTask(subject){
   // LESEN
   else if (subject==='read') {
     if (currentProfile==='liam') {
-      // Story + 4 Optionen
-      task.appendChild(el('div',{class:'task-text story', text: item.text}));
+      // Story + Vorlese-Button + 4 Optionen
+      const story = el('div',{class:'task-text story', text: item.text});
+      task.appendChild(story);
+      task.appendChild(el('button',{
+        text:'🔊 Vorlesen',
+        onclick: ()=> speak(item.text + '. ' + item.q),
+        attrs:{style:'align-self:center;padding:10px 20px;background:#1976d2;color:#fff;border:none;border-radius:12px;font-weight:700;margin-bottom:10px;cursor:pointer'}
+      }));
       task.appendChild(el('div',{class:'task-text', text: item.q, attrs:{style:'min-height:60px;font-size:22px'}}));
       const opts = el('div',{class:'options'});
       item.options.forEach((o,i) => {
@@ -281,7 +434,7 @@ function refreshPowerupBar(){
     oldBar.appendChild(btn);
   });
 }
-function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} }
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
 
 // Auto-Visual für Mathe: erkennt Schlüsselwörter und macht Emoji-Reihen
 function autoVisualForMath(q) {
@@ -333,8 +486,10 @@ function answer(btn, correct, next){
 
 function maybePauseOrContinue(subject, next){
   const p = State.data.profiles[currentProfile];
-  // Raik: Pause nach 5 richtigen Aufgaben
-  if (currentProfile==='raik' && p.sessionCount >= 5) {
+  // Raik: Pause nach 5 richtigen Aufgaben (ADHS-Modus)
+  // Liam: Bewegungs-Pause nach 10 Aufgaben
+  const trigger = currentProfile==='raik' ? 5 : 10;
+  if ((p.sessionCount||0) >= trigger) {
     p.sessionCount = 0;
     State.save();
     showPauseScreen(()=> next ? next() : renderTask(subject));
