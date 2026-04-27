@@ -119,7 +119,7 @@ async function renderTask(subject){
     const picked = pickTask(currentProfile, subject);
     item = picked.item;
   }
-  currentTask = { subject, item };
+  currentTask = { subject, item, fiftyUsed: false };
 
   const titles = {read:'📖 Lesen', math:'➕ Rechnen', sach:'🌍 Sachkunde', musik:'🎵 Musik'};
   const top = el('div',{class:'topbar'},
@@ -128,6 +128,29 @@ async function renderTask(subject){
     el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
   );
   root.appendChild(top);
+
+  // Power-Up-Leiste
+  const pwrBar = el('div',{class:'powerups'});
+  POWERUPS.forEach(pu => {
+    const canAfford = p.coins >= pu.price;
+    const isActive = pu.id === 'double' && p.powerup_double;
+    const usedThisTask = pu.id === 'fifty' && currentTask.fiftyUsed;
+    const btn = el('button',{
+      class:'pwr ' + (isActive ? 'active' : '') + (!canAfford || usedThisTask ? ' disabled' : ''),
+      attrs:{title: pu.desc + ' (Kostet '+pu.price+')'},
+      onclick: ()=> {
+        if (!canAfford || usedThisTask) return;
+        if (pu.id === 'fifty') applyFifty();
+        else if (pu.id === 'skip') applySkip();
+        else if (pu.id === 'double') applyDouble();
+      }
+    },
+      el('span',{class:'em', text: pu.icon}),
+      el('span',{text: pu.price+'🪙'})
+    );
+    pwrBar.appendChild(btn);
+  });
+  root.appendChild(pwrBar);
 
   const task = el('div',{class:'task'});
 
@@ -181,9 +204,10 @@ async function renderTask(subject){
       btn.style.background = correct ? '#4caf50' : '#e53935';
       btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig wäre: ${item.a}`;
       const result = recordAnswer(currentProfile, currentTask.subject, correct);
+      if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
       if (typeof schedulePush === 'function') schedulePush(currentProfile);
       setTimeout(() => {
-        if (result.unlocked) showReward(result.unlocked, ()=>maybePauseOrContinue('math'));
+        if (result.unlocked) { if (typeof sfxUnlock === 'function') sfxUnlock(); showReward(result.unlocked, ()=>maybePauseOrContinue('math')); }
         else maybePauseOrContinue('math');
       }, correct ? 800 : 1800);
     });
@@ -197,6 +221,56 @@ async function renderTask(subject){
   root.appendChild(task);
 }
 
+// Power-Up Aktionen
+function applyFifty(){
+  if (!usePowerup(currentProfile, 'fifty')) return;
+  currentTask.fiftyUsed = true;
+  const item = currentTask.item;
+  const wrongIdx = item.options.map((_,i)=>i).filter(i => i !== item.correct);
+  shuffle(wrongIdx);
+  const toHide = wrongIdx.slice(0, 2);
+  document.querySelectorAll('.opt').forEach((b,i) => {
+    if (toHide.includes(i)) b.classList.add('fifty-out');
+  });
+  // PowerUp-Bar refresh
+  refreshPowerupBar();
+}
+function applySkip(){
+  if (!usePowerup(currentProfile, 'skip')) return;
+  if (typeof schedulePush === 'function') schedulePush(currentProfile);
+  renderTask(currentTask.subject);
+}
+function applyDouble(){
+  if (!usePowerup(currentProfile, 'double')) return;
+  if (typeof schedulePush === 'function') schedulePush(currentProfile);
+  refreshPowerupBar();
+}
+function refreshPowerupBar(){
+  const oldBar = document.querySelector('.powerups');
+  if (!oldBar) return;
+  const p = State.data.profiles[currentProfile];
+  oldBar.innerHTML = '';
+  POWERUPS.forEach(pu => {
+    const canAfford = p.coins >= pu.price;
+    const isActive = pu.id === 'double' && p.powerup_double;
+    const usedThisTask = pu.id === 'fifty' && currentTask.fiftyUsed;
+    const btn = el('button',{
+      class:'pwr ' + (isActive ? 'active' : '') + (!canAfford || usedThisTask ? ' disabled' : ''),
+      onclick: ()=> {
+        if (!canAfford || usedThisTask) return;
+        if (pu.id === 'fifty') applyFifty();
+        else if (pu.id === 'skip') applySkip();
+        else if (pu.id === 'double') applyDouble();
+      }
+    },
+      el('span',{class:'em', text: pu.icon}),
+      el('span',{text: pu.price+'🪙'})
+    );
+    oldBar.appendChild(btn);
+  });
+}
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} }
+
 function answer(btn, correct, next){
   // alle Buttons disabled
   btn.parentElement.querySelectorAll('button').forEach(b => b.disabled = true);
@@ -209,9 +283,10 @@ function answer(btn, correct, next){
     });
   }
   const result = recordAnswer(currentProfile, currentTask.subject, correct);
+  if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
   if (typeof schedulePush === 'function') schedulePush(currentProfile);
   setTimeout(() => {
-    if (result.unlocked) showReward(result.unlocked, ()=>maybePauseOrContinue(currentTask.subject, next));
+    if (result.unlocked) { if (typeof sfxUnlock === 'function') sfxUnlock(); showReward(result.unlocked, ()=>maybePauseOrContinue(currentTask.subject, next)); }
     else maybePauseOrContinue(currentTask.subject, next);
   }, correct ? 900 : 1800);
 }
@@ -254,7 +329,7 @@ function showPauseScreen(then){
   }, 1000);
 }
 
-// ===== Sammlung =====
+// ===== Sammlung (Garage / Charaktere) =====
 function renderCollection(){
   clear();
   const p = State.data.profiles[currentProfile];
@@ -267,16 +342,189 @@ function renderCollection(){
   );
   root.appendChild(top);
   const wrap = el('div',{class:'collection'});
-  wrap.appendChild(el('h2',{text:`${p.unlocked.length} / ${collection.length} freigeschaltet`}));
+  wrap.appendChild(el('h2',{text:`${p.unlocked.length} / ${collection.length} freigeschaltet · Tippe an um anzuschauen`}));
   const grid = el('div',{class:'coll-grid'});
   collection.forEach(item => {
     const unlocked = p.unlocked.includes(item.id);
-    grid.appendChild(el('div',{class:'coll-item ' + (unlocked?'unlocked':'locked')},
+    const cell = el('div',{class:'coll-item ' + (unlocked?'unlocked':'locked'),
+      onclick: unlocked ? ()=> (currentProfile==='liam' ? renderMachineDetail(item.id) : renderCharDetail(item.id)) : null },
       el('div',{class:'icon', text: unlocked ? item.icon : '🔒'}),
       el('div',{text: unlocked ? item.name : `🪙 ${item.price}`})
-    ));
+    );
+    grid.appendChild(cell);
   });
   wrap.appendChild(grid);
+  root.appendChild(wrap);
+}
+
+// ===== Maschinen-Lexikon (Liam) =====
+function renderMachineDetail(machineId){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-liam';
+  const m = MACHINES.find(x => x.id === machineId);
+  if (!m) return renderCollection();
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderCollection}),
+    el('div',{text: '📖 Lexikon'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(top);
+  const wrap = el('div',{class:'detail'});
+  const card = el('div',{class:'detail-card'});
+  card.appendChild(el('div',{class:'detail-icon', text: m.icon}));
+  card.appendChild(el('div',{class:'detail-name', text: m.name}));
+  card.appendChild(el('div',{class:'detail-typ', text: m.typ || ''}));
+
+  const spec = el('div',{class:'detail-spec'});
+  function row(k,v){ if(!v) return; spec.appendChild(el('b',{text:k})); spec.appendChild(el('div',{text:String(v)})); }
+  row('Hersteller', m.hersteller);
+  row('Leistung', m.ps ? m.ps + ' PS' : null);
+  row('Baujahr', m.baujahr);
+  if (spec.children.length) card.appendChild(spec);
+
+  if (m.beschreibung) {
+    const sec = el('div',{class:'detail-section'});
+    sec.appendChild(el('h4',{text:'Was ist das?'}));
+    sec.appendChild(el('p',{text: m.beschreibung}));
+    card.appendChild(sec);
+  }
+  if (m.einsatz) {
+    const sec = el('div',{class:'detail-section'});
+    sec.appendChild(el('h4',{text:'Wofür wird sie eingesetzt?'}));
+    sec.appendChild(el('p',{text: m.einsatz}));
+    card.appendChild(sec);
+  }
+  if (m.funfact) {
+    const fact = el('div',{class:'detail-fact'},
+      el('b',{text:'💡 Wusstest du? '}),
+      document.createTextNode(m.funfact)
+    );
+    card.appendChild(fact);
+  }
+  wrap.appendChild(card);
+  root.appendChild(wrap);
+}
+
+// ===== Charakter-Detail mit Animation, Sound, Shop (Raik) =====
+function renderCharDetail(charId){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-raik';
+  const c = CHARS.find(x => x.id === charId);
+  if (!c) return renderCollection();
+
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderCollection}),
+    el('div',{text: c.name}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(top);
+
+  // Hintergrund je nach gekauftem bg
+  const outfits = (p.char_outfits && p.char_outfits[charId]) || {};
+  const bgClass = outfits.background ? 'char-bg-' + outfits.background.replace('bg_','') : '';
+  const stage = el('div',{class:'char-stage ' + bgClass});
+
+  const charWrap = el('div', {attrs:{style:'position:relative;text-align:center'}});
+  const emoji = el('div',{class:'char-emoji', text:c.icon, attrs:{style:`color:${c.color};text-shadow:0 0 30px ${c.color}88,0 8px 20px rgba(0,0,0,.4)`}});
+  charWrap.appendChild(emoji);
+
+  // Hut/Outfit oben drauf
+  if (outfits.outfit) {
+    const hatItem = SHOP_ITEMS.find(s => s.id === outfits.outfit);
+    if (hatItem) charWrap.appendChild(el('div',{class:'char-hat', text: hatItem.icon}));
+  }
+
+  stage.appendChild(charWrap);
+  stage.appendChild(el('div',{class:'char-name', text: c.name}));
+
+  // Klick auf Charakter → Animation + Spruch + Sound + Effekt
+  emoji.addEventListener('click', () => {
+    emoji.classList.remove('move-' + c.move);
+    void emoji.offsetWidth; // reflow trick
+    emoji.classList.add('move-' + c.move);
+    playSound(c.sound);
+    showSaying(stage, c.sayings[Math.floor(Math.random()*c.sayings.length)]);
+    if (outfits.effect) spawnEffectTrail(stage, outfits.effect);
+  });
+
+  // Action-Buttons: Spielen (Animation), Shop, Stimme
+  const actions = el('div',{class:'char-actions'});
+  actions.appendChild(el('button',{text:'🎬 Move!', onclick: ()=> emoji.click()}));
+  actions.appendChild(el('button',{text:'🛒 Shop', onclick: ()=> renderShop(charId)}));
+  actions.appendChild(el('button',{text:'💬 Sag was', onclick: ()=> showSaying(stage, c.sayings[Math.floor(Math.random()*c.sayings.length)]) }));
+  stage.appendChild(actions);
+  root.appendChild(stage);
+
+  // Auto-Klick beim Öffnen für direkten Wow-Effekt
+  setTimeout(()=> emoji.click(), 400);
+}
+
+function showSaying(stage, text){
+  // Entferne alte Speech-Bubble
+  const old = stage.querySelector('.char-saying');
+  if (old) old.remove();
+  const bubble = el('div',{class:'char-saying', text});
+  stage.appendChild(bubble);
+  setTimeout(()=> bubble.remove(), 2500);
+}
+
+function spawnEffectTrail(stage, effectId){
+  const item = SHOP_ITEMS.find(s => s.id === effectId);
+  if (!item) return;
+  for (let i=0; i<5; i++) {
+    setTimeout(() => {
+      const trail = el('div',{class:'fx-trail', text: item.icon, attrs:{style:`left:${30+Math.random()*40}%;top:${30+Math.random()*30}%`}});
+      stage.appendChild(trail);
+      setTimeout(()=> trail.remove(), 1300);
+    }, i * 80);
+  }
+}
+
+// ===== Shop (Outfits, Backgrounds, Effekte für Charaktere) =====
+function renderShop(charId){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const c = CHARS.find(x => x.id === charId);
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=> renderCharDetail(charId)}),
+    el('div',{text: '🛒 Shop für ' + c.name}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(top);
+
+  const wrap = el('div',{class:'shop'});
+  const outfits = (p.char_outfits && p.char_outfits[charId]) || {};
+  const sections = [
+    {kind:'background', title:'🎨 Hintergrund'},
+    {kind:'outfit', title:'🎩 Outfit'},
+    {kind:'effect', title:'✨ Effekt'}
+  ];
+  for (const sec of sections) {
+    wrap.appendChild(el('div',{class:'shop-section-title', text: sec.title}));
+    const grid = el('div',{class:'shop-grid'});
+    SHOP_ITEMS.filter(s => s.kind === sec.kind).forEach(item => {
+      const owned = (outfits[sec.kind] === item.id);
+      const canBuy = p.coins >= item.price || owned;
+      const cell = el('div',{class:'shop-item ' + (owned?'owned':'') + (!canBuy?' cant':''),
+        onclick: () => {
+          if (owned) return;
+          if (!canBuy) return;
+          if (buyShopItem(currentProfile, charId, item.id)) {
+            if (typeof schedulePush === 'function') schedulePush(currentProfile);
+            renderShop(charId); // Reload
+          }
+        }},
+        el('span',{class:'icon', text:item.icon}),
+        el('div',{class:'name', text:item.name}),
+        el('div',{class:'price', text: owned ? '✓ benutzt' : `🪙 ${item.price}`})
+      );
+      grid.appendChild(cell);
+    });
+    wrap.appendChild(grid);
+  }
   root.appendChild(wrap);
 }
 

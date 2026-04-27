@@ -13,7 +13,10 @@ const DEFAULT_STATE = {
       unlocked: [],
       stats: { read:{tries:0,correct:0,level:0}, math:{tries:0,correct:0,level:0}, sach:{tries:0,correct:0,level:0}, musik:{tries:0,correct:0,level:0} },
       history: [],
-      lastIndex: { read: -1, math: -1, sach: -1, musik: -1 }
+      lastIndex: { read: -1, math: -1, sach: -1, musik: -1 },
+      shop: [],          // gekaufte SHOP_ITEMS
+      char_outfits: {},  // charId -> outfit/bg/effect
+      powerup_double: false  // nächste richtige Antwort: doppelt Coins
     },
     raik: {
       name: 'Raik', age: 7, theme: 'raik', class: 1,
@@ -22,6 +25,9 @@ const DEFAULT_STATE = {
       stats: { read:{tries:0,correct:0,level:0}, math:{tries:0,correct:0,level:0}, sach:{tries:0,correct:0,level:0}, musik:{tries:0,correct:0,level:0} },
       history: [],
       lastIndex: { read: -1, math: -1, sach: -1, musik: -1 },
+      shop: [],
+      char_outfits: {},
+      powerup_double: false,
       sessionCount: 0  // Für Pause-Trigger nach 5 Aufgaben
     }
   }
@@ -67,9 +73,10 @@ function recordAnswer(profileKey, subject, correct) {
   s.tries++;
   if (correct) {
     s.correct++;
-    const reward = profileKey === 'liam'
+    let reward = profileKey === 'liam'
       ? (subject === 'read' ? 3 : subject === 'math' ? 1 : 2)
       : (subject === 'read' ? 2 : 1);
+    if (p.powerup_double) { reward *= 2; p.powerup_double = false; }
     p.coins += reward;
     if (profileKey === 'raik') p.sessionCount = (p.sessionCount||0) + 1;
   }
@@ -90,6 +97,31 @@ function recordAnswer(profileKey, subject, correct) {
   }
   State.save();
   return { unlocked: null, coins: p.coins };
+}
+
+// Power-Up nutzen (Coins abziehen)
+function usePowerup(profileKey, powerupId) {
+  const p = State.data.profiles[profileKey];
+  const pu = POWERUPS.find(x => x.id === powerupId);
+  if (!pu || p.coins < pu.price) return false;
+  p.coins -= pu.price;
+  if (powerupId === 'double') p.powerup_double = true;
+  State.save();
+  return true;
+}
+
+// Shop-Item kaufen für aktiven Charakter
+function buyShopItem(profileKey, charId, itemId) {
+  const p = State.data.profiles[profileKey];
+  const item = SHOP_ITEMS.find(x => x.id === itemId);
+  if (!item || p.coins < item.price) return false;
+  p.coins -= item.price;
+  if (!p.shop.includes(itemId)) p.shop.push(itemId);
+  if (!p.char_outfits) p.char_outfits = {};
+  if (!p.char_outfits[charId]) p.char_outfits[charId] = {};
+  p.char_outfits[charId][item.kind] = itemId;
+  State.save();
+  return true;
 }
 
 function todayStats(profileKey) {

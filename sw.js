@@ -1,6 +1,6 @@
-const CACHE = 'lernapp-v2';
+const CACHE = 'lernapp-v3';
 const ASSETS = [
-  '.', 'index.html', 'style.css', 'data.js', 'engine.js', 'sync.js', 'ui.js', 'manifest.json'
+  '.', 'index.html', 'style.css', 'data.js', 'engine.js', 'sync.js', 'sounds.js', 'ui.js', 'manifest.json'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(()=>self.skipWaiting()));

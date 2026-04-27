@@ -78,7 +78,93 @@ body.theme-raik .topbar{background:rgba(0,0,40,.6)}
 .coll-item.unlocked{background:rgba(255,255,255,.2);color:#fff}
 .coll-item .icon{font-size:36px;margin-bottom:4px}
 
-/* Eltern-Dashboard */
+/* ===== Detail-View Maschinen-Lexikon (Liam) ===== */
+.detail{flex:1;overflow-y:auto;padding:20px}
+.detail-card{background:rgba(255,255,255,.95);color:#1a1a1a;border-radius:24px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.detail-icon{font-size:120px;text-align:center;margin-bottom:8px;line-height:1}
+.detail-name{font-size:30px;font-weight:900;text-align:center;color:#1b5e20;margin-bottom:4px}
+.detail-typ{text-align:center;font-size:14px;color:#666;margin-bottom:18px;font-style:italic}
+.detail-spec{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:15px;margin-bottom:16px;background:#f5f5f5;padding:12px;border-radius:12px}
+.detail-spec b{color:#1b5e20}
+.detail-section{margin-bottom:14px}
+.detail-section h4{font-size:14px;color:#1b5e20;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.detail-section p{font-size:16px;line-height:1.5;color:#333}
+.detail-fact{background:#fff9c4;padding:14px;border-radius:12px;border-left:4px solid #fbc02d;margin-top:14px}
+.detail-fact b{color:#f57f17}
+
+/* ===== Charakter-Detail (Raik) ===== */
+.char-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.char-bg-castle{background:linear-gradient(180deg,#90caf9 0%,#64b5f6 60%,#7e57c2 100%)}
+.char-bg-beach{background:linear-gradient(180deg,#4fc3f7 0%,#fff176 70%,#ffe082 100%)}
+.char-bg-space{background:linear-gradient(180deg,#0d0d2b 0%,#1a237e 70%,#3949ab 100%)}
+.char-emoji{font-size:200px;line-height:1;cursor:pointer;display:inline-block;text-shadow:0 8px 20px rgba(0,0,0,.4);transition:transform .2s}
+.char-emoji:active{transform:scale(.9)}
+.char-name{font-size:40px;font-weight:900;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.4);margin-top:12px}
+.char-saying{margin-top:16px;background:rgba(255,255,255,.95);color:#222;padding:14px 24px;border-radius:24px;font-size:22px;font-weight:700;max-width:80%;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.3);position:relative;animation:bubble .4s ease-out}
+.char-saying::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid rgba(255,255,255,.95)}
+@keyframes bubble{from{transform:scale(0) translateY(-20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.char-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+.char-actions button{padding:14px 22px;font-size:16px;font-weight:800;border:none;border-radius:14px;cursor:pointer;background:#fff;color:#222;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.char-actions button:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.char-hat{position:absolute;font-size:80px;top:-20px;left:50%;transform:translateX(-50%);pointer-events:none;animation:bobble 2s infinite ease-in-out}
+@keyframes bobble{0%,100%{transform:translateX(-50%) rotate(-3deg)}50%{transform:translateX(-50%) rotate(3deg)}}
+
+/* Animationen für Moves */
+@keyframes jump{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
+@keyframes tallJump{0%,100%{transform:translateY(0)}50%{transform:translateY(-130px) scaleY(1.1)}}
+@keyframes dash{0%{transform:translateX(0)}50%{transform:translateX(150px) skewX(-20deg)}100%{transform:translateX(0)}}
+@keyframes fly{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-40px) rotate(-5deg)}75%{transform:translateY(-60px) rotate(5deg)}}
+@keyframes tongue{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.5)}}
+@keyframes punch{0%,100%{transform:translateX(0) rotate(0)}30%{transform:translateX(-30px) rotate(-15deg)}60%{transform:translateX(60px) rotate(20deg) scale(1.2)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px) rotate(10deg)}}
+@keyframes teleport{0%{opacity:1;transform:scale(1)}40%{opacity:0;transform:scale(.5)}60%{opacity:0;transform:scale(.5) translateX(150px)}100%{opacity:1;transform:scale(1) translateX(0)}}
+@keyframes roar{0%,100%{transform:scale(1)}50%{transform:scale(1.3) rotate(-5deg)}}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(720deg)}}
+@keyframes spinStar{0%{transform:rotate(0) scale(1)}50%{transform:rotate(360deg) scale(1.4)}100%{transform:rotate(720deg) scale(1)}}
+@keyframes rainbow{0%{filter:hue-rotate(0deg) drop-shadow(0 0 30px gold)}100%{filter:hue-rotate(360deg) drop-shadow(0 0 60px gold)}}
+.move-jump{animation:jump .8s ease-out}
+.move-tallJump{animation:tallJump 1s ease-out}
+.move-dash{animation:dash 1s ease-in-out}
+.move-fly{animation:fly 1.5s ease-in-out}
+.move-tongue{animation:tongue .6s ease-in-out 3}
+.move-punch{animation:punch .8s ease-in-out 2}
+.move-float{animation:float 1.5s ease-in-out 2}
+.move-teleport{animation:teleport 1s ease-in-out}
+.move-roar{animation:roar .5s ease-in-out 4}
+.move-spin{animation:spin 1.5s ease-in-out}
+.move-spin-star{animation:spinStar 1.5s ease-in-out}
+.move-rainbow{animation:rainbow 2s linear infinite, jump 1s ease-in-out}
+
+/* Spur-Effekte */
+.fx-trail{position:absolute;font-size:60px;pointer-events:none;animation:trailFade 1.2s ease-out forwards}
+@keyframes trailFade{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(2) translateY(-100px)}}
+
+/* ===== Shop ===== */
+.shop{flex:1;overflow-y:auto;padding:20px;background:rgba(0,0,0,.4)}
+.shop h2{color:#fff;text-align:center;margin-bottom:16px}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.shop-item{background:#fff;border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:transform .15s;color:#222}
+.shop-item:active{transform:scale(.95)}
+.shop-item.owned{background:#a5d6a7;color:#1b5e20}
+.shop-item.cant{opacity:.4;cursor:not-allowed}
+.shop-item .icon{font-size:48px;display:block;margin-bottom:6px}
+.shop-item .name{font-weight:800;font-size:14px}
+.shop-item .price{margin-top:6px;font-weight:900;font-size:13px;color:#e65100}
+.shop-item.owned .price{color:#1b5e20}
+.shop-section-title{color:#fff;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin:14px 4px 8px;opacity:.85}
+
+/* ===== Power-Ups in Aufgaben ===== */
+.powerups{display:flex;gap:8px;justify-content:center;padding:10px 0;flex-wrap:wrap}
+.pwr{padding:10px 14px;border:none;border-radius:12px;background:rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.pwr:active{transform:scale(.95)}
+.pwr.disabled{opacity:.35;cursor:not-allowed}
+.pwr .em{font-size:20px}
+.pwr.active{background:#ffcc00;color:#000;animation:pulseActive 1s infinite}
+@keyframes pulseActive{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+.opt.fifty-out{opacity:.15;pointer-events:none}
+
+/* ===== Eltern-Dashboard ===== */
 .dash{flex:1;padding:24px;overflow-y:auto;background:#1a1f4d}
 .dash h2{margin-bottom:16px}
 .dash-row{display:flex;justify-content:space-between;padding:12px;background:rgba(255,255,255,.08);border-radius:12px;margin-bottom:8px}
