@@ -28,6 +28,8 @@ const Sync = {
         unlocked: data.unlocked,
         stats: data.stats,
         history: data.history.slice(-100),
+        shop: data.shop || [],
+        char_outfits: data.char_outfits || {},
         updated_at: new Date().toISOString()
       };
       const r = await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.${profileKey}`, {
@@ -72,6 +74,8 @@ async function hydrateFromRemote(profileKey) {
     p.unlocked = remote.unlocked || [];
     p.stats = { ...p.stats, ...remote.stats };
     p.history = remote.history || [];
+    p.shop = remote.shop || [];
+    p.char_outfits = remote.char_outfits || {};
     p._lastSync = remoteUpdated;
     State.save();
   }
