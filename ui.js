@@ -387,10 +387,18 @@ function renderCollection(){
   collection.forEach(item => {
     const unlocked = p.unlocked.includes(item.id);
     const cell = el('div',{class:'coll-item ' + (unlocked?'unlocked':'locked'),
-      onclick: unlocked ? ()=> (currentProfile==='liam' ? renderMachineDetail(item.id) : renderCharDetail(item.id)) : null },
-      el('div',{class:'icon', text: unlocked ? item.icon : '🔒'}),
-      el('div',{text: unlocked ? item.name : `🪙 ${item.price}`})
-    );
+      onclick: unlocked ? ()=> (currentProfile==='liam' ? renderMachineDetail(item.id) : renderCharDetail(item.id)) : null });
+    if (unlocked && item.img) {
+      const img = document.createElement('img');
+      img.className = 'thumb';
+      img.src = item.img;
+      img.alt = item.name;
+      img.onerror = () => { img.replaceWith(el('div',{class:'icon', text: item.icon})); };
+      cell.appendChild(img);
+    } else {
+      cell.appendChild(el('div',{class:'icon', text: unlocked ? item.icon : '🔒'}));
+    }
+    cell.appendChild(el('div',{text: unlocked ? item.name : `🪙 ${item.price}`}));
     grid.appendChild(cell);
   });
   wrap.appendChild(grid);
@@ -412,7 +420,14 @@ function renderMachineDetail(machineId){
   root.appendChild(top);
   const wrap = el('div',{class:'detail'});
   const card = el('div',{class:'detail-card'});
-  card.appendChild(el('div',{class:'detail-icon', text: m.icon}));
+  if (m.img) {
+    const img = document.createElement('img');
+    img.className = 'detail-img'; img.src = m.img; img.alt = m.name;
+    img.onerror = () => { img.replaceWith(el('div',{class:'detail-icon', text: m.icon})); };
+    card.appendChild(img);
+  } else {
+    card.appendChild(el('div',{class:'detail-icon', text: m.icon}));
+  }
   card.appendChild(el('div',{class:'detail-name', text: m.name}));
   card.appendChild(el('div',{class:'detail-typ', text: m.typ || ''}));
 
@@ -467,7 +482,17 @@ function renderCharDetail(charId){
   const stage = el('div',{class:'char-stage ' + bgClass});
 
   const charWrap = el('div', {attrs:{style:'position:relative;text-align:center'}});
-  const emoji = el('div',{class:'char-emoji', text:c.icon, attrs:{style:`color:${c.color};text-shadow:0 0 30px ${c.color}88,0 8px 20px rgba(0,0,0,.4)`}});
+  let emoji;
+  if (c.img) {
+    emoji = document.createElement('img');
+    emoji.className = 'char-img'; emoji.src = c.img; emoji.alt = c.name;
+    emoji.onerror = () => {
+      const fallback = el('div',{class:'char-emoji', text:c.icon, attrs:{style:`color:${c.color};text-shadow:0 0 30px ${c.color}88,0 8px 20px rgba(0,0,0,.4)`}});
+      emoji.replaceWith(fallback); emoji = fallback;
+    };
+  } else {
+    emoji = el('div',{class:'char-emoji', text:c.icon, attrs:{style:`color:${c.color};text-shadow:0 0 30px ${c.color}88,0 8px 20px rgba(0,0,0,.4)`}});
+  }
   charWrap.appendChild(emoji);
 
   // Hut/Outfit oben drauf
