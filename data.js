@@ -818,11 +818,11 @@ const RAIK_MATH = [
   {q:"13 - 8 = ?",a:5},
   {q:"16 - 7 = ?",a:9},
   {q:"20 - 10 = ?",a:10},
-  // Verdoppeln
-  {q:"5 + 5 = ?",a:10},
+  // Verdoppeln (5+5 + 4+4 oben schon)
   {q:"3 + 3 = ?",a:6},
-  {q:"4 + 4 = ?",a:8},
-  {q:"6 + 6 = ?",a:12}
+  {q:"6 + 6 = ?",a:12},
+  {q:"9 + 9 = ?",a:18},
+  {q:"2 + 2 = ?",a:4}
 ];
 
 // ===== LIAM SACHKUNDE (Klasse 3, Hof- & Naturwelt) =====

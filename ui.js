@@ -228,12 +228,23 @@ function startSub(topKey, sub) {
   renderHome();
 }
 
-// Generische Quiz-Render für kuratierte Pools (mit options/correct ODER q/a)
+// Generische Quiz-Render für kuratierte Pools (mit options/correct ODER q/a) + Anti-Wiederhol
+const _quizRecent = {}; // poolKey -> [indices]
 function renderQuizTask(topKey, sub, pool, statKey) {
   clear();
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
-  const item = pool[Math.floor(Math.random() * pool.length)];
+  // Anti-Wiederhol pro (currentProfile + topKey + sub)
+  const key = currentProfile + ':' + topKey + ':' + sub.id;
+  if (!_quizRecent[key]) _quizRecent[key] = [];
+  const recent = _quizRecent[key];
+  let avail = pool.map((_,i) => i).filter(i => !recent.includes(i));
+  if (avail.length === 0) avail = pool.map((_,i) => i);
+  const idx = avail[Math.floor(Math.random() * avail.length)];
+  recent.push(idx);
+  const maxRecent = Math.min(8, Math.floor(pool.length * 0.7));
+  while (recent.length > maxRecent) recent.shift();
+  const item = pool[idx];
   currentTask = { subject: statKey, item, fiftyUsed: false };
 
   const tb = el('div',{class:'topbar'},

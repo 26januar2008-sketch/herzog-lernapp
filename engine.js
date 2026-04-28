@@ -51,7 +51,7 @@ const State = {
   reset(){ localStorage.removeItem(STORAGE_KEY); this.load(); }
 };
 
-// Aufgabe-Auswahl: Adaptive Schwierigkeit + sanfter Einstieg
+// Aufgabe-Auswahl: Adaptive Schwierigkeit + sanfter Einstieg + Anti-Wiederhol-Liste
 function pickTask(profileKey, subject) {
   const p = State.data.profiles[profileKey];
   let pool;
@@ -60,22 +60,32 @@ function pickTask(profileKey, subject) {
   } else {
     pool = { read:RAIK_READING, math:RAIK_MATH, sach:RAIK_SACH, musik:RAIK_MUSIK }[subject];
   }
-  // Sanfter Einstieg: NUR für Liam, erste N Versuche pro Fach aus den ersten 1/3 des Pools (leichter sortiert)
+  // Sanfter Einstieg nur Liam
   let candidates = pool;
   const tries = p.stats[subject]?.tries || 0;
   if (profileKey === 'liam' && typeof Settings !== 'undefined' && Settings.isEnabled('gentle_start')) {
     if (tries < 5) candidates = pool.slice(0, Math.max(3, Math.floor(pool.length / 3)));
     else if (tries < 15) candidates = pool.slice(0, Math.max(5, Math.floor(pool.length * 2 / 3)));
-    // ab 15 Versuchen: voller Pool
   }
-  let idx;
-  let realIdx;
-  do {
-    idx = Math.floor(Math.random() * candidates.length);
-    realIdx = pool.indexOf(candidates[idx]);
-  } while (realIdx === p.lastIndex[subject] && candidates.length > 1);
+  // Anti-Wiederhol: tracke letzte 8 Indizes pro Fach
+  if (!p.recentIdx) p.recentIdx = {};
+  if (!p.recentIdx[subject]) p.recentIdx[subject] = [];
+  const recent = p.recentIdx[subject];
+
+  // Erstelle Liste aller Indizes aus candidates (im Original-Pool)
+  const candIndices = candidates.map(c => pool.indexOf(c));
+  // Filtere die zuletzt benutzten raus
+  let available = candIndices.filter(i => !recent.includes(i));
+  // Wenn nichts übrig: alle erlaubt (Pool zu klein)
+  if (available.length === 0) available = candIndices;
+
+  const realIdx = available[Math.floor(Math.random() * available.length)];
+  // Update recent: max 8 letzte (oder pool.length-1)
+  recent.push(realIdx);
+  const maxRecent = Math.min(8, Math.floor(candidates.length * 0.7));
+  while (recent.length > maxRecent) recent.shift();
   p.lastIndex[subject] = realIdx;
-  return { item: candidates[idx], idx: realIdx };
+  return { item: pool[realIdx], idx: realIdx };
 }
 
 function recordAnswer(profileKey, subject, correct) {
