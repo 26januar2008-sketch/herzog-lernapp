@@ -639,23 +639,80 @@ function renderCollection(){
   const grid = el('div',{class:'coll-grid'});
   collection.forEach(item => {
     const unlocked = p.unlocked.includes(item.id);
+    const canAfford = !unlocked && p.coins >= item.price;
     const cell = el('div',{class:'coll-item ' + (unlocked?'unlocked':'locked'),
-      onclick: unlocked ? ()=> (currentProfile==='liam' ? renderMachineDetail(item.id) : renderCharDetail(item.id)) : null });
-    if (unlocked && item.img) {
+      attrs: !unlocked && canAfford ? {style:'cursor:pointer;border:2px solid #ffc107;background:rgba(255,193,7,.15)'} : null,
+      onclick: unlocked
+        ? ()=> (currentProfile==='liam' ? renderMachineDetail(item.id) : renderCharDetail(item.id))
+        : (canAfford ? ()=> tryBuyItem(item.id) : null)
+    });
+    if (item.img) {
       const img = document.createElement('img');
       img.className = 'thumb';
       img.src = item.img;
       img.alt = item.name;
-      img.onerror = () => { img.replaceWith(el('div',{class:'icon', text: item.icon})); };
+      // Wenn nicht freigeschaltet: graustufig + dunkel
+      if (!unlocked) img.style.cssText += 'filter:grayscale(1) brightness(.4) contrast(.9);opacity:.6';
+      img.onerror = () => { img.replaceWith(el('div',{class:'icon', text: unlocked ? item.icon : '🔒'})); };
       cell.appendChild(img);
     } else {
       cell.appendChild(el('div',{class:'icon', text: unlocked ? item.icon : '🔒'}));
     }
-    cell.appendChild(el('div',{text: unlocked ? item.name : `🪙 ${item.price}`}));
+    if (unlocked) {
+      cell.appendChild(el('div',{text: item.name}));
+    } else {
+      cell.appendChild(el('div',{text: item.name, attrs:{style:'opacity:.6;font-size:11px'}}));
+      cell.appendChild(el('div',{text: canAfford ? `💰 KAUFEN: ${item.price}🪙` : `🔒 ${item.price}🪙`,
+        attrs:{style:`margin-top:4px;font-size:11px;font-weight:900;color:${canAfford?'#ffc107':'#888'}`}}));
+    }
     grid.appendChild(cell);
   });
   wrap.appendChild(grid);
   root.appendChild(wrap);
+}
+
+// ===== Item kaufen mit Bestätigungs-Dialog =====
+function tryBuyItem(itemId) {
+  const collection = currentProfile==='liam' ? MACHINES : CHARS;
+  const item = collection.find(x => x.id === itemId);
+  if (!item) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'reward';
+  overlay.style.background = 'rgba(0,0,0,.85)';
+  const card = document.createElement('div');
+  card.style.cssText = 'background:#fff;color:#222;padding:24px;border-radius:20px;text-align:center;max-width:340px;box-shadow:0 12px 40px rgba(0,0,0,.6)';
+  if (item.img) {
+    const img = document.createElement('img');
+    img.src = item.img;
+    img.style.cssText = 'width:160px;height:160px;object-fit:contain;margin-bottom:10px;filter:grayscale(1) brightness(.5);transition:filter .8s';
+    card.appendChild(img);
+    setTimeout(()=> img.style.filter = 'none', 100);
+  }
+  card.appendChild(el('div',{text:`Möchtest du ${item.name} kaufen?`, attrs:{style:'font-size:20px;font-weight:900;margin-bottom:8px'}}));
+  card.appendChild(el('div',{text:`Kosten: ${item.price} 🪙`, attrs:{style:'font-size:18px;color:#e65100;font-weight:700;margin-bottom:18px'}}));
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:10px;justify-content:center';
+  const buyBtn = el('button',{text:`✓ JA, kaufen!`,
+    attrs:{style:'padding:14px 24px;background:#4caf50;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:16px;cursor:pointer'},
+    onclick:()=>{
+      const r = buyItem(currentProfile, itemId);
+      if (r.ok) {
+        sfxUnlock?.();
+        schedulePush?.(currentProfile);
+        overlay.remove();
+        showReward(item, ()=> renderCollection());
+      } else { alert(r.reason); }
+    }
+  });
+  const cancelBtn = el('button',{text:'Nein',
+    attrs:{style:'padding:14px 24px;background:#bdbdbd;color:#222;border:none;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer'},
+    onclick:()=> overlay.remove()
+  });
+  btnRow.appendChild(cancelBtn);
+  btnRow.appendChild(buyBtn);
+  card.appendChild(btnRow);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
 }
 
 // ===== Maschinen-Lexikon (Liam) =====

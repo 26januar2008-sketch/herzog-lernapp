@@ -97,18 +97,24 @@ function recordAnswer(profileKey, subject, correct) {
   if (ratio < 0.4 && s.tries >= 5) s.level = Math.max(0, s.level-1);
   p.history.push({ ts: Date.now(), subject, correct });
   if (p.history.length > 200) p.history = p.history.slice(-200);
-  // Belohnung freischalten
-  const collection = profileKey === 'liam' ? MACHINES : CHARS;
-  for (const item of collection) {
-    if (!p.unlocked.includes(item.id) && p.coins >= item.price) {
-      p.unlocked.push(item.id);
-      grantStandardCard(profileKey, item.id);
-      State.save();
-      return { unlocked: item, coins: p.coins };
-    }
-  }
+  // KEIN Auto-Unlock mehr - Items müssen aktiv mit Münzen gekauft werden
   State.save();
   return { unlocked: null, coins: p.coins };
+}
+
+// Aktiver Kauf eines Items (Maschine oder Charakter)
+function buyItem(profileKey, itemId) {
+  const p = State.data.profiles[profileKey];
+  const collection = profileKey === 'liam' ? MACHINES : CHARS;
+  const item = collection.find(x => x.id === itemId);
+  if (!item) return { ok:false, reason:'nicht gefunden' };
+  if (p.unlocked.includes(itemId)) return { ok:false, reason:'schon gekauft' };
+  if (p.coins < item.price) return { ok:false, reason:'zu wenig Münzen' };
+  p.coins -= item.price;
+  p.unlocked.push(itemId);
+  grantStandardCard(profileKey, itemId);
+  State.save();
+  return { ok:true, item };
 }
 
 // ===== Sammelkarten =====
