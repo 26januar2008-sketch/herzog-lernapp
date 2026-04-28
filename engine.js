@@ -60,10 +60,10 @@ function pickTask(profileKey, subject) {
   } else {
     pool = { read:RAIK_READING, math:RAIK_MATH, sach:RAIK_SACH, musik:RAIK_MUSIK }[subject];
   }
-  // Sanfter Einstieg: erste N Versuche pro Fach nur aus den ersten 1/3 des Pools (leichter sortiert)
+  // Sanfter Einstieg: NUR für Liam, erste N Versuche pro Fach aus den ersten 1/3 des Pools (leichter sortiert)
   let candidates = pool;
   const tries = p.stats[subject]?.tries || 0;
-  if (typeof Settings !== 'undefined' && Settings.isEnabled('gentle_start')) {
+  if (profileKey === 'liam' && typeof Settings !== 'undefined' && Settings.isEnabled('gentle_start')) {
     if (tries < 5) candidates = pool.slice(0, Math.max(3, Math.floor(pool.length / 3)));
     else if (tries < 15) candidates = pool.slice(0, Math.max(5, Math.floor(pool.length * 2 / 3)));
     // ab 15 Versuchen: voller Pool

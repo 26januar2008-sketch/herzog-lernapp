@@ -12,7 +12,7 @@ const DEFAULT_SETTINGS = {
   tts: {enabled:true, label:'🔊 Vorlesen-Funktion'},
   powerups: {enabled:true, label:'⚡ Power-Ups (50/50, Skip, Doppel-Münzen)'},
   visuals: {enabled:true, label:'🪙 Auto-Visualisierung bei Mathe (Münzen-Reihen)'},
-  gentle_start: {enabled:true, label:'🌱 Sanfter Einstieg (leichte Aufgaben am Anfang, langsam schwerer)'},
+  gentle_start: {enabled:true, label:'🌱 Sanfter Einstieg für Liam (erst leicht, dann schwerer)'},
 
   // ===== Belohnungen =====
   collection_cards: {enabled:true, label:'🎴 Sammelkarten (5 Varianten pro Char)'},
