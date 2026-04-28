@@ -387,16 +387,48 @@ function finishFocus(score, misses) {
 }
 
 // ============================================================
-// TTS – Text vorlesen (Web Speech API)
+// TTS – Text vorlesen (Web Speech API) – robust mit Voice-Auswahl
 // ============================================================
+let _ttsVoices = null;
+function loadVoices() {
+  if (!('speechSynthesis' in window)) return [];
+  _ttsVoices = speechSynthesis.getVoices();
+  return _ttsVoices;
+}
 function speak(text) {
-  if (!('speechSynthesis' in window)) return;
+  if (!('speechSynthesis' in window)) {
+    alert('Vorlesen funktioniert in diesem Browser nicht.');
+    return;
+  }
   try {
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'de-DE'; u.rate = 0.9; u.pitch = 1.05;
-    speechSynthesis.speak(u);
-  } catch (e) {}
+    let voices = _ttsVoices || speechSynthesis.getVoices();
+    if (!voices.length) {
+      // Voices noch nicht geladen → warten
+      speechSynthesis.onvoiceschanged = () => { _ttsVoices = speechSynthesis.getVoices(); doSpeak(text); };
+      // Trotzdem versuchen (Chrome lädt voices manchmal lazy nach erstem Speak)
+      doSpeak(text);
+      return;
+    }
+    doSpeak(text);
+  } catch (e) { console.error('TTS error:', e); }
+}
+function doSpeak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  const voices = speechSynthesis.getVoices();
+  // Bevorzuge: deutsche Stimme, sonst irgendeine de-, sonst Default
+  const deVoice = voices.find(v => v.lang === 'de-DE') || voices.find(v => v.lang.startsWith('de'));
+  if (deVoice) { u.voice = deVoice; u.lang = deVoice.lang; }
+  else { u.lang = 'de-DE'; }
+  u.rate = 0.9;
+  u.pitch = 1.05;
+  u.volume = 1.0;
+  speechSynthesis.speak(u);
+}
+// Voices beim Laden initialisieren (Chrome braucht das)
+if (typeof speechSynthesis !== 'undefined') {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
 }
 
 // ============================================================

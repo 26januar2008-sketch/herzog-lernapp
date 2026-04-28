@@ -90,6 +90,9 @@ function pickTask(profileKey, subject) {
 
 function recordAnswer(profileKey, subject, correct) {
   const p = State.data.profiles[profileKey];
+  // Auto-init unbekannte Subjects (z.B. 'extra' für Knobeln)
+  if (!p.stats[subject]) p.stats[subject] = {tries:0, correct:0, level:0};
+  if (!p.lastIndex[subject]) p.lastIndex[subject] = -1;
   const s = p.stats[subject];
   s.tries++;
   if (correct) {
