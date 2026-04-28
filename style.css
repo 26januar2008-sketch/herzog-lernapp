@@ -104,13 +104,14 @@ body.night-mode .topbar{background:rgba(0,0,0,.6)}
 .detail-fact b{color:#f57f17}
 
 /* ===== Charakter-Detail (Raik) ===== */
-.char-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+.char-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px;position:relative;overflow-y:auto;overflow-x:hidden}
 .char-bg-castle{background:linear-gradient(180deg,#90caf9 0%,#64b5f6 60%,#7e57c2 100%)}
 .char-bg-beach{background:linear-gradient(180deg,#4fc3f7 0%,#fff176 70%,#ffe082 100%)}
 .char-bg-space{background:linear-gradient(180deg,#0d0d2b 0%,#1a237e 70%,#3949ab 100%)}
-.char-emoji{font-size:200px;line-height:1;cursor:pointer;display:inline-block;text-shadow:0 8px 20px rgba(0,0,0,.4);transition:transform .2s}
-.char-img{width:280px;max-width:60vw;max-height:55vh;cursor:pointer;display:block;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5));transition:transform .2s;object-fit:contain}
+.char-emoji{font-size:160px;line-height:1;cursor:pointer;display:inline-block;text-shadow:0 8px 20px rgba(0,0,0,.4);transition:transform .2s}
+.char-img{width:auto;max-width:80vw;max-height:35vh;height:auto;cursor:pointer;display:block;margin:0 auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5));transition:transform .2s;object-fit:contain}
 .char-img:active{transform:scale(.92)}
+.char-stage{padding:14px}
 .char-emoji:active{transform:scale(.9)}
 .char-name{font-size:40px;font-weight:900;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.4);margin-top:12px}
 .char-saying{margin-top:16px;background:rgba(255,255,255,.95);color:#222;padding:14px 24px;border-radius:24px;font-size:22px;font-weight:700;max-width:80%;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.3);position:relative;animation:bubble .4s ease-out}

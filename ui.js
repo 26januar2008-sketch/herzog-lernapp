@@ -847,12 +847,28 @@ function renderCharDetail(charId){
     if (outfits.effect) spawnEffectTrail(stage, outfits.effect);
   });
 
-  // Action-Buttons: Spielen (Animation), Shop, Stimme, Info
+  // Info-Karte direkt unter Bild + Name
+  if (c.desc || c.welt || c.type || c.pokedexNo) {
+    const info = el('div',{attrs:{style:'background:rgba(255,255,255,.95);color:#222;padding:14px 18px;border-radius:16px;margin:14px 16px 8px;box-shadow:0 6px 18px rgba(0,0,0,.4);max-width:600px;width:calc(100% - 32px);align-self:center;box-sizing:border-box'}});
+    if (c.welt) info.appendChild(el('div',{text:'🌍 Welt: ' + c.welt, attrs:{style:'font-size:13px;color:#1976d2;font-weight:700;margin-bottom:4px'}}));
+    if (c.type) info.appendChild(el('div',{text: c.type, attrs:{style:'font-size:14px;font-style:italic;color:#666;margin-bottom:8px'}}));
+    if (c.pokedexNo) info.appendChild(el('div',{text:'#' + c.pokedexNo + ' Pokédex', attrs:{style:'font-size:12px;color:#888;font-weight:700;margin-bottom:6px'}}));
+    if (c.desc) info.appendChild(el('div',{text: c.desc, attrs:{style:'font-size:15px;line-height:1.5'}}));
+    if (Settings.isEnabled('tts') && c.desc) {
+      info.appendChild(el('button',{
+        text:'🔊 Vorlesen',
+        onclick: ()=> speak(c.name + '. ' + (c.type||'') + '. ' + c.desc),
+        attrs:{style:'margin-top:10px;padding:8px 16px;background:#1976d2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px'}
+      }));
+    }
+    stage.appendChild(info);
+  }
+
+  // Action-Buttons: Spielen (Animation), Shop, Stimme
   const actions = el('div',{class:'char-actions'});
   actions.appendChild(el('button',{text:'🎬 Move!', onclick: ()=> emoji.click()}));
   actions.appendChild(el('button',{text:'🛒 Shop', onclick: ()=> renderShop(charId)}));
   actions.appendChild(el('button',{text:'💬 Sag was', onclick: ()=> showSaying(stage, c.sayings[Math.floor(Math.random()*c.sayings.length)]) }));
-  if (c.desc) actions.appendChild(el('button',{text:'ℹ️ Info', onclick: ()=> renderCharLexikon(charId)}));
   stage.appendChild(actions);
   root.appendChild(stage);
 
