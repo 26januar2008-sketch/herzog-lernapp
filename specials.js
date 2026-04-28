@@ -39,7 +39,7 @@ function renderMemoryGame() {
   memoryState = { cards, flipped:[], moves:0, matches:0, pairs, startTime:Date.now() };
 
   const tb = el('div',{class:'topbar'},
-    el('button',{class:'back', text:'⬅️', onclick: renderHome}),
+    el('button',{class:'back', text:'⬅️', onclick: ()=>{ if(memoryState) memoryState.aborted=true; renderHome(); }}),
     el('div',{text:'🃏 Memory'}),
     el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
   );
@@ -66,7 +66,7 @@ function renderMemoryGame() {
 }
 
 function flipMemoryCard(id) {
-  const ms = memoryState; if (!ms) return;
+  const ms = memoryState; if (!ms || ms.aborted) return;
   const c = ms.cards[id];
   if (c.matched || c.flipped) return;
   if (ms.flipped.length >= 2) return;
@@ -108,6 +108,7 @@ function flipMemoryCard(id) {
     } else {
       sfxWrong?.();
       setTimeout(() => {
+        if (ms.aborted) return;
         [a,b].forEach(x => {
           x.flipped = false;
           const d = document.querySelector(`[data-card-id="${x.id}"]`);

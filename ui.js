@@ -18,7 +18,17 @@ function el(tag, opts={}, ...children){
   return e;
 }
 
-function clear(){ root.innerHTML=''; document.body.className=''; }
+function clear(){
+  // Stop all interval-based games
+  if (typeof memoryState !== 'undefined' && memoryState) memoryState.aborted = true;
+  if (typeof focusState !== 'undefined' && focusState) focusState.alive = false;
+  if (typeof runnerState !== 'undefined' && runnerState) runnerState.alive = false;
+  if (typeof farmState !== 'undefined' && farmState && farmState._timer) {
+    clearInterval(farmState._timer); farmState._timer = null;
+  }
+  root.innerHTML='';
+  document.body.className='';
+}
 
 // ===== Profil-Auswahl =====
 function renderPicker(){
@@ -670,11 +680,13 @@ function renderCollection(){
       cell.appendChild(el('div',{class:'icon', text: unlocked ? item.icon : '🔒'}));
     }
     if (unlocked) {
-      cell.appendChild(el('div',{text: item.name}));
+      cell.appendChild(el('div',{text: item.name, attrs:{style:'font-weight:700'}}));
     } else {
-      cell.appendChild(el('div',{text: item.name, attrs:{style:'opacity:.6;font-size:11px'}}));
-      cell.appendChild(el('div',{text: canAfford ? `💰 KAUFEN: ${item.price}🪙` : `🔒 ${item.price}🪙`,
-        attrs:{style:`margin-top:4px;font-size:11px;font-weight:900;color:${canAfford?'#ffc107':'#888'}`}}));
+      cell.appendChild(el('div',{text: item.name, attrs:{style:'opacity:.7;font-size:12px;margin-top:4px'}}));
+      cell.appendChild(el('div',{text: canAfford ? `KAUFEN` : `🔒`,
+        attrs:{style:`margin-top:6px;font-size:13px;font-weight:900;color:${canAfford?'#ff6f00':'#888'}`}}));
+      cell.appendChild(el('div',{text: `${item.price} 🪙`,
+        attrs:{style:`margin-top:4px;font-size:22px;font-weight:900;color:${canAfford?'#ff6f00':'#fbc02d'};text-shadow:0 1px 0 rgba(0,0,0,.3)`}}));
     }
     grid.appendChild(cell);
   });
