@@ -750,11 +750,12 @@ function renderCharDetail(charId){
     if (outfits.effect) spawnEffectTrail(stage, outfits.effect);
   });
 
-  // Action-Buttons: Spielen (Animation), Shop, Stimme
+  // Action-Buttons: Spielen (Animation), Shop, Stimme, Info
   const actions = el('div',{class:'char-actions'});
   actions.appendChild(el('button',{text:'🎬 Move!', onclick: ()=> emoji.click()}));
   actions.appendChild(el('button',{text:'🛒 Shop', onclick: ()=> renderShop(charId)}));
   actions.appendChild(el('button',{text:'💬 Sag was', onclick: ()=> showSaying(stage, c.sayings[Math.floor(Math.random()*c.sayings.length)]) }));
+  if (c.desc) actions.appendChild(el('button',{text:'ℹ️ Info', onclick: ()=> renderCharLexikon(charId)}));
   stage.appendChild(actions);
   root.appendChild(stage);
 
@@ -886,6 +887,56 @@ function renderDashboard(){
 
 function rowDash(label, val){
   return el('div',{class:'dash-row'}, el('div',{text:label}), el('div',{text:val,attrs:{style:'font-weight:700'}}));
+}
+
+// ===== Charakter-Lexikon (Pokemon-Steckbriefe etc.) =====
+function renderCharLexikon(charId){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const c = CHARS.find(x => x.id === charId);
+  if (!c) return renderCollection();
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=> renderCharDetail(charId)}),
+    el('div',{text: '📖 Lexikon'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+  const wrap = el('div',{class:'detail'});
+  const card = el('div',{class:'detail-card'});
+  if (c.img) {
+    const img = document.createElement('img');
+    img.className = 'detail-img'; img.src = c.img; img.alt = c.name;
+    img.onerror = () => { img.replaceWith(el('div',{class:'detail-icon', text: c.icon})); };
+    card.appendChild(img);
+  } else {
+    card.appendChild(el('div',{class:'detail-icon', text: c.icon}));
+  }
+  card.appendChild(el('div',{class:'detail-name', text: c.name}));
+  if (c.pokedexNo) card.appendChild(el('div',{class:'detail-typ', text: '#' + c.pokedexNo + ' Pokédex'}));
+  else card.appendChild(el('div',{class:'detail-typ', text: c.type || ''}));
+
+  const spec = el('div',{class:'detail-spec'});
+  function row(k, v){ if(!v) return; spec.appendChild(el('b',{text:k})); spec.appendChild(el('div',{text:String(v)})); }
+  if (c.type) row('Typ', c.type);
+  row('Preis', c.price + ' Münzen');
+  if (c.pokedexNo) row('Welt', 'Pokemon');
+  else if (['mario','luigi','yoshi','peach','bowser','rosalina','superstar'].includes(c.id)) row('Welt', 'Mario');
+  else if (['sonic','tails','knuckles','shadow','eggman'].includes(c.id)) row('Welt', 'Sonic');
+  else if (['kai','jay','cole','zane','lloyd','nya','wu'].includes(c.id)) row('Welt', 'Lego Ninjago');
+  card.appendChild(spec);
+  if (c.desc) {
+    const sec = el('div',{class:'detail-section'});
+    sec.appendChild(el('h4',{text:'Was ist das?'}));
+    sec.appendChild(el('p',{text: c.desc}));
+    card.appendChild(sec);
+  }
+  if (Settings.isEnabled('tts')) {
+    card.appendChild(el('button',{text:'🔊 Vorlesen', onclick: ()=> speak(c.name + '. ' + (c.desc || '')),
+      attrs:{style:'margin-top:14px;padding:12px 24px;background:#1976d2;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;display:block;margin-left:auto;margin-right:auto'}}));
+  }
+  wrap.appendChild(card);
+  root.appendChild(wrap);
 }
 
 // ===== Profilbild-Picker (Eltern) =====

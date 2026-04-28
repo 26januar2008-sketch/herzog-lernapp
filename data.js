@@ -104,8 +104,109 @@ const CHARS = [
   {id:'nya',name:'Nya (Wasser)',icon:'🌊',img:'img/chars/ninja_group.jpg',color:'#0277bd',price:110,move:'float',sound:'water-splash',
    sayings:['Wasser marsch!','Nya weiss wie es geht!','Spritzer!','Komm rein, das Wasser ist fein!']},
   {id:'wu',name:'Master Wu',icon:'🍵',color:'#fff9c4',price:180,move:'spin',sound:'gong',
-   sayings:['Geduld, junger Schueler.','Der Tee ist heiss.','Niinja!','Weisheit ist Macht.']}
+   sayings:['Geduld, junger Schueler.','Der Tee ist heiss.','Niinja!','Weisheit ist Macht.'],desc:'Sensei der Ninja. Trinkt grünen Tee, kennt alle Geheimnisse von Spinjitzu.',type:'Lehrer'},
+  // ===== POKEMON 1-251 werden in pokedex.js dynamisch hinzugefügt =====
+  // Removed hardcoded Pokemon - now generated from POKEDEX
+  ...[].concat([
+  {id:'_dummy_',name:'Pikachu',icon:'⚡',img:'img/chars/pikachu.png',color:'#fbc02d',price:25,move:'spin',sound:'thunder',
+   sayings:['Pika Pika!','Pikachuuuu!','Pi-ka-chu!']},
+  {id:'glumanda',name:'Glumanda',icon:'🔥',img:'img/chars/glumanda.png',color:'#ff7043',price:35,move:'roar',sound:'fire-whoosh',
+   sayings:['Gluuu!','Glumanda!','Schwanzflamme an!']},
+  {id:'schiggy',name:'Schiggy',icon:'💧',img:'img/chars/schiggy.png',color:'#4fc3f7',price:35,move:'spin',sound:'water-splash',
+   sayings:['Schiggy!','Wasserpistole!','Bubbles!']},
+  {id:'bisasam',name:'Bisasam',icon:'🌱',img:'img/chars/bisasam.png',color:'#7cb342',price:35,move:'tongue',sound:'spin',
+   sayings:['Bisa!','Rankenhieb!','Bisasaaam!']},
+  {id:'pummeluff',name:'Pummeluff',icon:'🎀',img:'img/chars/pummeluff.png',color:'#f8bbd0',price:45,move:'float',sound:'shiny',
+   sayings:['Puuuummel!','Pummeluff!','Schlaflied!']},
+  {id:'mauzi',name:'Mauzi',icon:'😼',img:'img/chars/mauzi.png',color:'#ffeb3b',price:45,move:'punch',sound:'pow',
+   sayings:['Mauzi!','Krratzfuss!','Mauzi-Mauzi!']},
+  {id:'evoli',name:'Evoli',icon:'🦊',img:'img/chars/evoli.png',color:'#a1887f',price:50,move:'jump',sound:'yoshi',
+   sayings:['Evoliii!','Voli!','Bin so vielseitig!']},
+  {id:'pichu',name:'Pichu',icon:'⚡',img:'img/chars/pichu.png',color:'#fff59d',price:50,move:'jump',sound:'zap',
+   sayings:['Pi-Pi!','Pichu!','Knister!']},
+  {id:'togepi',name:'Togepi',icon:'🥚',img:'img/chars/togepi.png',color:'#fff9c4',price:55,move:'float',sound:'sparkle',
+   sayings:['Togepi!','Toge-toge!','Schalalaaa!']},
+  {id:'karpador',name:'Karpador',icon:'🐟',img:'img/chars/karpador.png',color:'#ff7043',price:55,move:'tongue',sound:'water-splash',
+   sayings:['Karp.','Karpadooor!','Platsch!']},
+  {id:'onix',name:'Onix',icon:'🪨',img:'img/chars/onix.png',color:'#9e9e9e',price:65,move:'roar',sound:'earth-stomp',
+   sayings:['ROOOOAAR!','Felsen-Hieb!','Onix!']},
+  {id:'lapras',name:'Lapras',icon:'🌊',img:'img/chars/lapras.png',color:'#4fc3f7',price:75,move:'float',sound:'water-splash',
+   sayings:['Lapraaas!','Komm reit!','Eis-Strahl!']},
+  {id:'aquana',name:'Aquana',icon:'💦',img:'img/chars/aquana.png',color:'#0288d1',price:80,move:'fly',sound:'water-splash',
+   sayings:['Aquaaa!','Hydro-Pumpe!']},
+  {id:'flamara',name:'Flamara',icon:'🔥',img:'img/chars/flamara.png',color:'#e53935',price:80,move:'roar',sound:'fire-whoosh',
+   sayings:['Flamaraaa!','Feuer-Sturm!']},
+  {id:'blitza',name:'Blitza',icon:'⚡',img:'img/chars/blitza.png',color:'#ffeb3b',price:80,move:'teleport',sound:'thunder',
+   sayings:['Blitzaa!','Donner!']},
+  {id:'psiana',name:'Psiana',icon:'🔮',img:'img/chars/psiana.png',color:'#ce93d8',price:90,move:'spin-star',sound:'sparkle',
+   sayings:['Psiaa!','Psycho-Power!']},
+  {id:'nachtara',name:'Nachtara',icon:'🌙',img:'img/chars/nachtara.png',color:'#212121',price:90,move:'teleport',sound:'evil-laugh',
+   sayings:['Nachtaaa!','Im Schatten!']},
+  {id:'gengar',name:'Gengar',icon:'👻',img:'img/chars/gengar.png',color:'#7b1fa2',price:100,move:'teleport',sound:'evil-laugh',
+   sayings:['Gengaaar!','Hihihi!','Schattenball!']},
+  {id:'chaneira',name:'Chaneira',icon:'💗',img:'img/chars/chaneira.png',color:'#f8bbd0',price:100,move:'float',sound:'shiny',
+   sayings:['Chaaa!','Glücks-Ei!','Heilung!']},
+  {id:'glurak',name:'Glurak',icon:'🔥',img:'img/chars/glurak.png',color:'#e53935',price:120,move:'fly',sound:'roar',
+   sayings:['GLUUUURAK!','Flammenwurf!','Ich bin ein Drache!']},
+  {id:'turtok',name:'Turtok',icon:'🐢',img:'img/chars/turtok.png',color:'#0277bd',price:120,move:'roar',sound:'water-splash',
+   sayings:['Turtoook!','Hydro-Kanone!']},
+  {id:'bisaflor',name:'Bisaflor',icon:'🌳',img:'img/chars/bisaflor.png',color:'#388e3c',price:120,move:'roar',sound:'earth-stomp',
+   sayings:['Bisaflooor!','Solar-Strahl!']},
+  {id:'relaxo',name:'Relaxo',icon:'😴',img:'img/chars/relaxo.png',color:'#5d4037',price:130,move:'punch',sound:'earth-stomp',
+   sayings:['Zzzzz...','Relaxo isst.','Schubs nicht!']},
+  {id:'garados',name:'Garados',icon:'🐉',img:'img/chars/garados.png',color:'#1565c0',price:140,move:'roar',sound:'roar',
+   sayings:['ROOOAAAR!','Hyperstrahl!','Du gehst unter!']},
+  {id:'lucario',name:'Lucario',icon:'🥋',img:'img/chars/lucario.png',color:'#1976d2',price:160,move:'punch',sound:'thunder',
+   sayings:['Aura!','Aura-Sphäre!','Lucario!']},
+  {id:'quajutsu',name:'Quajutsu',icon:'🥷',img:'img/chars/quajutsu.png',color:'#01579b',price:170,move:'dash',sound:'whoosh',
+   sayings:['Quaa!','Wasser-Shuriken!','Ninja-Frosch!']},
+  {id:'garchomp',name:'Knakrack',icon:'🦈',img:'img/chars/garchomp.png',color:'#0277bd',price:180,move:'dash',sound:'pow',
+   sayings:['ROAR!','Drachen-Klaue!']},
+  {id:'zoroark',name:'Zoroark',icon:'🦊',img:'img/chars/zoroark.png',color:'#212121',price:190,move:'teleport',sound:'evil-laugh',
+   sayings:['Zoroark!','Illusion!']},
+  {id:'kapuhototo',name:'Mimigma',icon:'👻',img:'img/chars/kapuhototo.png',color:'#fbc02d',price:200,move:'spin',sound:'sparkle',
+   sayings:['Mimi!','Geheimnis!']},
+  {id:'mew',name:'Mew',icon:'💗',img:'img/chars/mew.png',color:'#f48fb1',price:220,move:'float',sound:'sparkle',
+   sayings:['Mew!','Mew Mew!','Ich kann ALLE Attacken!']},
+  {id:'mewtu',name:'Mewtu',icon:'🧠',img:'img/chars/mewtu.png',color:'#9c27b0',price:280,move:'spin-star',sound:'energy-burst',
+   sayings:['Hmpf.','Ich bin überlegen.','Psystrahl!']},
+  {id:'lugia',name:'Lugia',icon:'🌊',img:'img/chars/lugia.png',color:'#90caf9',price:320,move:'fly',sound:'gong',
+   sayings:['Aero-Geschoss!','Hüter der Meere.']},
+  {id:'hooh',name:'Ho-Oh',icon:'🔥',img:'img/chars/hooh.png',color:'#ff9800',price:320,move:'fly',sound:'fanfare',
+   sayings:['Heiliges Feuer!','Phönix!']},
+  {id:'rayquaza',name:'Rayquaza',icon:'🐲',img:'img/chars/rayquaza.png',color:'#388e3c',price:380,move:'spin',sound:'roar',
+   sayings:['ROOOOAR!','Drachen-Aszension!','Wächter des Himmels!']},
+  {id:'arceus',name:'Arceus',icon:'✨',img:'img/chars/arceus.png',color:'#ffd700',price:500,move:'rainbow',sound:'fanfare',
+   sayings:['Schöpfer.','Alpha-Pokemon.','Tausend Welten.']}
+  ].filter(c=>c.id!=='_dummy_'))
 ];
+
+// Dynamisch alle 251 Pokemon aus POKEDEX hinzufügen
+if (typeof POKEDEX !== 'undefined') {
+  const moves = ['jump','dash','spin','roar','float','tongue','teleport','punch'];
+  const sounds = ['wahoo','whoosh','spin','yoshi','shiny','pow','zap','sparkle'];
+  const finalForms = new Set([3,6,9,18,20,22,24,26,28,31,34,36,38,40,42,45,47,49,51,53,55,57,59,62,65,68,71,73,76,78,80,82,85,87,89,91,93,94,103,105,107,110,112,115,121,124,125,126,127,128,130,131,134,135,136,142,143,149,154,157,160,162,164,166,168,169,171,176,178,181,184,186,188,189,192,195,196,197,205,210,212,215,217,219,221,224,227,229,230,232,233,238,239,240,242,248]);
+  const legendaries = new Set([144,145,146,150,151,243,244,245,249,250,251]);
+  for (const p of POKEDEX) {
+    let price = 8 + Math.floor(p.n / 8) * 3;
+    if (legendaries.has(p.n)) price = 200 + (p.n % 10) * 20;
+    if (finalForms.has(p.n)) price += 15;
+    CHARS.push({
+      id: 'pkm_' + p.n,
+      name: p.de,
+      icon: '🔮',
+      img: 'img/chars/pokemon/' + p.n + '.png',
+      color: p.color || '#9e9e9e',
+      price: price,
+      move: moves[p.n % moves.length],
+      sound: sounds[p.n % sounds.length],
+      sayings: [p.de + '!', p.de + '-' + p.de + '!', (p.type || 'Pokemon') + '-Power!'],
+      desc: p.desc,
+      type: p.type,
+      pokedexNo: p.n
+    });
+  }
+}
 
 // Outfits/Hintergründe die mit Münzen kaufbar sind (nach Charakter-Freischaltung)
 const SHOP_ITEMS = [
@@ -480,23 +581,36 @@ const LIAM_STORIES = [
 ];
 
 const LIAM_MATH = [
-  // Klasse 3: Mal, Geteilt, Plus/Minus mit größeren Zahlen, Sachaufgaben
-  {q:"Auf dem Hof stehen 8 Reihen mit je 12 Strohballen. Wie viele Ballen sind es?",a:96},
-  {q:"Ein Mähdrescher schafft 4 Hektar pro Stunde. Wie viel in 7 Stunden?",a:28},
-  {q:"6 Kühe geben je 30 Liter Milch. Wie viele Liter zusammen?",a:180},
-  {q:"Der Tank fasst 800 Liter Diesel, 350 sind verbraucht. Wie viel ist noch drin?",a:450},
-  {q:"144 Eier sollen in 12er-Schachteln verpackt werden. Wie viele Schachteln?",a:12},
-  {q:"Der Fendt 724 hat 240 PS, der 1050 hat 517 PS. Wie viel mehr hat der 1050?",a:277},
-  {q:"15 × 6 = ?",a:90},
+  // Sortiert: leicht → schwer (sanfter Einstieg)
+  // ===== LEICHT =====
+  {q:"5 + 7 = ?",a:12},
+  {q:"8 + 6 = ?",a:14},
+  {q:"15 - 7 = ?",a:8},
+  {q:"20 - 8 = ?",a:12},
+  {q:"3 × 4 = ?",a:12},
+  {q:"5 × 5 = ?",a:25},
+  {q:"2 × 8 = ?",a:16},
+  {q:"3 Kühe geben je 10 Liter Milch. Wie viel?",a:30},
+  {q:"Auf einem Feld stehen 4 Reihen mit je 5 Strohballen. Wie viele?",a:20},
+  // ===== MITTEL =====
   {q:"7 × 8 = ?",a:56},
+  {q:"6 × 9 = ?",a:54},
+  {q:"15 × 6 = ?",a:90},
+  {q:"25 × 4 = ?",a:100},
   {q:"63 : 9 = ?",a:7},
   {q:"81 : 9 = ?",a:9},
-  {q:"Auf dem Acker liegen 240 Säcke Saatgut, je 25 kg. Wie viele kg gesamt?",a:6000},
-  {q:"Eine Sau hat 12 Ferkel. Wie viele Ferkel haben 9 Sauen?",a:108},
-  {q:"Der Tankwagen lädt 18 000 Liter Gülle, 6 000 sind ausgebracht. Rest?",a:12000},
-  {q:"Das Schneidwerk ist 12 m breit. Wie viel m² werden auf 50 m gemäht?",a:600},
   {q:"144 : 12 = ?",a:12},
-  {q:"25 × 4 = ?",a:100}
+  {q:"6 Kühe geben je 30 Liter Milch. Wie viel zusammen?",a:180},
+  {q:"Auf dem Hof stehen 8 Reihen mit je 12 Strohballen. Wie viele Ballen sind es?",a:96},
+  {q:"144 Eier in 12er-Schachteln. Wie viele Schachteln?",a:12},
+  {q:"Eine Sau hat 12 Ferkel. Wie viele bei 9 Sauen?",a:108},
+  // ===== SCHWER =====
+  {q:"Der Tank fasst 800 L Diesel, 350 sind weg. Wie viel ist noch drin?",a:450},
+  {q:"Ein Mähdrescher schafft 4 Hektar pro Stunde. Wie viel in 7 Stunden?",a:28},
+  {q:"Fendt 724 hat 240 PS, 1050 hat 517 PS. Wie viel mehr?",a:277},
+  {q:"240 Säcke Saatgut, je 25 kg. Wie viele kg gesamt?",a:6000},
+  {q:"Tankwagen lädt 18 000 L Gülle, 6 000 sind ausgebracht. Rest?",a:12000},
+  {q:"Schneidwerk ist 12 m breit. m² auf 50 m Länge?",a:600}
 ];
 
 // ===== RAIK (7, 1. Klasse, Sonic/Mario, ADHS-tauglich kurz) =====

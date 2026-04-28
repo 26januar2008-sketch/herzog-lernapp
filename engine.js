@@ -51,7 +51,7 @@ const State = {
   reset(){ localStorage.removeItem(STORAGE_KEY); this.load(); }
 };
 
-// Aufgabe-Auswahl: Adaptive Schwierigkeit
+// Aufgabe-Auswahl: Adaptive Schwierigkeit + sanfter Einstieg
 function pickTask(profileKey, subject) {
   const p = State.data.profiles[profileKey];
   let pool;
@@ -60,11 +60,22 @@ function pickTask(profileKey, subject) {
   } else {
     pool = { read:RAIK_READING, math:RAIK_MATH, sach:RAIK_SACH, musik:RAIK_MUSIK }[subject];
   }
-  // Vermeide direkte Wiederholung
+  // Sanfter Einstieg: erste N Versuche pro Fach nur aus den ersten 1/3 des Pools (leichter sortiert)
+  let candidates = pool;
+  const tries = p.stats[subject]?.tries || 0;
+  if (typeof Settings !== 'undefined' && Settings.isEnabled('gentle_start')) {
+    if (tries < 5) candidates = pool.slice(0, Math.max(3, Math.floor(pool.length / 3)));
+    else if (tries < 15) candidates = pool.slice(0, Math.max(5, Math.floor(pool.length * 2 / 3)));
+    // ab 15 Versuchen: voller Pool
+  }
   let idx;
-  do { idx = Math.floor(Math.random() * pool.length); } while (idx === p.lastIndex[subject] && pool.length > 1);
-  p.lastIndex[subject] = idx;
-  return { item: pool[idx], idx };
+  let realIdx;
+  do {
+    idx = Math.floor(Math.random() * candidates.length);
+    realIdx = pool.indexOf(candidates[idx]);
+  } while (realIdx === p.lastIndex[subject] && candidates.length > 1);
+  p.lastIndex[subject] = realIdx;
+  return { item: candidates[idx], idx: realIdx };
 }
 
 function recordAnswer(profileKey, subject, correct) {
