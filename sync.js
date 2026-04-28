@@ -30,6 +30,7 @@ const Sync = {
         history: data.history.slice(-100),
         shop: data.shop || [],
         char_outfits: data.char_outfits || {},
+        cards: data.cards || {},
         updated_at: new Date().toISOString()
       };
       const r = await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.${profileKey}`, {
@@ -76,6 +77,7 @@ async function hydrateFromRemote(profileKey) {
     p.history = remote.history || [];
     p.shop = remote.shop || [];
     p.char_outfits = remote.char_outfits || {};
+    p.cards = remote.cards || {};
     p._lastSync = remoteUpdated;
     State.save();
   }

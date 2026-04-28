@@ -8,7 +8,7 @@ const MACHINES = [
    beschreibung:'Mittlerer Schlepper für viele Aufgaben am Hof. Stufenloses Vario-Getriebe – Geschwindigkeit lässt sich ohne Schalten anpassen.',
    einsatz:'Heuwenden, Düngerstreuen, Anhänger ziehen, Frontlader-Arbeit.',
    funfact:'Der Vario heißt so, weil er stufenlos schaltet – wie ein Roller mit CVT-Getriebe.'},
-  {id:'jd6r',name:'John Deere 6R 250',icon:'🚜',img:'img/machines/jd8r.jpg',price:10,
+  {id:'jd6r',name:'John Deere 6R 250',icon:'🚜',img:'img/machines/jd6r.jpg',price:10,
    typ:'Universal-Schlepper',hersteller:'John Deere (USA, Werk in Mannheim)',ps:250,baujahr:'seit 2022',
    beschreibung:'Beliebter Allrounder in grün-gelb. CommandPRO-Joystick statt Lenkrad-Hebeln.',
    einsatz:'Pflug ziehen, Säen, Pressen, Stallarbeit. Auf vielen deutschen Höfen Standard.',
@@ -43,7 +43,7 @@ const MACHINES = [
    beschreibung:'Größter Mähdrescher Europas. Schneidwerk bis 13,80 m Breite, Korntank 18.000 Liter.',
    einsatz:'Weizen, Gerste, Roggen, Raps, Mais ernten. Drischt 60-70 Tonnen Korn pro Stunde.',
    funfact:'Ein Lexion 8900 kostet über 600.000 Euro – mehr als ein Einfamilienhaus.'},
-  {id:'kronebigx',name:'Krone Big X 1180',icon:'🌽',price:130,
+  {id:'kronebigx',name:'Krone Big X 1180',icon:'🌽',img:'img/machines/kronebigx.jpg',price:130,
    typ:'Selbstfahrender Häcksler',hersteller:'Krone (Spelle, DE)',ps:1156,baujahr:'seit 2018',
    beschreibung:'Stärkster Häcksler der Welt mit 1156 PS. Häckselt Mais, Gras und Ganzpflanzensilage.',
    einsatz:'Maishäckseln für Biogasanlagen und Kuhfutter. Schafft 400 Tonnen Mais pro Stunde.',
@@ -58,7 +58,7 @@ const MACHINES = [
    beschreibung:'104 Tonnen schwer, 8,69 m lang. Schiebt mit Riesenschild Erde, Steine, Schutt.',
    einsatz:'Steinbruch, Tagebau, Großbaustellen. Jahresleistung: kann ganze Hügel abtragen.',
    funfact:'Ein D11 kostet über 3 Millionen Euro – und braucht alle 100 Stunden 800 Liter Motoröl.'},
-  {id:'jd_x9',name:'John Deere X9 1100',icon:'🌾',price:250,
+  {id:'jd_x9',name:'John Deere X9 1100',icon:'🌾',img:'img/machines/jd_x9.jpg',price:250,
    typ:'Mähdrescher Top-Klasse',hersteller:'John Deere (USA)',ps:690,baujahr:'seit 2020',
    beschreibung:'Drischt mit zwei Rotoren parallel – schneller und korn-schonender als Single-Rotor.',
    einsatz:'Großbetriebe USA/Europa. Schafft auf gutem Weizen über 100 t Korn pro Stunde.',
@@ -103,7 +103,7 @@ const CHARS = [
    sayings:['Gruener Ninja!','Lloyd kommt!','Energie raus!','Ich bin der Auserwaehlte!']},
   {id:'nya',name:'Nya (Wasser)',icon:'🌊',img:'img/chars/ninja_group.jpg',color:'#0277bd',price:110,move:'float',sound:'water-splash',
    sayings:['Wasser marsch!','Nya weiss wie es geht!','Spritzer!','Komm rein, das Wasser ist fein!']},
-  {id:'wu',name:'Master Wu',icon:'🍵',color:'#fff9c4',price:180,move:'spin',sound:'gong',
+  {id:'wu',name:'Master Wu',icon:'🍵',img:'img/chars/wu.jpg',color:'#fff9c4',price:180,move:'spin',sound:'gong',
    sayings:['Geduld, junger Schueler.','Der Tee ist heiss.','Niinja!','Weisheit ist Macht.'],desc:'Sensei der Ninja. Trinkt grünen Tee, kennt alle Geheimnisse von Spinjitzu.',type:'Lehrer'},
   // ===== POKEMON 1-251 werden in pokedex.js dynamisch hinzugefügt =====
   // Removed hardcoded Pokemon - now generated from POKEDEX
@@ -447,6 +447,16 @@ const TOOLS_QUIZ = [
   {q:"Was klemmt etwas fest?",options:["Schraubzwinge","Hammer","Pinsel","Säge"],correct:0},
   {q:"Was hält eine Schraube an Ort und Stelle?",options:["Mutter","Pflug","Reifen","Säge"],correct:0},
   {q:"Womit zeichnet man eine gerade Linie?",options:["Pinsel","Lineal","Wasserwaage","Hammer"],correct:1,img:"📐"}
+];
+
+// ===== Sammelkarten-Editionen =====
+const CARD_EDITIONS = [
+  {id:'standard', name:'Standard', icon:'⚪', rarity:1.00, filter:'none', glow:''},
+  {id:'bronze',   name:'Bronze',   icon:'🥉', rarity:0.40, filter:'sepia(0.6) hue-rotate(-15deg) saturate(1.4)', glow:'0 0 20px #cd7f32'},
+  {id:'silver',   name:'Silber',   icon:'🥈', rarity:0.25, filter:'grayscale(0.7) brightness(1.1) contrast(1.1)', glow:'0 0 20px #c0c0c0'},
+  {id:'gold',     name:'Gold',     icon:'🥇', rarity:0.12, filter:'sepia(0.9) saturate(2.5) hue-rotate(-25deg) brightness(1.15)', glow:'0 0 30px #ffd700'},
+  {id:'holo',     name:'Holo-Foil',icon:'🌈', rarity:0.06, filter:'hue-rotate(180deg) saturate(2)', glow:'0 0 30px #00ffff', animated:true},
+  {id:'shiny',    name:'Shiny',    icon:'✨', rarity:0.02, filter:'invert(0.8) hue-rotate(180deg) saturate(2)', glow:'0 0 40px #ff00ff'}
 ];
 
 // ===== Hof-Probleme (Liam, Sachkunde-Sub) =====

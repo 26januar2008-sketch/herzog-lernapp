@@ -619,6 +619,23 @@ function renderCollection(){
   root.appendChild(top);
   const wrap = el('div',{class:'collection'});
   wrap.appendChild(el('h2',{text:`${p.unlocked.length} / ${collection.length} freigeschaltet · Tippe an um anzuschauen`}));
+
+  // Booster-Pack-Button (wenn cards-Feature on UND etwas freigeschaltet)
+  if (Settings.isEnabled('collection_cards') && p.unlocked.length > 0) {
+    const COST = 25;
+    const canAfford = p.coins >= COST;
+    const totalCards = Object.values(p.cards||{}).reduce((s,arr)=>s+arr.length, 0);
+    const boosterBox = el('div',{attrs:{style:'background:linear-gradient(135deg,#7e57c2,#1976d2);padding:14px;border-radius:14px;margin-bottom:14px;color:#fff;text-align:center'}});
+    boosterBox.innerHTML = `🎴 <b>${totalCards}</b> Karten gesammelt`;
+    const btn = el('button',{
+      text: canAfford ? `📦 Booster-Pack öffnen (${COST} 🪙)` : `🔒 ${COST}🪙 fehlen`,
+      attrs:{style:`display:block;width:100%;margin-top:8px;padding:14px;background:${canAfford?'#ffc107':'#666'};color:${canAfford?'#000':'#aaa'};border:none;border-radius:10px;font-weight:900;font-size:16px;cursor:${canAfford?'pointer':'not-allowed'}`},
+      onclick: ()=> { if (canAfford) openBoosterAnimation(); }
+    });
+    boosterBox.appendChild(btn);
+    wrap.appendChild(boosterBox);
+  }
+
   const grid = el('div',{class:'coll-grid'});
   collection.forEach(item => {
     const unlocked = p.unlocked.includes(item.id);
@@ -761,7 +778,91 @@ function renderCharDetail(charId){
 
   // Auto-Klick beim Öffnen für direkten Wow-Effekt
   setTimeout(()=> emoji.click(), 400);
+
+  // Karten-Strip am Ende
+  if (Settings.isEnabled('collection_cards')) {
+    const owned = (p.cards && p.cards[charId]) || [];
+    if (owned.length > 0 || true) {
+      const cardsRow = el('div',{attrs:{style:'background:rgba(0,0,0,.5);padding:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;overflow-x:auto'}});
+      cardsRow.appendChild(el('div',{text:'🎴 Editionen:', attrs:{style:'color:#fff;font-weight:700;width:100%;text-align:center;margin-bottom:6px'}}));
+      CARD_EDITIONS.forEach(ed => {
+        const ownedThis = owned.includes(ed.id);
+        const cardChip = el('div',{attrs:{
+          style:`width:60px;height:80px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;${ownedThis?`box-shadow:${ed.glow};border:2px solid #fff`:'background:rgba(255,255,255,.1);opacity:.4;border:1px dashed #888'};${ownedThis && c.img?`background-image:url(${c.img});background-size:cover;background-position:center;filter:${ed.filter}`:''};${ownedThis && ed.animated?'animation:rainbow 3s linear infinite':''}`
+        }});
+        cardChip.appendChild(el('div',{text: ownedThis?ed.icon:'?', attrs:{style:'font-size:24px'}}));
+        cardChip.appendChild(el('div',{text: ed.name, attrs:{style:'font-size:8px;font-weight:700;color:#fff;background:rgba(0,0,0,.6);padding:1px 4px;border-radius:4px;margin-top:2px'}}));
+        cardsRow.appendChild(cardChip);
+      });
+      stage.appendChild(cardsRow);
+    }
+  }
 }
+
+// ===== Booster-Pack mit dramatischer Animation =====
+function openBoosterAnimation() {
+  const result = openBooster(currentProfile);
+  if (!result) return alert('Nicht genug Münzen oder noch keine Charaktere/Maschinen freigeschaltet');
+  const { charId, edition, isNew } = result;
+  const collection = currentProfile==='liam' ? MACHINES : CHARS;
+  const item = collection.find(x => x.id === charId);
+  const ed = CARD_EDITIONS.find(e => e.id === edition);
+  if (!item || !ed) return;
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;animation:fadein .3s';
+  overlay.innerHTML = `
+    <div style="font-size:80px;margin-bottom:20px;animation:bounce 1s infinite">📦</div>
+    <div style="color:#fff;font-size:24px;font-weight:900;margin-bottom:30px">Booster wird geöffnet...</div>
+  `;
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.innerHTML = '';
+    const card = document.createElement('div');
+    card.style.cssText = `width:280px;height:380px;background:#fff;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-shadow:${ed.glow};animation:cardReveal 1s ease-out;${ed.animated?'background:linear-gradient(45deg,#ff00ff,#00ffff,#ffff00,#ff00ff);background-size:400% 400%;animation:cardReveal 1s ease-out, rainbow 3s linear infinite':''}`;
+    if (item.img) {
+      const img = document.createElement('img');
+      img.src = item.img;
+      img.style.cssText = `max-width:200px;max-height:200px;object-fit:contain;filter:${ed.filter}`;
+      card.appendChild(img);
+    } else {
+      const e = document.createElement('div');
+      e.textContent = item.icon; e.style.cssText = 'font-size:140px';
+      card.appendChild(e);
+    }
+    const name = document.createElement('div');
+    name.textContent = item.name;
+    name.style.cssText = 'font-size:22px;font-weight:900;color:#222;margin-top:10px;text-align:center';
+    card.appendChild(name);
+    const editionLabel = document.createElement('div');
+    editionLabel.textContent = ed.icon + ' ' + ed.name + ' Edition';
+    editionLabel.style.cssText = 'font-size:16px;font-weight:700;color:#666;margin-top:6px';
+    card.appendChild(editionLabel);
+    if (isNew) {
+      const newTag = document.createElement('div');
+      newTag.textContent = '✨ NEU!';
+      newTag.style.cssText = 'background:#e53935;color:#fff;padding:6px 14px;border-radius:14px;margin-top:10px;font-weight:900;animation:pulse 1s infinite';
+      card.appendChild(newTag);
+    } else {
+      const dupTag = document.createElement('div');
+      dupTag.textContent = 'Hast du schon';
+      dupTag.style.cssText = 'color:#999;font-size:12px;margin-top:8px';
+      card.appendChild(dupTag);
+    }
+    overlay.appendChild(card);
+    sfxUnlock?.();
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'OK';
+    closeBtn.style.cssText = 'margin-top:24px;padding:14px 36px;background:#4caf50;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:18px;cursor:pointer';
+    closeBtn.onclick = () => { overlay.remove(); schedulePush?.(currentProfile); renderCollection(); };
+    overlay.appendChild(closeBtn);
+  }, 1500);
+}
+
+// Wrapper um openBoosterPack mit besserem Namen
+function openBooster(profileKey) { return openBoosterPack(profileKey); }
+
 
 function showSaying(stage, text){
   // Entferne alte Speech-Bubble

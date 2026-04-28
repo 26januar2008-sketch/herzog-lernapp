@@ -79,6 +79,11 @@ body.theme-raik .topbar{background:rgba(0,0,40,.6)}
 .coll-item .icon{font-size:36px;margin-bottom:4px}
 .coll-item img.thumb{width:70%;height:70%;object-fit:contain;margin-bottom:4px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
 
+/* ===== Sammelkarten Animationen ===== */
+@keyframes cardReveal { 0%{transform:scale(0) rotateY(0)} 50%{transform:scale(1.2) rotateY(180deg)} 100%{transform:scale(1) rotateY(360deg)} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+@keyframes rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
 /* ===== Tag/Nacht ===== */
 body.night-mode{filter:brightness(.78) saturate(.85)}
 body.night-mode .topbar{background:rgba(0,0,0,.6)}

@@ -102,12 +102,56 @@ function recordAnswer(profileKey, subject, correct) {
   for (const item of collection) {
     if (!p.unlocked.includes(item.id) && p.coins >= item.price) {
       p.unlocked.push(item.id);
+      grantStandardCard(profileKey, item.id);
       State.save();
       return { unlocked: item, coins: p.coins };
     }
   }
   State.save();
   return { unlocked: null, coins: p.coins };
+}
+
+// ===== Sammelkarten =====
+function ensureCards(profileKey) {
+  const p = State.data.profiles[profileKey];
+  if (!p.cards) p.cards = {}; // {charId: ['standard', 'gold', ...]}
+}
+function grantStandardCard(profileKey, charId) {
+  ensureCards(profileKey);
+  const p = State.data.profiles[profileKey];
+  if (!p.cards[charId]) p.cards[charId] = [];
+  if (!p.cards[charId].includes('standard')) p.cards[charId].push('standard');
+  State.save();
+}
+function pickRandomEdition() {
+  const r = Math.random();
+  let acc = 0;
+  // Verteilung: standard rarer als angegeben (nur wenige), bronze häufig, etc.
+  const weights = {standard:0, bronze:50, silver:25, gold:15, holo:8, shiny:2};
+  let total = 0; for (const k in weights) total += weights[k];
+  const pick = Math.random() * total;
+  let cum = 0;
+  for (const e of CARD_EDITIONS) {
+    cum += weights[e.id] || 0;
+    if (pick < cum) return e.id;
+  }
+  return 'bronze';
+}
+function openBoosterPack(profileKey) {
+  const p = State.data.profiles[profileKey];
+  const COST = 25;
+  if (p.coins < COST) return null;
+  if (p.unlocked.length === 0) return null; // keine Chars noch frei
+  p.coins -= COST;
+  ensureCards(profileKey);
+  // Wähle zufälligen freigeschalteten Char
+  const charId = p.unlocked[Math.floor(Math.random() * p.unlocked.length)];
+  const edition = pickRandomEdition();
+  if (!p.cards[charId]) p.cards[charId] = [];
+  const isNew = !p.cards[charId].includes(edition);
+  if (isNew) p.cards[charId].push(edition);
+  State.save();
+  return { charId, edition, isNew, cost: COST };
 }
 
 // Power-Up nutzen (Coins abziehen)
