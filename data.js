@@ -522,23 +522,30 @@ const LIAM_GEOMETRIE = [
   {q:"Was ist symmetrisch?",options:["Schmetterling","Wolke","Stein","Blatt zerrissen"],correct:0}
 ];
 
-// --- RAIK Mathe Sub-Pools ---
+// --- RAIK Mathe Sub-Pools - SEHR KURZ! ---
 const RAIK_ZAHLENRAUM = [
-  {q:"Vorgänger von 7?",a:6},{q:"Nachfolger von 9?",a:10},
-  {q:"Vorgänger von 15?",a:14},{q:"Nachfolger von 19?",a:20},
-  {q:"Welche Zahl liegt zwischen 4 und 6?",a:5},
-  {q:"Welche Zahl liegt zwischen 12 und 14?",a:13},
-  {q:"Verdopple 4.",a:8},{q:"Verdopple 7.",a:14},
-  {q:"Halbiere 10.",a:5},{q:"Halbiere 16.",a:8}
+  {q:"Vor 7?",a:6},{q:"Nach 9?",a:10},
+  {q:"Vor 15?",a:14},{q:"Nach 19?",a:20},
+  {q:"Was zwischen 4 und 6?",a:5},
+  {q:"Was zwischen 12 und 14?",a:13},
+  {q:"4 + 4 = ?",a:8},{q:"7 + 7 = ?",a:14},
+  {q:"Hälfte von 10?",a:5},{q:"Hälfte von 16?",a:8},
+  {q:"Vor 5?",a:4},{q:"Nach 11?",a:12},
+  {q:"Was zwischen 8 und 10?",a:9},
+  {q:"Doppelt von 3?",a:6},{q:"Doppelt von 5?",a:10}
 ];
 const RAIK_SACHAUFGABE = [
-  {q:"Mario sammelt 5 Münzen, dann 4 mehr.",a:9},
-  {q:"Sonic verliert 3 von 10 Ringen.",a:7},
-  {q:"Yoshi frisst 2 Kirschen, dann 6 mehr.",a:8},
-  {q:"Kai zündet 4 Feuer, 2 erlöschen.",a:2},
-  {q:"Lloyd findet 7 Energiekugeln, gibt 2 ab.",a:5},
-  {q:"Bowser hat 9 Bomben, wirft 4.",a:5},
-  {q:"Tails sammelt 6 Edelsteine, findet 5 mehr.",a:11}
+  // Mit Visualisierung - wenig Text
+  {q:"Mario: 5 + 4",a:9,visual:"🪙🪙🪙🪙🪙 + 🪙🪙🪙🪙"},
+  {q:"Sonic: 10 - 3",a:7,visual:"💍💍💍💍💍💍💍💍💍💍 − 💍💍💍"},
+  {q:"Yoshi: 2 + 6",a:8,visual:"🍒🍒 + 🍒🍒🍒🍒🍒🍒"},
+  {q:"Kai: 4 - 2",a:2,visual:"🔥🔥🔥🔥 − 🔥🔥"},
+  {q:"Lloyd: 7 - 2",a:5,visual:"💚💚💚💚💚💚💚 − 💚💚"},
+  {q:"Bowser: 9 - 4",a:5,visual:"💣💣💣💣💣💣💣💣💣 − 💣💣💣💣"},
+  {q:"Tails: 6 + 5",a:11,visual:"💎💎💎💎💎💎 + 💎💎💎💎💎"},
+  {q:"Pikachu: 3 + 4",a:7,visual:"⚡⚡⚡ + ⚡⚡⚡⚡"},
+  {q:"Mauzi: 8 - 3",a:5,visual:"🪙🪙🪙🪙🪙🪙🪙🪙 − 🪙🪙🪙"},
+  {q:"Glumanda: 5 + 5",a:10,visual:"🔥🔥🔥🔥🔥 + 🔥🔥🔥🔥🔥"}
 ];
 const RAIK_GEOMETRIE = [
   {q:"Wie heißt diese Form? ⬛",options:["Kreis","Quadrat","Dreieck","Stern"],correct:1},
@@ -778,27 +785,44 @@ const RAIK_READING = [
 ];
 
 const RAIK_MATH = [
-  // Klasse 1: Plus/Minus bis 20, sehr kurz
-  {q:"Mario hat 3 Münzen 🪙 und sammelt 4 mehr. Wie viele?",a:7},
-  {q:"Sonic sammelt 5 Ringe und verliert 2. Wie viele?",a:3},
-  {q:"Yoshi frisst 6 Kirschen, dann 3 mehr. Wie viele?",a:9},
-  {q:"Luigi hat 8 Pilze, gibt Mario 3 ab. Wie viele?",a:5},
-  {q:"Bowser hat 10 Bomben, wirft 4. Wie viele bleiben?",a:6},
-  {q:"Tails sammelt 7 Ringe, dann 5 mehr.",a:12},
-  {q:"Peach hat 4 Kronen, bekommt 4 mehr.",a:8},
-  {q:"6 + 7 = ?",a:13},
-  {q:"15 - 8 = ?",a:7},
-  {q:"9 + 6 = ?",a:15},
-  {q:"12 - 5 = ?",a:7},
-  {q:"3 + 9 = ?",a:12},
+  // Klasse 1: NUR Zahlen, sehr kurz - keine Lese-Aufgaben!
+  // Plus bis 10
+  {q:"3 + 2 = ?",a:5,visual:"🪙🪙🪙 + 🪙🪙"},
+  {q:"4 + 3 = ?",a:7,visual:"🍎🍎🍎🍎 + 🍎🍎🍎"},
+  {q:"5 + 4 = ?",a:9,visual:"⭐⭐⭐⭐⭐ + ⭐⭐⭐⭐"},
+  {q:"2 + 6 = ?",a:8,visual:"🍄🍄 + 🍄🍄🍄🍄🍄🍄"},
+  {q:"1 + 8 = ?",a:9,visual:"💎 + 💎💎💎💎💎💎💎💎"},
+  {q:"4 + 4 = ?",a:8,visual:"🪙🪙🪙🪙 + 🪙🪙🪙🪙"},
+  // Minus bis 10
+  {q:"7 - 2 = ?",a:5,visual:"🪙🪙🪙🪙🪙🪙🪙 − 🪙🪙"},
+  {q:"9 - 4 = ?",a:5,visual:"🍄🍄🍄🍄🍄🍄🍄🍄🍄 − 🍄🍄🍄🍄"},
+  {q:"6 - 3 = ?",a:3,visual:"⭐⭐⭐⭐⭐⭐ − ⭐⭐⭐"},
+  {q:"8 - 5 = ?",a:3,visual:"🍎🍎🍎🍎🍎🍎🍎🍎 − 🍎🍎🍎🍎🍎"},
+  {q:"10 - 6 = ?",a:4,visual:"💎💎💎💎💎💎💎💎💎💎 − 💎💎💎💎💎💎"},
+  // Plus bis 20
+  {q:"5 + 5 = ?",a:10},
+  {q:"6 + 4 = ?",a:10},
+  {q:"7 + 5 = ?",a:12},
+  {q:"8 + 6 = ?",a:14},
+  {q:"9 + 4 = ?",a:13},
+  {q:"7 + 7 = ?",a:14},
+  {q:"8 + 8 = ?",a:16},
+  {q:"10 + 5 = ?",a:15},
+  {q:"6 + 9 = ?",a:15},
+  // Minus bis 20
+  {q:"12 - 4 = ?",a:8},
+  {q:"15 - 7 = ?",a:8},
+  {q:"14 - 6 = ?",a:8},
   {q:"18 - 9 = ?",a:9},
-  {q:"4 + 8 = ?",a:12},
-  {q:"Sonic läuft 10 Meter, dann nochmal 8 Meter.",a:18},
-  {q:"Mario hat 14 Münzen, verliert 6.",a:8},
-  {q:"5 + 5 + 5 = ?",a:15},
-  {q:"20 - 7 = ?",a:13},
-  {q:"2 + 9 = ?",a:11},
-  {q:"11 - 4 = ?",a:7}
+  {q:"11 - 5 = ?",a:6},
+  {q:"13 - 8 = ?",a:5},
+  {q:"16 - 7 = ?",a:9},
+  {q:"20 - 10 = ?",a:10},
+  // Verdoppeln
+  {q:"5 + 5 = ?",a:10},
+  {q:"3 + 3 = ?",a:6},
+  {q:"4 + 4 = ?",a:8},
+  {q:"6 + 6 = ?",a:12}
 ];
 
 // ===== LIAM SACHKUNDE (Klasse 3, Hof- & Naturwelt) =====
@@ -839,23 +863,28 @@ const LIAM_MUSIK = [
   {q:"Wie viele Saiten hat eine normale Gitarre?",options:["4","5","6","8"],correct:2}
 ];
 
-// ===== RAIK SACHKUNDE (Klasse 1, Tiere/Natur/Alltag) =====
+// ===== RAIK SACHKUNDE (Klasse 1) - SEHR KURZ! Max 4-5 Wörter pro Frage =====
 const RAIK_SACH = [
-  {q:"Wie viele Beine hat eine Spinne?",options:["6","8","10","4"],correct:1,img:"🕷️"},
-  {q:'Welches Tier macht "Muh"?',options:["Schaf","Kuh","Pferd","Hund"],correct:1,img:"🐮"},
-  {q:"Welches Tier legt Eier?",options:["Hund","Katze","Huhn","Kuh"],correct:2,img:"🐔"},
-  {q:"Wo wohnt ein Fisch?",options:["Im Baum","Im Wasser","Im Sand","In der Luft"],correct:1,img:"🐟"},
-  {q:"Welche Jahreszeit ist warm und sonnig?",options:["Winter","Frühling","Sommer","Herbst"],correct:2,img:"☀️"},
-  {q:"Wann fallen die Blätter von den Bäumen?",options:["Frühling","Sommer","Herbst","Winter"],correct:2,img:"🍂"},
-  {q:"Wie viele Tage hat eine Woche?",options:["5","6","7","8"],correct:2},
-  {q:"Welche Farbe hat eine reife Banane?",options:["Rot","Grün","Gelb","Blau"],correct:2,img:"🍌"},
-  {q:"Was brauchen Pflanzen zum Wachsen?",options:["Strom","Wasser und Sonne","Schokolade","Geld"],correct:1,img:"🌱"},
-  {q:"Welches Tier hat einen Rüssel?",options:["Giraffe","Elefant","Löwe","Affe"],correct:1,img:"🐘"},
-  {q:"Wie viele Finger hat eine Hand?",options:["3","4","5","6"],correct:2,img:"✋"},
-  {q:"Was ist KEIN Werkzeug?",options:["Hammer","Säge","Apfel","Schraubenzieher"],correct:2},
-  {q:"Welches Tier kann fliegen?",options:["Fisch","Vogel","Kuh","Schwein"],correct:1,img:"🦅"},
-  {q:"Welche Farbe wird aus Blau und Gelb?",options:["Rot","Grün","Lila","Orange"],correct:1},
-  {q:"Wie heißt das Junge vom Hund?",options:["Fohlen","Welpe","Kalb","Küken"],correct:1,img:"🐶"}
+  {q:"Beine einer Spinne?",options:["6","8","10","4"],correct:1,img:"🕷️"},
+  {q:"Wer macht Muh?",options:["Schaf","Kuh","Pferd","Hund"],correct:1,img:"🐮"},
+  {q:"Wer legt Eier?",options:["Hund","Katze","Huhn","Kuh"],correct:2,img:"🐔"},
+  {q:"Wo wohnt ein Fisch?",options:["Baum","Wasser","Sand","Luft"],correct:1,img:"🐟"},
+  {q:"Welche Jahreszeit ist heiß?",options:["Winter","Frühling","Sommer","Herbst"],correct:2,img:"☀️"},
+  {q:"Wann fallen Blätter?",options:["Frühling","Sommer","Herbst","Winter"],correct:2,img:"🍂"},
+  {q:"Tage in einer Woche?",options:["5","6","7","8"],correct:2,img:"📅"},
+  {q:"Banane reif - welche Farbe?",options:["Rot","Grün","Gelb","Blau"],correct:2,img:"🍌"},
+  {q:"Was brauchen Pflanzen?",options:["Strom","Wasser+Sonne","Saft","Geld"],correct:1,img:"🌱"},
+  {q:"Wer hat einen Rüssel?",options:["Giraffe","Elefant","Löwe","Affe"],correct:1,img:"🐘"},
+  {q:"Finger an einer Hand?",options:["3","4","5","6"],correct:2,img:"✋"},
+  {q:"Was ist KEIN Werkzeug?",options:["Hammer","Säge","Apfel","Bohrer"],correct:2,img:"🍎"},
+  {q:"Wer kann fliegen?",options:["Fisch","Vogel","Kuh","Schwein"],correct:1,img:"🦅"},
+  {q:"Blau + Gelb = ?",options:["Rot","Grün","Lila","Orange"],correct:1},
+  {q:"Junges vom Hund?",options:["Fohlen","Welpe","Kalb","Küken"],correct:1,img:"🐶"},
+  {q:"Wer kann schwimmen?",options:["Vogel","Fisch","Hase","Maus"],correct:1,img:"🐟"},
+  {q:"Wo schläft die Eule?",options:["Tag","Nacht","beides","gar nicht"],correct:0,img:"🦉"},
+  {q:"Welches Tier ist groß?",options:["Maus","Elefant","Ameise","Marienkäfer"],correct:1,img:"🐘"},
+  {q:"Was ist süß?",options:["Salz","Zucker","Pfeffer","Senf"],correct:1,img:"🍬"},
+  {q:"Tag oder Nacht: Sonne?",options:["Tag","Nacht","beides","keins"],correct:0,img:"☀️"}
 ];
 
 // ===== RAIK MUSIK (Klasse 1) =====
