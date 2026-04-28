@@ -1,4 +1,4 @@
-const CACHE = 'lernapp-v19';
+const CACHE = 'lernapp-v20';
 const ASSETS = [
   '.', 'index.html', 'liam.html', 'raik.html',
   'style.css', 'pokedex.js', 'data.js', 'engine.js', 'settings.js', 'sync.js', 'sounds.js', 'trace.js', 'specials.js', 'games.js', 'ui.js',
