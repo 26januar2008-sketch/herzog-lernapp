@@ -22,7 +22,10 @@ const EPOCHEN = [
     lerntext:'Vor 10 000 Jahren wurden Menschen sesshaft. Mit Hacken aus Stein und Holz haben sie kleine Felder neben ihren Hütten bestellt. Dünger gab es nicht – also wechselten sie die Felder durch.' },
   { id:'antike', name:'Antike', em:'🏛️', kosten:600,
     farbeHimmel:'#9ec5fe', farbeBoden:'#9ccc65',
-    lerntext:'Die Römer und Griechen bauten Steinhäuser. Ochsen zogen den Holzpflug. Erste Wassermühlen mahlten Korn zu Mehl.' },
+    lerntext:'Die Römer und Griechen bauten Steinhäuser mit Säulen und Atrium. Ochsen zogen den Holzpflug. Erste Wassermühlen mahlten Korn zu Mehl.' },
+  { id:'wikinger', name:'Wikingerzeit', em:'⚔️', kosten:1800,
+    farbeHimmel:'#90a4ae', farbeBoden:'#7cb342',
+    lerntext:'Vor 1 200 Jahren! Die Wikinger lebten in langen Holzhäusern mit Grasdach und Drachenköpfen am Giebel. Sie züchteten Schafe für Wolle, fuhren mit Drachenbooten über die Meere und brachten neue Pflanzen wie Roggen aus dem Osten mit.' },
   { id:'mittelalter', name:'Mittelalter', em:'🏰', kosten:4000,
     farbeHimmel:'#90caf9', farbeBoden:'#7cb342',
     lerntext:'Drei-Felder-Wirtschaft: ein Feld Sommerfrucht, eins Winterfrucht, eins BRACH (ruht). So bleibt der Boden fruchtbar! Ritter pflügten mit Pferden, Windmühlen mahlten das Korn.' },
@@ -40,6 +43,7 @@ const EPOCHEN = [
 const TRAKTOR_TYPEN = {
   hacke:      { name:'Steinhacke', em:'🪨', epoche:'steinzeit', preis:0, speed:0.8 },
   ochse:      { name:'Ochsenpflug', em:'🐂', epoche:'antike', preis:300, speed:1.0 },
+  drachenboot:{ name:'Drachenboot', em:'⛵', epoche:'wikinger', preis:800, speed:1.2 },
   pferd:      { name:'Pferdegespann', em:'🐴', epoche:'mittelalter', preis:1500, speed:1.4 },
   dampfpflug: { name:'Dampfpflug', em:'💨', epoche:'industrie', preis:6000, speed:1.6 },
   lanzbulldog:{ name:'Lanz Bulldog', em:'🚜', epoche:'industrie', preis:9000, speed:1.8 },
@@ -56,7 +60,7 @@ const CROP_CONFIG = {
   gerste:    { em:'🌾', name:'Gerste',    wachstumMs:75000,  ertragSaecke:7,  preisProSack:7,  saatkosten:6,  color:'#dce775', epoche:'steinzeit' },
   hafer:     { em:'🌾', name:'Hafer',     wachstumMs:80000,  ertragSaecke:7,  preisProSack:9,  saatkosten:7,  color:'#c5e1a5', epoche:'antike' },
   roggen:    { em:'🌾', name:'Roggen',    wachstumMs:90000,  ertragSaecke:6,  preisProSack:11, saatkosten:8,  color:'#bcaaa4', epoche:'antike' },
-  wiese:     { em:'🍃', name:'Heu',       wachstumMs:90000,  ertragSaecke:5,  preisProSack:10, saatkosten:0,  color:'#aed581', epoche:'mittelalter' },
+  wiese:     { em:'🍃', name:'Heu',       wachstumMs:90000,  ertragSaecke:5,  preisProSack:10, saatkosten:0,  color:'#aed581', epoche:'wikinger' },
   mais:      { em:'🌽', name:'Mais',      wachstumMs:90000,  ertragSaecke:12, preisProSack:8,  saatkosten:8,  color:'#fbc02d', epoche:'industrie' },
   kartoffel: { em:'🥔', name:'Kartoffel', wachstumMs:120000, ertragSaecke:10, preisProSack:15, saatkosten:12, color:'#7cb342', epoche:'industrie' },
   ruebe:     { em:'🍠', name:'Rübe',      wachstumMs:180000, ertragSaecke:8,  preisProSack:35, saatkosten:20, color:'#9c27b0', epoche:'industrie' },
@@ -94,6 +98,8 @@ const GEBAEUDE_DEFAULTS = {
   huehnerstall: {x:1140, y:580, w:240, h:240, name:'Hühnerstall',   em:'🐔', epoche:'antike' },
   steinstall:   {x:1420, y:540, w:280, h:300, name:'Ochsenstall',   em:'🐂', epoche:'antike' },
   muehle:       {x:480,  y:380, w:200, h:280, name:'Wassermühle',   em:'⚙️', epoche:'antike' },
+  langhaus:     {x:300,  y:480, w:380, h:240, name:'Wikinger-Langhaus', em:'⚔️', epoche:'wikinger' },
+  schafstall:   {x:1700, y:1000,w:240, h:200, name:'Schafstall',    em:'🐑', epoche:'wikinger' },
   fachwerkhaus: {x:760,  y:200, w:300, h:280, name:'Fachwerkhaus',  em:'🏡', epoche:'mittelalter' },
   windmuehle:   {x:1750, y:200, w:200, h:340, name:'Windmühle',     em:'🌀', epoche:'mittelalter' },
   schmiede:     {x:1100, y:300, w:240, h:220, name:'Schmiede',      em:'⚒️', epoche:'mittelalter' },
@@ -117,6 +123,8 @@ const SHOP_KATALOG = {
     { id:'huehnerstall', preis:200,   desc:'+2 Hühner' },
     { id:'steinstall',   preis:500,   desc:'Ochsen halten' },
     { id:'muehle',       preis:900,   desc:'Korn → Mehl' },
+    { id:'langhaus',     preis:1200,  desc:'Wikinger-Halle' },
+    { id:'schafstall',   preis:900,   desc:'+2 Schafe, Wolle' },
     { id:'fachwerkhaus', preis:1500,  desc:'Mehr Wohnraum' },
     { id:'windmuehle',   preis:2400,  desc:'Wind = Energie' },
     { id:'schmiede',     preis:1800,  desc:'Werkzeuge' },
@@ -139,6 +147,7 @@ const SHOP_KATALOG = {
   tiere: [
     { id:'huhn',    name:'+ Huhn',  em:'🐔', preis:50,  desc:'5 Eier/Tag', requires:'huehnerstall', wiederholbar:true, max:12 },
     { id:'ochse',   name:'+ Ochse', em:'🐂', preis:200, desc:'Zugtier',    requires:'steinstall',  wiederholbar:true, max:4 },
+    { id:'schaf',   name:'+ Schaf', em:'🐑', preis:120, desc:'Wolle + Milch', requires:'schafstall', wiederholbar:true, max:8 },
     { id:'kuh',     name:'+ Kuh',   em:'🐮', preis:500, desc:'8 L Milch',  requires:'kuhstall',    wiederholbar:true, max:8 },
     { id:'schwein', name:'+ Schwein',em:'🐷',preis:300, desc:'Mastvieh',   requires:'schweinestall',wiederholbar:true, max:8 },
     { id:'pferd',   name:'Pferd',   em:'🐴', preis:1500,desc:'Reittier',   requires:'steinstall' },
@@ -711,7 +720,9 @@ function drawBauplatz(parent, gid, preis) {
 function renderGebaeudeSVG(gid, meta) {
   const w = meta.w, h = meta.h;
   switch(gid) {
-    case 'wohnhaus':     return svgWohnhaus(w, h);
+    case 'wohnhaus':     return svgWohnhausFuerEpoche(w, h);
+    case 'langhaus':     return svgLanghaus(w, h);
+    case 'schafstall':   return svgSchafstall(w, h);
     case 'fachwerkhaus': return svgFachwerkhaus(w, h);
     case 'feuerstelle':  return svgFeuerstelle(w, h);
     case 'vorratsgrube': return svgVorratsgrube(w, h);
@@ -732,40 +743,231 @@ function renderGebaeudeSVG(gid, meta) {
   }
 }
 
-// --- Detail-SVGs ---
-function svgWohnhaus(w, h) {
+// --- WOHNHAUS pro Epoche ---
+function svgWohnhausFuerEpoche(w, h) {
+  switch(GS.epoche) {
+    case 'steinzeit':   return svgWohnhausSteinzeit(w, h);
+    case 'antike':      return svgWohnhausAntike(w, h);
+    case 'wikinger':    return svgLanghaus(w, h);
+    case 'mittelalter': return svgFachwerkhaus(w, h);
+    case 'industrie':   return svgWohnhausIndustrie(w, h);
+    case 'moderne':     return svgWohnhausModerne(w, h);
+    default:            return svgWohnhausSteinzeit(w, h);
+  }
+}
+
+// Steinzeit – runde Lehmhütte mit Strohdach
+function svgWohnhausSteinzeit(w, h) {
+  const cx = w/2, baseY = h*0.95, wallTop = h*0.55, peak = h*0.12;
+  return `
+    <ellipse cx="${cx}" cy="${baseY+5}" rx="${w*0.45}" ry="11" fill="#000" opacity=".35"/>
+    <!-- Lehmwand rund -->
+    <path d="M ${w*0.1} ${baseY} Q ${w*0.1} ${wallTop} ${cx} ${wallTop} Q ${w*0.9} ${wallTop} ${w*0.9} ${baseY} Z"
+          fill="#a1887f" stroke="#5d4037" stroke-width="3"/>
+    <!-- Wand-Textur -->
+    <path d="M ${w*0.18} ${wallTop+20} Q ${cx} ${wallTop+10} ${w*0.82} ${wallTop+20}" stroke="#8d6e63" stroke-width="2" fill="none" opacity=".7"/>
+    <path d="M ${w*0.15} ${wallTop+45} Q ${cx} ${wallTop+35} ${w*0.85} ${wallTop+45}" stroke="#8d6e63" stroke-width="2" fill="none" opacity=".7"/>
+    <!-- Strohdach -->
+    <path d="M ${w*0.05} ${wallTop+5} Q ${cx} ${peak} ${w*0.95} ${wallTop+5} L ${w*0.9} ${wallTop} L ${w*0.1} ${wallTop} Z"
+          fill="#bf8b3a" stroke="#5d4037" stroke-width="3"/>
+    <!-- Stroh-Striche -->
+    ${[0.15,0.28,0.4,0.5,0.6,0.72,0.85].map(p => `<line x1="${w*p}" y1="${wallTop}" x2="${w*p + (p<0.5?-6:6)}" y2="${peak + (p-0.5)*(p-0.5)*h*1.2 + h*0.02}" stroke="#8d6e63" stroke-width="1.5"/>`).join('')}
+    <!-- Eingang -->
+    <path d="M ${cx-22} ${baseY} L ${cx-22} ${baseY-h*0.3} Q ${cx-22} ${baseY-h*0.4} ${cx} ${baseY-h*0.4} Q ${cx+22} ${baseY-h*0.4} ${cx+22} ${baseY-h*0.3} L ${cx+22} ${baseY} Z"
+          fill="#3e2723" stroke="#000" stroke-width="2"/>
+    <path d="M ${cx-18} ${baseY-5} L ${cx-18} ${baseY-h*0.28} Q ${cx-18} ${baseY-h*0.36} ${cx} ${baseY-h*0.36} Q ${cx+18} ${baseY-h*0.36} ${cx+18} ${baseY-h*0.28} L ${cx+18} ${baseY-5} Z"
+          fill="#1a0e08"/>
+    <!-- Rauchloch -->
+    <ellipse cx="${cx}" cy="${peak+10}" rx="14" ry="6" fill="#000"/>
+    <g opacity=".7">
+      <circle cx="${cx-3}" cy="${peak-2}" r="6" fill="#cfd8dc"/>
+      <circle cx="${cx+5}" cy="${peak-12}" r="9" fill="#eceff1"/>
+      <circle cx="${cx-2}" cy="${peak-22}" r="11" fill="#fff"/>
+    </g>
+    <!-- Kleiner Stein vorm Eingang -->
+    <ellipse cx="${cx-w*0.32}" cy="${baseY+2}" rx="14" ry="6" fill="#9e9e9e" stroke="#424242" stroke-width="1.5"/>
+  `;
+}
+
+// Antike – römisches Steinhaus mit Säulen + Atrium
+function svgWohnhausAntike(w, h) {
   return `
     <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
-    <polygon points="20,${h*0.88} ${w-20},${h*0.88} ${w-5},${h-15} 35,${h-15}" fill="#8d6e63" stroke="#000" stroke-width="2.5"/>
-    <rect x="20" y="${h*0.83}" width="${w-40}" height="${h*0.05}" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
-    <polygon points="${w-20},${h*0.4} ${w+5},${h*0.42} ${w+5},${h*0.85} ${w-20},${h*0.83}" fill="#a52525" stroke="#000" stroke-width="2"/>
-    <rect x="20" y="${h*0.4}" width="${w-40}" height="${h*0.43}" fill="#fff8e1" stroke="#000" stroke-width="3"/>
-    <line x1="20" y1="${h*0.6}" x2="${w-20}" y2="${h*0.6}" stroke="#5d4037" stroke-width="3"/>
-    <line x1="${w/2}" y1="${h*0.4}" x2="${w/2}" y2="${h*0.83}" stroke="#5d4037" stroke-width="3"/>
-    <rect x="40" y="${h*0.46}" width="50" height="36" fill="#90caf9" stroke="#000" stroke-width="3"/>
-    <line x1="65" y1="${h*0.46}" x2="65" y2="${h*0.46+36}" stroke="#5d4037" stroke-width="2"/>
-    <line x1="40" y1="${h*0.46+18}" x2="90" y2="${h*0.46+18}" stroke="#5d4037" stroke-width="2"/>
-    <rect x="36" y="${h*0.46+36}" width="58" height="6" fill="#5d4037"/>
-    <circle cx="50" cy="${h*0.46+34}" r="3.5" fill="#e91e63"/>
-    <circle cx="62" cy="${h*0.46+34}" r="3.5" fill="#fff59d"/>
-    <circle cx="74" cy="${h*0.46+34}" r="3.5" fill="#9c27b0"/>
-    <rect x="${w-90}" y="${h*0.46}" width="50" height="36" fill="#90caf9" stroke="#000" stroke-width="3"/>
-    <line x1="${w-65}" y1="${h*0.46}" x2="${w-65}" y2="${h*0.46+36}" stroke="#5d4037" stroke-width="2"/>
-    <rect x="${w/2-22}" y="${h*0.62}" width="44" height="${h*0.21}" fill="#5d4037" stroke="#000" stroke-width="3" rx="2"/>
-    <rect x="${w/2-18}" y="${h*0.66}" width="36" height="18" fill="#3e2723"/>
-    <circle cx="${w/2+12}" cy="${h*0.74}" r="2.5" fill="#fbc02d"/>
-    <polygon points="0,${h*0.4} ${w/2},${h*0.08} ${w},${h*0.4}" fill="url(#ziegelRot)" stroke="#000" stroke-width="3"/>
-    <polygon points="${w},${h*0.4} ${w+22},${h*0.42} ${w/2+22},${h*0.08+5} ${w/2},${h*0.08}" fill="url(#ziegelDachSeite)" stroke="#000" stroke-width="2.5"/>
-    <rect x="${w/2-14}" y="${h*0.32}" width="28" height="20" fill="#fff8e1" stroke="#000" stroke-width="2"/>
-    <polygon points="${w/2-18},${h*0.32} ${w/2},${h*0.22} ${w/2+18},${h*0.32}" fill="#c62828" stroke="#000" stroke-width="2"/>
-    <rect x="${w/2-8}" y="${h*0.36}" width="16" height="14" fill="#90caf9" stroke="#000" stroke-width="1.5"/>
-    <rect x="55" y="${h*0.18}" width="16" height="40" fill="#8d6e63" stroke="#000" stroke-width="2.5"/>
-    <rect x="51" y="${h*0.16}" width="24" height="7" fill="#5d4037" stroke="#000" stroke-width="2"/>
-    <g opacity=".75">
-      <circle cx="63" cy="${h*0.13}" r="6" fill="#eceff1"/>
-      <circle cx="70" cy="${h*0.08}" r="9" fill="#eceff1"/>
-      <circle cx="58" cy="${h*0.04}" r="11" fill="#fff"/>
+    <!-- Sockel -->
+    <rect x="10" y="${h*0.85}" width="${w-20}" height="${h*0.1}" fill="#cfd8dc" stroke="#5d4037" stroke-width="3"/>
+    <line x1="10" y1="${h*0.92}" x2="${w-10}" y2="${h*0.92}" stroke="#90a4ae" stroke-width="1.5"/>
+    <!-- Hauptmauer -->
+    <rect x="20" y="${h*0.4}" width="${w-40}" height="${h*0.45}" fill="#fff8e1" stroke="#5d4037" stroke-width="3"/>
+    <!-- Säulen -->
+    ${[0.18,0.36,0.54,0.72].map(p => `
+      <rect x="${w*p-7}" y="${h*0.42}" width="14" height="${h*0.43}" fill="#eceff1" stroke="#5d4037" stroke-width="2"/>
+      <rect x="${w*p-12}" y="${h*0.42}" width="24" height="6" fill="#cfd8dc" stroke="#5d4037" stroke-width="1.5"/>
+      <rect x="${w*p-12}" y="${h*0.79}" width="24" height="6" fill="#cfd8dc" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="${w*p}" y1="${h*0.48}" x2="${w*p}" y2="${h*0.78}" stroke="#cfd8dc" stroke-width="1"/>
+    `).join('')}
+    <!-- Eingang -->
+    <rect x="${w*0.85-15}" y="${h*0.6}" width="30" height="${h*0.25}" fill="#5d4037" stroke="#000" stroke-width="2.5"/>
+    <!-- Flaches Dach mit Giebel -->
+    <polygon points="0,${h*0.4} ${w/2},${h*0.18} ${w},${h*0.4}" fill="#c62828" stroke="#5d4037" stroke-width="3"/>
+    <polygon points="${w},${h*0.4} ${w+18},${h*0.42} ${w/2+18},${h*0.2} ${w/2},${h*0.18}" fill="#8b1e1e" stroke="#5d4037" stroke-width="2"/>
+    <!-- Tympanon -->
+    <text x="${w/2}" y="${h*0.32}" text-anchor="middle" font-size="20">🏛️</text>
+    <text x="${w/2}" y="${h-2}" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" stroke="#000" stroke-width="3" paint-order="stroke">VILLA</text>
+  `;
+}
+
+// Industriezeit – Backsteinhaus mit hohem Schornstein
+function svgWohnhausIndustrie(w, h) {
+  return `
+    <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
+    <rect x="10" y="${h*0.88}" width="${w-20}" height="${h*0.07}" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
+    <!-- Backsteinwand -->
+    <rect x="20" y="${h*0.35}" width="${w-40}" height="${h*0.53}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
+    <!-- Stockwerk-Linie -->
+    <rect x="20" y="${h*0.6}" width="${w-40}" height="4" fill="#3e2723"/>
+    <!-- Fenster oben Reihe -->
+    ${[0.2,0.45,0.7].map(p => `
+      <rect x="${w*p-22}" y="${h*0.42}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+      <line x1="${w*p}" y1="${h*0.42}" x2="${w*p}" y2="${h*0.42+36}" stroke="#3e2723" stroke-width="1.5"/>
+      <line x1="${w*p-22}" y1="${h*0.42+18}" x2="${w*p+22}" y2="${h*0.42+18}" stroke="#3e2723" stroke-width="1.5"/>
+    `).join('')}
+    <!-- Tür + Fenster unten -->
+    <rect x="${w*0.2-22}" y="${h*0.66}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${w*0.7-22}" y="${h*0.66}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${w*0.45-20}" y="${h*0.65}" width="40" height="${h*0.23}" fill="#5d4037" stroke="#3e2723" stroke-width="3"/>
+    <rect x="${w*0.45-16}" y="${h*0.69}" width="32" height="14" fill="#3e2723"/>
+    <circle cx="${w*0.45+10}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
+    <!-- Walmdach -->
+    <polygon points="0,${h*0.35} ${w*0.2},${h*0.13} ${w*0.8},${h*0.13} ${w},${h*0.35}" fill="#37474f" stroke="#000" stroke-width="3"/>
+    <polygon points="${w},${h*0.35} ${w+18},${h*0.37} ${w*0.8+18},${h*0.15} ${w*0.8},${h*0.13}" fill="#263238" stroke="#000" stroke-width="2"/>
+    <!-- Hoher Industrieschornstein -->
+    <rect x="${w*0.85}" y="${h*-0.15}" width="20" height="${h*0.5}" fill="#a1887f" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.85-3}" y="${h*-0.18}" width="26" height="8" fill="#5d4037" stroke="#000" stroke-width="2"/>
+    <g opacity=".7">
+      <circle cx="${w*0.85+10}" cy="${h*-0.25}" r="9" fill="#90a4ae"/>
+      <circle cx="${w*0.85+18}" cy="${h*-0.35}" r="11" fill="#b0bec5"/>
+      <circle cx="${w*0.85+8}" cy="${h*-0.45}" r="13" fill="#cfd8dc"/>
     </g>
+  `;
+}
+
+// Moderne – sauberes 2-stöckiges Wohnhaus
+function svgWohnhausModerne(w, h) {
+  const cx = w/2;
+  return `
+    <ellipse cx="${cx}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
+    <!-- Sockel -->
+    <rect x="15" y="${h*0.86}" width="${w-30}" height="${h*0.09}" fill="url(#steinSockel)" stroke="#000" stroke-width="2.5"/>
+    <!-- Wand 2 Stockwerke -->
+    <rect x="20" y="${h*0.38}" width="${w-40}" height="${h*0.48}" fill="#fff8e1" stroke="#3e2723" stroke-width="3"/>
+    <!-- Stockwerk-Trennung -->
+    <rect x="15" y="${h*0.62}" width="${w-30}" height="6" fill="#5d4037"/>
+    <!-- Fenster oben -->
+    <rect x="${w*0.18}" y="${h*0.43}" width="48" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
+    <line x1="${w*0.18+24}" y1="${h*0.43}" x2="${w*0.18+24}" y2="${h*0.43+34}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${w*0.18}" y1="${h*0.6}" x2="${w*0.18+48}" y2="${h*0.6}" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.62}" y="${h*0.43}" width="48" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
+    <line x1="${w*0.62+24}" y1="${h*0.43}" x2="${w*0.62+24}" y2="${h*0.43+34}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${w*0.62}" y1="${h*0.6}" x2="${w*0.62+48}" y2="${h*0.6}" stroke="#3e2723" stroke-width="2"/>
+    <!-- Fenster unten links -->
+    <rect x="${w*0.15}" y="${h*0.7}" width="50" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
+    <line x1="${w*0.15+25}" y1="${h*0.7}" x2="${w*0.15+25}" y2="${h*0.7+32}" stroke="#3e2723" stroke-width="2"/>
+    <!-- Blumenkasten -->
+    <rect x="${w*0.15-3}" y="${h*0.7+32}" width="56" height="6" fill="#5d4037" stroke="#000" stroke-width="1.5"/>
+    <circle cx="${w*0.15+10}" cy="${h*0.7+32}" r="3" fill="#e91e63"/>
+    <circle cx="${w*0.15+25}" cy="${h*0.7+32}" r="3" fill="#fff59d"/>
+    <circle cx="${w*0.15+40}" cy="${h*0.7+32}" r="3" fill="#9c27b0"/>
+    <!-- Tür mittig -->
+    <rect x="${cx-22}" y="${h*0.65}" width="44" height="${h*0.21}" fill="#5d4037" stroke="#3e2723" stroke-width="3" rx="3"/>
+    <rect x="${cx-18}" y="${h*0.69}" width="36" height="18" fill="#90caf9" stroke="#3e2723" stroke-width="1.5"/>
+    <circle cx="${cx+12}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
+    <!-- Fenster unten rechts -->
+    <rect x="${w*0.65}" y="${h*0.7}" width="50" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
+    <line x1="${w*0.65+25}" y1="${h*0.7}" x2="${w*0.65+25}" y2="${h*0.7+32}" stroke="#3e2723" stroke-width="2"/>
+    <!-- Satteldach -->
+    <polygon points="0,${h*0.38} ${cx},${h*0.08} ${w},${h*0.38}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
+    <polygon points="${w},${h*0.38} ${w+22},${h*0.4} ${cx+22},${h*0.1} ${cx},${h*0.08}" fill="url(#ziegelDachSeite)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Schornstein -->
+    <rect x="${cx+w*0.18}" y="${h*0.13}" width="18" height="${h*0.18}" fill="#a52525" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${cx+w*0.18-3}" y="${h*0.11}" width="24" height="6" fill="#3e2723"/>
+    <g opacity=".75">
+      <circle cx="${cx+w*0.18+10}" cy="${h*0.06}" r="6" fill="#eceff1"/>
+      <circle cx="${cx+w*0.18+16}" cy="${h*0}" r="9" fill="#fff"/>
+    </g>
+  `;
+}
+
+// Wikinger-Langhaus
+function svgLanghaus(w, h) {
+  const cx = w/2, base = h*0.95, dachAnsatz = h*0.55, peak = h*0.18;
+  return `
+    <ellipse cx="${cx}" cy="${base+5}" rx="${w/2-5}" ry="11" fill="#000" opacity=".4"/>
+    <!-- niedrige Holzwand -->
+    <rect x="20" y="${dachAnsatz}" width="${w-40}" height="${base-dachAnsatz}" fill="url(#holzWand)" stroke="#3e2723" stroke-width="3"/>
+    ${[0.15,0.28,0.4,0.52,0.65,0.78,0.9].map(p => `<line x1="${w*p}" y1="${dachAnsatz}" x2="${w*p}" y2="${base}" stroke="#5d4037" stroke-width="2"/>`).join('')}
+    <!-- Eingangs-Tor -->
+    <rect x="${cx-30}" y="${dachAnsatz+30}" width="60" height="${base-dachAnsatz-30}" fill="#3e2723" stroke="#000" stroke-width="3"/>
+    <line x1="${cx}" y1="${dachAnsatz+30}" x2="${cx}" y2="${base}" stroke="#5d4037" stroke-width="2"/>
+    <!-- Mini-Fenster -->
+    <rect x="${w*0.2}" y="${dachAnsatz+25}" width="20" height="20" fill="#fbc02d" stroke="#000" stroke-width="2"/>
+    <rect x="${w*0.78}" y="${dachAnsatz+25}" width="20" height="20" fill="#fbc02d" stroke="#000" stroke-width="2"/>
+    <!-- Grasdach – langes Walmdach -->
+    <path d="M -10 ${dachAnsatz+5} L ${w*0.18} ${peak} L ${w*0.82} ${peak} L ${w+10} ${dachAnsatz+5} L ${w-10} ${dachAnsatz} L 10 ${dachAnsatz} Z"
+          fill="#558b2f" stroke="#33691e" stroke-width="3"/>
+    <!-- Grasflecken auf Dach -->
+    ${[0.12,0.25,0.4,0.55,0.7,0.85].map(p => `<ellipse cx="${w*p}" cy="${peak + (p<0.18 || p>0.82 ? (p<0.18?(0.18-p):(p-0.82))*h*0.6 : 5)}" rx="14" ry="5" fill="#7cb342" opacity=".7"/>`).join('')}
+    ${[0.18,0.32,0.48,0.62,0.78].map(p => `<line x1="${w*p}" y1="${peak+10}" x2="${w*p+3}" y2="${peak+22}" stroke="#33691e" stroke-width="1.5"/>`).join('')}
+    <!-- Drachenköpfe gekreuzt am Giebel -->
+    <g transform="translate(${w*0.18},${peak})">
+      <line x1="0" y1="0" x2="-25" y2="-35" stroke="#5d4037" stroke-width="6" stroke-linecap="round"/>
+      <g transform="translate(-25,-35) rotate(-30)">
+        <path d="M 0 0 L -10 -4 L -16 0 L -22 -3 L -20 4 L -8 8 Z" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+        <circle cx="-6" cy="-1" r="1.5" fill="#e53935"/>
+      </g>
+    </g>
+    <g transform="translate(${w*0.82},${peak})">
+      <line x1="0" y1="0" x2="25" y2="-35" stroke="#5d4037" stroke-width="6" stroke-linecap="round"/>
+      <g transform="translate(25,-35) rotate(30)">
+        <path d="M 0 0 L 10 -4 L 16 0 L 22 -3 L 20 4 L 8 8 Z" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+        <circle cx="6" cy="-1" r="1.5" fill="#e53935"/>
+      </g>
+    </g>
+    <!-- Rauch in der Mitte -->
+    <g opacity=".7">
+      <circle cx="${cx-3}" cy="${peak+5}" r="6" fill="#cfd8dc"/>
+      <circle cx="${cx+5}" cy="${peak-8}" r="9" fill="#eceff1"/>
+      <circle cx="${cx-2}" cy="${peak-22}" r="11" fill="#fff"/>
+    </g>
+    <!-- Wikinger-Schild -->
+    <circle cx="40" cy="${dachAnsatz+25}" r="14" fill="#c62828" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="40" y1="${dachAnsatz+11}" x2="40" y2="${dachAnsatz+39}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="26" y1="${dachAnsatz+25}" x2="54" y2="${dachAnsatz+25}" stroke="#3e2723" stroke-width="2"/>
+    <circle cx="40" cy="${dachAnsatz+25}" r="3" fill="#fbc02d" stroke="#3e2723" stroke-width="1"/>
+  `;
+}
+
+function svgSchafstall(w, h) {
+  let schafe = '';
+  const anz = Math.min(GS.tiere.schaf || 0, 4);
+  for (let i = 0; i < anz; i++) {
+    const sx = w*0.2 + (i%2)*w*0.35, sy = h*0.65 + Math.floor(i/2)*22;
+    schafe += `<g transform="translate(${sx},${sy})">
+      <ellipse cx="0" cy="6" rx="14" ry="4" fill="#000" opacity=".3"/>
+      <ellipse cx="0" cy="0" rx="13" ry="9" fill="#fff" stroke="#000" stroke-width="1.5"/>
+      <circle cx="-9" cy="-3" r="5" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+      <circle cx="-11" cy="-4" r="1" fill="#fff"/>
+      <line x1="-5" y1="6" x2="-5" y2="11" stroke="#3e2723" stroke-width="2"/>
+      <line x1="5" y1="6" x2="5" y2="11" stroke="#3e2723" stroke-width="2"/>
+    </g>`;
+  }
+  return `
+    <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="11" fill="#000" opacity=".35"/>
+    <rect x="10" y="${h*0.85}" width="${w-20}" height="${h*0.1}" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
+    <rect x="10" y="${h*0.45}" width="${w-20}" height="${h*0.4}" fill="url(#holzWand)" stroke="#3e2723" stroke-width="3"/>
+    <rect x="${w/2-25}" y="${h*0.6}" width="50" height="${h*0.25}" fill="#3e2723" stroke="#000" stroke-width="2.5"/>
+    <polygon points="-5,${h*0.45} ${w/2},${h*0.15} ${w+5},${h*0.45}" fill="#558b2f" stroke="#33691e" stroke-width="3"/>
+    <text x="${w/2}" y="${h*0.12}" text-anchor="middle" font-size="22">🐑</text>
+    ${schafe}
   `;
 }
 
@@ -1099,6 +1301,27 @@ function treckerSpriteFor(typ) {
         <polygon points="90,55 105,75 80,80" fill="#3e2723" stroke="#000" stroke-width="2"/>
       </g>
     `;
+    case 'drachenboot': return `
+      <ellipse cx="75" cy="115" rx="70" ry="9" fill="#000" opacity=".4"/>
+      <g transform="translate(0,40)">
+        <!-- Rumpf -->
+        <path d="M 5 50 Q 75 80 145 50 L 135 30 Q 75 20 15 30 Z" fill="#5d4037" stroke="#3e2723" stroke-width="2.5"/>
+        <line x1="20" y1="40" x2="130" y2="40" stroke="#3e2723" stroke-width="1.5"/>
+        <!-- Schilde am Rand -->
+        ${[30,55,80,105].map(x => `<circle cx="${x}" cy="35" r="7" fill="#c62828" stroke="#3e2723" stroke-width="1.5"/><circle cx="${x}" cy="35" r="2" fill="#fbc02d"/>`).join('')}
+        <!-- Mast -->
+        <line x1="75" y1="32" x2="75" y2="-30" stroke="#3e2723" stroke-width="3"/>
+        <!-- Segel rot-weiß gestreift -->
+        <rect x="40" y="-25" width="70" height="50" fill="#fff" stroke="#3e2723" stroke-width="2"/>
+        <rect x="40" y="-15" width="70" height="8" fill="#c62828"/>
+        <rect x="40" y="3" width="70" height="8" fill="#c62828"/>
+        <!-- Drachenkopf vorn -->
+        <path d="M 145 50 L 158 30 L 162 35 L 156 42 L 162 45 L 152 55 Z" fill="#3e2723" stroke="#000" stroke-width="2"/>
+        <circle cx="156" cy="38" r="1.5" fill="#e53935"/>
+        <!-- Heck -->
+        <path d="M 5 50 L -5 35 L 0 50" fill="#3e2723" stroke="#000" stroke-width="2"/>
+      </g>
+    `;
     case 'pferd': return `
       <ellipse cx="75" cy="115" rx="55" ry="8" fill="#000" opacity=".35"/>
       <g transform="translate(35,30)">
@@ -1414,6 +1637,7 @@ function commitPlatzieren() {
     if (platzierenItem.gid === 'huehnerstall') GS.tiere.huhn = (GS.tiere.huhn || 0) + 2;
     if (platzierenItem.gid === 'kuhstall')      GS.tiere.kuh  = (GS.tiere.kuh || 0) + 1;
     if (platzierenItem.gid === 'steinstall')    GS.tiere.ochse= (GS.tiere.ochse || 0) + 1;
+    if (platzierenItem.gid === 'schafstall')    GS.tiere.schaf= (GS.tiere.schaf || 0) + 2;
   }
   GS.gebaeudePos[platzierenItem.gid] = {x: Math.round(platzierenPos.x), y: Math.round(platzierenPos.y)};
   toast(`🎉 ${meta.name} steht!`, '#43a047');
@@ -1508,7 +1732,8 @@ function verkaufenMitMatheCustom(item, menge, preisProEinheit, titel, em) {
 // INNEN-ANSICHTEN
 // ============================================================
 function openInnen(gid) {
-  if (gid === 'wohnhaus' || gid === 'fachwerkhaus') return openWohnhausInnen(gid);
+  if (gid === 'wohnhaus' || gid === 'fachwerkhaus' || gid === 'langhaus') return openWohnhausInnen(gid);
+  if (gid === 'schafstall')   return openSchafstallInnen();
   if (gid === 'huehnerstall') return openHuehnerstallInnen();
   if (gid === 'kuhstall')     return openKuhstallInnen();
   if (gid === 'steinstall')   return openSteinstallInnen();
@@ -1620,6 +1845,25 @@ function openSteinstallInnen() {
   const ochsen = GS.tiere.ochse || 0;
   card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px'}}, `${ochsen} Ochsen · Zugtiere für Pflug`));
   card.appendChild(el('p', {style:{'text-align':'center', 'font-size':'13px', color:'#666'}}, 'Ochsen ziehen den Pflug schon seit der Antike. Sie sind langsam aber stark.'));
+  showModalRaw(card);
+}
+
+function openSchafstallInnen() {
+  const card = el('div', {class:'modal-card'});
+  card.appendChild(el('button', {class:'close', onclick: closeModal}, '✕'));
+  card.appendChild(el('h2', {}, '🐑 Schafstall'));
+  const schafe = GS.tiere.schaf || 0;
+  const wolle = schafe * 2, milch = schafe * 1;
+  card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px'}}, `${schafe} Schafe · ${wolle} Wolle · ${milch} L Milch`));
+  card.appendChild(aktionBtn('🧶 Wolle scheren', `+${wolle*8}€`, () => {
+    if (schafe === 0) { toast('Keine Schafe', '#ef5350'); return; }
+    GS.geld += wolle * 8; updateGeldText(); saveState(); closeModal(); toast(`🧶 +${wolle*8}€`);
+  }));
+  card.appendChild(aktionBtn('🥛 Milch sammeln', `+${milch*1}€`, () => {
+    if (schafe === 0) return;
+    GS.inventar.milch = (GS.inventar.milch || 0) + milch; saveState(); closeModal();
+    verkaufenMitMatheCustom('milch', milch, 0.5, '🥛 Schafsmilch verkaufen', '🥛');
+  }));
   showModalRaw(card);
 }
 
