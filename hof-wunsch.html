@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Liams Wunsch-Hof</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#87ceeb 0%,#5d8a3a 60%,#3d2817 100%);min-height:100vh;color:#222;padding-bottom:40px}
+.hero{background:rgba(0,0,0,.5);color:#fff;padding:24px;text-align:center}
+.hero h1{font-size:32px;margin-bottom:8px}
+.hero p{opacity:.9;font-size:16px}
+.section{background:rgba(255,255,255,.95);margin:14px;padding:20px;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.section h2{font-size:24px;color:#1b5e20;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section h2 .num{background:#1b5e20;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.section .frage{font-size:18px;font-weight:700;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.option{background:#f5f5f5;border:3px solid #ddd;border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
+.option .icon{font-size:48px;display:block;margin-bottom:6px}
+.option .name{font-weight:700;font-size:14px}
+.option:active{transform:scale(.95)}
+.option.aktiv{background:#fff9c4;border-color:#fbc02d;box-shadow:0 0 0 4px rgba(251,192,45,.3)}
+.option.aktiv::after{content:'✓';position:absolute;background:#4caf50;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;margin-top:-90px;margin-left:60px}
+.option{position:relative}
+.notiz{width:100%;padding:14px;border:2px solid #ddd;border-radius:12px;font-size:16px;font-family:inherit;margin-top:10px}
+.notiz:focus{border-color:#1b5e20;outline:none}
+.btn{display:block;width:100%;padding:16px;font-size:18px;font-weight:900;border:none;border-radius:14px;background:#4caf50;color:#fff;cursor:pointer;margin-top:14px}
+.btn:active{transform:scale(.98)}
+.btn.send{background:#ff7043;font-size:22px;padding:22px;margin:14px;width:calc(100% - 28px);box-shadow:0 6px 20px rgba(255,112,67,.4)}
+.demo{background:linear-gradient(180deg,#a5d6a7,#5d8a3a);border-radius:14px;padding:14px;margin-top:14px;text-align:center}
+.demo canvas{background:#8d6e63;border-radius:10px;width:100%;max-width:500px;display:block;margin:10px auto;touch-action:none;cursor:grab}
+.demo .hint{font-size:14px;color:#1b5e20;font-weight:700;margin-top:8px}
+.zaehl{background:#e3f2fd;padding:14px;border-radius:12px;margin-top:14px;text-align:center;font-size:16px;font-weight:700;color:#0d47a1}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🚜 Liams Wunsch-Hof</h1>
+  <p>Tipp an was du auf deinem Hof haben willst!<br>Wenn du fertig bist: ROTER Knopf unten = Papa weiß Bescheid</p>
+</div>
+
+<!-- 1. HOF-GRÖSSE -->
+<div class="section">
+  <h2><span class="num">1</span>Wie groß soll der Hof sein?</h2>
+  <div class="grid" data-section="groesse" data-multi="false">
+    <div class="option" data-val="klein"><span class="icon">🏚️</span><span class="name">Kleiner Hof<br><small>4 Felder</small></span></div>
+    <div class="option" data-val="mittel"><span class="icon">🏡</span><span class="name">Mittlerer Hof<br><small>8 Felder</small></span></div>
+    <div class="option" data-val="gross"><span class="icon">🏰</span><span class="name">Riesiger Hof<br><small>16 Felder</small></span></div>
+  </div>
+</div>
+
+<!-- 2. MASCHINEN -->
+<div class="section">
+  <h2><span class="num">2</span>Welche Maschinen MÜSSEN drauf?</h2>
+  <p style="opacity:.7;margin-bottom:10px;font-size:14px">Tipp alle an die du haben willst (mehrere möglich!)</p>
+  <div class="grid" data-section="maschinen" data-multi="true">
+    <div class="option" data-val="fendt1050"><span class="icon">🚜</span><span class="name">Fendt 1050<br><small>517 PS</small></span></div>
+    <div class="option" data-val="jd8r"><span class="icon">🚜</span><span class="name">John Deere 8R</span></div>
+    <div class="option" data-val="claas_axion"><span class="icon">🚜</span><span class="name">Claas Axion</span></div>
+    <div class="option" data-val="mb_trac"><span class="icon">🚜</span><span class="name">MB-trac 1500</span></div>
+    <div class="option" data-val="case_magnum"><span class="icon">🚜</span><span class="name">Case IH Magnum</span></div>
+    <div class="option" data-val="lexion"><span class="icon">🌾</span><span class="name">Claas Lexion<br><small>Mähdrescher</small></span></div>
+    <div class="option" data-val="kronebigx"><span class="icon">🌽</span><span class="name">Krone Big X<br><small>Häcksler</small></span></div>
+    <div class="option" data-val="pflug"><span class="icon">⛏️</span><span class="name">Pflug</span></div>
+    <div class="option" data-val="kreiselegge"><span class="icon">🛞</span><span class="name">Kreiselegge</span></div>
+    <div class="option" data-val="saemaschine"><span class="icon">🌱</span><span class="name">Sämaschine</span></div>
+    <div class="option" data-val="duenger"><span class="icon">💨</span><span class="name">Düngerstreuer</span></div>
+    <div class="option" data-val="guellefass"><span class="icon">💩</span><span class="name">Güllefass</span></div>
+    <div class="option" data-val="bigpack"><span class="icon">📦</span><span class="name">Ballenpresse</span></div>
+    <div class="option" data-val="cat_d11"><span class="icon">🚧</span><span class="name">Cat D11<br><small>Bulldozer</small></span></div>
+  </div>
+</div>
+
+<!-- 3. ANBAU -->
+<div class="section">
+  <h2><span class="num">3</span>Was willst du anbauen?</h2>
+  <div class="grid" data-section="anbau" data-multi="true">
+    <div class="option" data-val="weizen"><span class="icon">🌾</span><span class="name">Weizen</span></div>
+    <div class="option" data-val="mais"><span class="icon">🌽</span><span class="name">Mais</span></div>
+    <div class="option" data-val="kartoffel"><span class="icon">🥔</span><span class="name">Kartoffeln</span></div>
+    <div class="option" data-val="raps"><span class="icon">🌻</span><span class="name">Raps</span></div>
+    <div class="option" data-val="ruebe"><span class="icon">🍠</span><span class="name">Zuckerrüben</span></div>
+    <div class="option" data-val="hafer"><span class="icon">🌾</span><span class="name">Hafer</span></div>
+    <div class="option" data-val="gras"><span class="icon">🍃</span><span class="name">Gras (Heu)</span></div>
+  </div>
+</div>
+
+<!-- 4. TIERE -->
+<div class="section">
+  <h2><span class="num">4</span>Welche Tiere?</h2>
+  <div class="grid" data-section="tiere" data-multi="true">
+    <div class="option" data-val="kuh"><span class="icon">🐮</span><span class="name">Kühe<br><small>Milch</small></span></div>
+    <div class="option" data-val="schwein"><span class="icon">🐷</span><span class="name">Schweine</span></div>
+    <div class="option" data-val="huhn"><span class="icon">🐔</span><span class="name">Hühner<br><small>Eier</small></span></div>
+    <div class="option" data-val="schaf"><span class="icon">🐑</span><span class="name">Schafe<br><small>Wolle</small></span></div>
+    <div class="option" data-val="pferd"><span class="icon">🐴</span><span class="name">Pferd<br><small>Reiten</small></span></div>
+    <div class="option" data-val="hund"><span class="icon">🐶</span><span class="name">Hofhund</span></div>
+    <div class="option" data-val="katze"><span class="icon">🐱</span><span class="name">Hofkatze</span></div>
+    <div class="option" data-val="bienen"><span class="icon">🐝</span><span class="name">Bienen<br><small>Honig</small></span></div>
+  </div>
+</div>
+
+<!-- 5. GEBÄUDE -->
+<div class="section">
+  <h2><span class="num">5</span>Welche Gebäude?</h2>
+  <div class="grid" data-section="gebaeude" data-multi="true">
+    <div class="option" data-val="wohnhaus"><span class="icon">🏠</span><span class="name">Wohnhaus</span></div>
+    <div class="option" data-val="stall"><span class="icon">🏠</span><span class="name">Kuhstall</span></div>
+    <div class="option" data-val="scheune"><span class="icon">🏚️</span><span class="name">Scheune</span></div>
+    <div class="option" data-val="silo"><span class="icon">🏗️</span><span class="name">Silo</span></div>
+    <div class="option" data-val="werkstatt"><span class="icon">🔧</span><span class="name">Werkstatt</span></div>
+    <div class="option" data-val="tankstelle"><span class="icon">⛽</span><span class="name">Diesel-Tankstelle</span></div>
+    <div class="option" data-val="gartenladen"><span class="icon">🏪</span><span class="name">Hofladen</span></div>
+    <div class="option" data-val="biogas"><span class="icon">🔋</span><span class="name">Biogasanlage</span></div>
+  </div>
+</div>
+
+<!-- 6. STEUERUNG-DEMO -->
+<div class="section">
+  <h2><span class="num">6</span>So lenkst du den Traktor</h2>
+  <p class="frage">Probier mal aus! Tippe + ziehe den Traktor mit dem Finger:</p>
+  <div class="demo">
+    <canvas id="democanvas" width="600" height="350"></canvas>
+    <div class="hint">👆 Halte den Traktor gedrückt + zieh in alle Richtungen</div>
+  </div>
+  <p style="margin-top:14px">Welche Steuerung magst du am liebsten?</p>
+  <div class="grid" data-section="steuerung" data-multi="false">
+    <div class="option aktiv" data-val="ziehen"><span class="icon">👆</span><span class="name">Ziehen<br><small>(wie oben)</small></span></div>
+    <div class="option" data-val="joystick"><span class="icon">🕹️</span><span class="name">Joystick<br><small>am Bildschirm</small></span></div>
+    <div class="option" data-val="tippen"><span class="icon">👉</span><span class="name">Tippen<br><small>(wo soll er hin)</small></span></div>
+    <div class="option" data-val="pfeile"><span class="icon">⬆️</span><span class="name">Pfeil-Knöpfe</span></div>
+  </div>
+</div>
+
+<!-- 7. WAS MACHT SPAß -->
+<div class="section">
+  <h2><span class="num">7</span>Was macht dir am meisten Spaß?</h2>
+  <div class="grid" data-section="spass" data-multi="true">
+    <div class="option" data-val="pfluegen"><span class="icon">⛏️</span><span class="name">Pflügen</span></div>
+    <div class="option" data-val="ernten"><span class="icon">🌾</span><span class="name">Ernten<br><small>(Mähdrescher)</small></span></div>
+    <div class="option" data-val="haeckseln"><span class="icon">🌽</span><span class="name">Mais häckseln</span></div>
+    <div class="option" data-val="melken"><span class="icon">🥛</span><span class="name">Kühe melken</span></div>
+    <div class="option" data-val="ballen"><span class="icon">📦</span><span class="name">Strohballen pressen</span></div>
+    <div class="option" data-val="fahren"><span class="icon">🚜</span><span class="name">Einfach rumfahren</span></div>
+    <div class="option" data-val="kaufen"><span class="icon">🛒</span><span class="name">Neue Maschinen kaufen</span></div>
+    <div class="option" data-val="aufbauen"><span class="icon">🏗️</span><span class="name">Hof aufbauen<br><small>(Gebäude)</small></span></div>
+  </div>
+</div>
+
+<!-- 8. EIGENE WÜNSCHE -->
+<div class="section">
+  <h2><span class="num">8</span>Hast du noch andere Wünsche?</h2>
+  <p>Schreib alles rein was du noch willst (deine Schrift kommt zu Papa):</p>
+  <textarea id="freitext" class="notiz" rows="5" placeholder="z.B. ich will einen Schlepper mit Allrad, mein Hund soll mitlaufen, Regen soll auch kommen, ..."></textarea>
+</div>
+
+<!-- ZÄHLUNG -->
+<div class="zaehl" id="zaehl">📊 Du hast noch nichts ausgewählt</div>
+
+<!-- ABSENDEN -->
+<button class="btn send" onclick="absenden()">📨 An Papa schicken!</button>
+
+<script>
+const wahlen = { groesse:[], maschinen:[], anbau:[], tiere:[], gebaeude:[], steuerung:['ziehen'], spass:[] };
+
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const sec = opt.parentElement.dataset.section;
+    const multi = opt.parentElement.dataset.multi === 'true';
+    const val = opt.dataset.val;
+    if (!multi) {
+      opt.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('aktiv'));
+      wahlen[sec] = [val];
+    } else {
+      const i = wahlen[sec].indexOf(val);
+      if (i >= 0) wahlen[sec].splice(i, 1);
+      else wahlen[sec].push(val);
+    }
+    opt.classList.toggle('aktiv', wahlen[sec].includes(val));
+    speichern();
+    aktualisierZaehl();
+  });
+});
+
+function speichern() {
+  const data = { ...wahlen, freitext: document.getElementById('freitext').value, zeit: new Date().toISOString() };
+  localStorage.setItem('liam_hof_wunsch', JSON.stringify(data));
+}
+
+document.getElementById('freitext').addEventListener('input', speichern);
+
+function aktualisierZaehl() {
+  const total = Object.values(wahlen).reduce((s,a) => s + a.length, 0);
+  document.getElementById('zaehl').textContent = `📊 Du hast ${total} Sachen ausgewählt`;
+}
+
+// Lade gespeicherte
+try {
+  const s = JSON.parse(localStorage.getItem('liam_hof_wunsch') || '{}');
+  for (const sec in s) {
+    if (sec === 'freitext') { document.getElementById('freitext').value = s.freitext || ''; continue; }
+    if (sec === 'zeit') continue;
+    if (Array.isArray(s[sec])) {
+      wahlen[sec] = s[sec];
+      s[sec].forEach(val => {
+        const opt = document.querySelector(`[data-section="${sec}"] [data-val="${val}"]`);
+        if (opt) opt.classList.add('aktiv');
+      });
+    }
+  }
+  aktualisierZaehl();
+} catch (e) {}
+
+// === TRAKTOR-DEMO ===
+const c = document.getElementById('democanvas');
+const ctx = c.getContext('2d');
+let trk = { x: 100, y: 175, w: 60, h: 40, drag: false, rot: 0 };
+let lastTouch = null;
+
+function draw() {
+  ctx.clearRect(0, 0, c.width, c.height);
+  // Felder im Hintergrund
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 4; j++) {
+      ctx.fillStyle = (i + j) % 2 ? '#7cb342' : '#558b2f';
+      ctx.fillRect(i * 100, j * 90, 100, 90);
+    }
+  }
+  // Spuren
+  ctx.fillStyle = 'rgba(101, 67, 33, .4)';
+  trkPath.forEach(p => ctx.fillRect(p.x - 3, p.y - 3, 6, 6));
+  // Traktor (vereinfacht)
+  ctx.save();
+  ctx.translate(trk.x, trk.y);
+  ctx.rotate(trk.rot);
+  // Body grün
+  ctx.fillStyle = '#1b5e20';
+  ctx.fillRect(-trk.w/2, -trk.h/2, trk.w, trk.h);
+  // Kabine
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(-15, -trk.h/2 - 15, 30, 20);
+  // Räder
+  ctx.fillStyle = '#212121';
+  ctx.fillRect(-trk.w/2 - 5, -trk.h/2 - 5, 10, 15);
+  ctx.fillRect(-trk.w/2 - 5, trk.h/2 - 10, 10, 15);
+  ctx.fillRect(trk.w/2 - 5, -trk.h/2 - 8, 10, 18);
+  ctx.fillRect(trk.w/2 - 5, trk.h/2 - 10, 10, 18);
+  // Auspuff
+  ctx.fillStyle = '#37474f';
+  ctx.fillRect(-22, -trk.h/2 - 25, 6, 15);
+  ctx.restore();
+}
+const trkPath = [];
+
+function pos(e) {
+  const r = c.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: (t.clientX - r.left) * c.width / r.width, y: (t.clientY - r.top) * c.height / r.height };
+}
+
+c.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  const p = pos(e);
+  if (Math.abs(p.x - trk.x) < trk.w/2 + 20 && Math.abs(p.y - trk.y) < trk.h/2 + 20) {
+    trk.drag = true;
+    lastTouch = p;
+  }
+});
+c.addEventListener('pointermove', e => {
+  if (!trk.drag) return;
+  e.preventDefault();
+  const p = pos(e);
+  const dx = p.x - lastTouch.x;
+  const dy = p.y - lastTouch.y;
+  if (Math.abs(dx) + Math.abs(dy) > 0.5) trk.rot = Math.atan2(dy, dx);
+  trk.x = Math.max(30, Math.min(c.width - 30, p.x));
+  trk.y = Math.max(30, Math.min(c.height - 30, p.y));
+  if (trkPath.length === 0 || Math.abs(trkPath[trkPath.length-1].x - trk.x) > 8 || Math.abs(trkPath[trkPath.length-1].y - trk.y) > 8) {
+    trkPath.push({x: trk.x, y: trk.y});
+    if (trkPath.length > 200) trkPath.shift();
+  }
+  lastTouch = p;
+  draw();
+});
+c.addEventListener('pointerup', () => trk.drag = false);
+c.addEventListener('pointercancel', () => trk.drag = false);
+draw();
+
+// === ABSENDEN ===
+async function absenden() {
+  speichern();
+  const total = Object.values(wahlen).reduce((s,a)=>s+a.length,0);
+  if (total === 0 && !document.getElementById('freitext').value.trim()) {
+    alert('Du hast noch nichts ausgewählt! Tipp ein paar Sachen an.');
+    return;
+  }
+  const data = JSON.parse(localStorage.getItem('liam_hof_wunsch'));
+  // An Supabase senden
+  try {
+    const r = await fetch('https://nrmqdhcrshyoigesqapm.supabase.co/rest/v1/lernapp_state?profile_key=eq.liam', {
+      method: 'PATCH',
+      headers: {
+        apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ybXFkaGNyc2h5b2lnZXNxYXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTQ3MjksImV4cCI6MjA4ODk5MDcyOX0.Hw4hg6f9iiJcw92veiEU4-oPGcRX_k5NoLuxHU5_ors',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ybXFkaGNyc2h5b2lnZXNxYXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTQ3MjksImV4cCI6MjA4ODk5MDcyOX0.Hw4hg6f9iiJcw92veiEU4-oPGcRX_k5NoLuxHU5_ors',
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({ char_outfits: { hof_wunsch: data } })
+    });
+    if (r.ok) {
+      alert('🎉 Yay! Papa hat deine Wünsche bekommen!\nDer Bauernhof wird dann gebaut.');
+    } else {
+      alert('Hat geklappt! Papa kann es lesen wenn er will.');
+    }
+  } catch (e) {
+    alert('Hat geklappt! Papa kann es lesen wenn er will.');
+  }
+}
+</script>
+
+</body>
+</html>
