@@ -258,6 +258,18 @@ function toast(msg, color) {
   setTimeout(() => t.remove(), 3000);
 }
 function formatGeld(g) { return Math.round(g).toLocaleString('de-DE') + ' €'; }
+
+// === Twemoji-Bibliothek: Emoji → detailliertes SVG-Bild ===
+const TWEMOJI_BASE = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg';
+function emojiCode(em) {
+  return [...em].map(c => c.codePointAt(0))
+    .filter(cp => cp !== 0xfe0f)
+    .map(cp => cp.toString(16))
+    .join('-');
+}
+function imgEmoji(em, cx, cy, size) {
+  return `<image href="${TWEMOJI_BASE}/${emojiCode(em)}.svg" x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}"/>`;
+}
 function epocheIdx(eid) { return EPOCHEN.findIndex(e => e.id === eid); }
 function aktuelleEpoche() { return EPOCHEN[epocheIdx(GS.epoche)] || EPOCHEN[0]; }
 function epocheUnlocked(eid) { return epocheIdx(eid) <= epocheIdx(GS.epoche); }
@@ -577,55 +589,28 @@ function drawFeldBauplatz(parent, fid, layout, preis) {
 function drawPflanzenSchoen(g, type, w, h, reif) {
   const cfg = CROP_CONFIG[type];
   if (!cfg) return;
-  const cols = Math.floor(w / 28), rows = Math.floor(h / 50);
+  // Reif → echtes Twemoji der Frucht; nicht-reif → kleiner Sprössling 🌱
+  const emReif = {
+    weizen:'🌾', gerste:'🌾', hafer:'🌾', roggen:'🌾',
+    mais:'🌽', kartoffel:'🥔', ruebe:'🥕', raps:'🌻',
+    soja:'🫘', wiese:'🌿'
+  };
+  const em = reif ? (emReif[type] || '🌱') : '🌱';
+  const tileSz = reif ? 32 : 24;
+  const cols = Math.floor(w / (tileSz + 4));
+  const rows = Math.floor((h - 20) / (tileSz + 6));
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const px = (c+0.5) * w / cols;
-      const py = h * 0.2 + r * h / rows * 0.95 + (r%2 ? 5 : 0);
-      const ph = svgEl('g', {transform:`translate(${px},${py})`});
-      if (type === 'weizen' || type === 'hafer' || type === 'gerste' || type === 'roggen') {
-        ph.innerHTML = `
-          <line x1="0" y1="14" x2="0" y2="-2" stroke="#558b2f" stroke-width="1.8"/>
-          <ellipse cx="0" cy="-6" rx="4" ry="8" fill="${reif ? '#fdd835' : '#9ccc65'}" stroke="#000" stroke-width=".7"/>
-          ${reif ? '<line x1="0" y1="-14" x2="0" y2="-18" stroke="#fbc02d" stroke-width="1.2"/><line x1="-3" y1="-14" x2="-4" y2="-18" stroke="#fbc02d" stroke-width="1"/><line x1="3" y1="-14" x2="4" y2="-18" stroke="#fbc02d" stroke-width="1"/>' : ''}
-        `;
-      } else if (type === 'mais') {
-        ph.innerHTML = `
-          <line x1="0" y1="22" x2="0" y2="-12" stroke="#33691e" stroke-width="3"/>
-          <path d="M 0 8 Q -10 2 -7 -7" stroke="#558b2f" stroke-width="2.5" fill="none"/>
-          <path d="M 0 0 Q 10 -7 8 -15" stroke="#558b2f" stroke-width="2.5" fill="none"/>
-          <ellipse cx="0" cy="-15" rx="5" ry="12" fill="${reif ? '#fbc02d' : '#aed581'}" stroke="#000" stroke-width="1"/>
-        `;
-      } else if (type === 'kartoffel') {
-        ph.innerHTML = `
-          <ellipse cx="0" cy="6" rx="11" ry="3" fill="#3e2723" opacity=".4"/>
-          <circle cx="-5" cy="0" r="5" fill="#558b2f" stroke="#000" stroke-width=".8"/>
-          <circle cx="5" cy="0" r="5" fill="#558b2f" stroke="#000" stroke-width=".8"/>
-          <circle cx="0" cy="-4" r="6" fill="${reif ? '#7cb342' : '#aed581'}" stroke="#000" stroke-width=".8"/>
-          ${reif ? '<circle cx="0" cy="-7" r="2.5" fill="#fff" stroke="#000" stroke-width=".5"/><circle cx="0" cy="-7" r="1.2" fill="#ffeb3b"/>' : ''}
-        `;
-      } else if (type === 'raps' || type === 'soja') {
-        ph.innerHTML = `
-          <line x1="0" y1="14" x2="0" y2="-6" stroke="#558b2f" stroke-width="1.8"/>
-          <ellipse cx="-4" cy="2" rx="3" ry="2" fill="#7cb342" stroke="#000" stroke-width=".5"/>
-          <ellipse cx="4" cy="0" rx="3" ry="2" fill="#7cb342" stroke="#000" stroke-width=".5"/>
-          ${reif ? `<circle cx="0" cy="-10" r="4" fill="${type==='soja'?'#aed581':'#fdd835'}" stroke="#000" stroke-width=".7"/><circle cx="-3" cy="-12" r="2.5" fill="#fbc02d"/><circle cx="3" cy="-12" r="2.5" fill="#fbc02d"/>` : '<circle cx="0" cy="-7" r="2.5" fill="#9ccc65" stroke="#000" stroke-width=".5"/>'}
-        `;
-      } else if (type === 'ruebe') {
-        ph.innerHTML = `
-          <circle cx="0" cy="3" r="${reif ? 8 : 4}" fill="${reif ? '#9c27b0' : '#aed581'}" stroke="#000" stroke-width=".8"/>
-          <path d="M -4 -4 L -6 -12 M 0 -7 L 0 -15 M 4 -4 L 6 -12" stroke="#558b2f" stroke-width="2" fill="none"/>
-        `;
-      } else if (type === 'wiese') {
-        ph.innerHTML = `
-          <path d="M -3 14 L -3 -3" stroke="#558b2f" stroke-width="1.5"/>
-          <path d="M 0 14 L 0 -5" stroke="#558b2f" stroke-width="1.5"/>
-          <path d="M 3 14 L 3 -3" stroke="#558b2f" stroke-width="1.5"/>
-        `;
-      }
-      g.appendChild(ph);
+      const px = (c + 0.5) * w / cols;
+      const py = h * 0.18 + r * ((h - 20) / Math.max(rows,1)) * 0.95 + (r%2 ? 4 : 0);
+      g.appendChild(svgFromString(imgEmoji(em, px, py, tileSz)));
     }
   }
+}
+function svgFromString(htmlStr) {
+  const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  tmp.innerHTML = htmlStr;
+  return tmp;
 }
 
 // ============================================================
@@ -644,8 +629,10 @@ function openCropPicker(fid) {
     const cfg = CROP_CONFIG[cid];
     const locked = !epocheUnlocked(cfg.epoche);
     const tooExpensive = GS.geld < cfg.saatkosten;
+    const cellPic = el('div', {style:{height:'56px'}});
+    cellPic.innerHTML = `<svg viewBox="0 0 56 56" width="56" height="56">${imgEmoji(cfg.em, 28, 28, 50)}</svg>`;
     const cell = el('div', {style:{background: locked ? '#eee' : '#f5f5f5', 'border-radius':'12px', padding:'12px', 'text-align':'center', cursor: locked ? 'not-allowed' : 'pointer', opacity: locked ? '.4' : '1', border: '2px solid ' + (tooExpensive && !locked ? '#ef5350' : 'transparent')}},
-      el('div', {style:{'font-size':'40px'}}, cfg.em),
+      cellPic,
       el('div', {style:{'font-weight':'900', 'font-size':'14px', 'margin-top':'4px'}}, cfg.name),
       el('div', {style:{'font-size':'11px', color:'#666', 'margin-top':'2px'}}, `Saat ${cfg.saatkosten}€ → ${cfg.ertragSaecke}× ${cfg.preisProSack}€`),
       el('div', {style:{'font-size':'10px', color:'#888', 'margin-top':'2px'}}, `~${Math.round(cfg.wachstumMs * ZEIT_FAKTOR / 1000)}s wachsen`),
@@ -707,7 +694,9 @@ function drawBauplatz(parent, gid, preis) {
   const pos = gebaeudePos(gid);
   const g = svgEl('g', {transform:`translate(${pos.x},${pos.y})`, style:'cursor:pointer'});
   g.appendChild(svgEl('rect', {x:'0', y:'0', width:String(meta.w), height:String(meta.h), fill:'rgba(255,255,255,.12)', stroke:'#fff', 'stroke-width':'4', 'stroke-dasharray':'12 8', rx:'10'}));
-  g.appendChild(svgEl('text', {x:String(meta.w/2), y:String(meta.h/2 - 16), 'text-anchor':'middle', fill:'#fff', 'font-size':'34'}, meta.em));
+  const picStr = imgEmoji(meta.em, meta.w/2, meta.h/2 - 24, 60);
+  const picWrap = svgEl('g'); picWrap.innerHTML = picStr;
+  g.appendChild(picWrap);
   g.appendChild(svgEl('text', {x:String(meta.w/2), y:String(meta.h/2 + 14), 'text-anchor':'middle', fill:'#fff', 'font-size':'14', 'font-weight':'700'}, meta.name));
   g.appendChild(svgEl('text', {x:String(meta.w/2), y:String(meta.h/2 + 36), 'text-anchor':'middle', fill:'#fff', 'font-size':'15', 'font-weight':'900'}, formatGeld(preis)));
   g.addEventListener('click', () => kaufenGebaeude(gid));
@@ -1122,15 +1111,8 @@ function svgSchafstall(w, h) {
   let schafe = '';
   const anz = Math.min(GS.tiere.schaf || 0, 4);
   for (let i = 0; i < anz; i++) {
-    const sx = w*0.2 + (i%2)*w*0.35, sy = h*0.65 + Math.floor(i/2)*22;
-    schafe += `<g transform="translate(${sx},${sy})">
-      <ellipse cx="0" cy="6" rx="14" ry="4" fill="#000" opacity=".3"/>
-      <ellipse cx="0" cy="0" rx="13" ry="9" fill="#fff" stroke="#000" stroke-width="1.5"/>
-      <circle cx="-9" cy="-3" r="5" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
-      <circle cx="-11" cy="-4" r="1" fill="#fff"/>
-      <line x1="-5" y1="6" x2="-5" y2="11" stroke="#3e2723" stroke-width="2"/>
-      <line x1="5" y1="6" x2="5" y2="11" stroke="#3e2723" stroke-width="2"/>
-    </g>`;
+    const sx = w*0.2 + (i%2)*w*0.35, sy = h*0.65 + Math.floor(i/2)*30;
+    schafe += imgEmoji('🐑', sx, sy, 38);
   }
   return `
     <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="11" fill="#000" opacity=".35"/>
@@ -1138,7 +1120,7 @@ function svgSchafstall(w, h) {
     <rect x="10" y="${h*0.45}" width="${w-20}" height="${h*0.4}" fill="url(#holzWand)" stroke="#3e2723" stroke-width="3"/>
     <rect x="${w/2-25}" y="${h*0.6}" width="50" height="${h*0.25}" fill="#3e2723" stroke="#000" stroke-width="2.5"/>
     <polygon points="-5,${h*0.45} ${w/2},${h*0.15} ${w+5},${h*0.45}" fill="#558b2f" stroke="#33691e" stroke-width="3"/>
-    <text x="${w/2}" y="${h*0.12}" text-anchor="middle" font-size="22">🐑</text>
+    ${imgEmoji('🐑', w/2, h*0.1, 38)}
     ${schafe}
   `;
 }
@@ -1262,14 +1244,8 @@ function svgVorratsgrube(w, h) {
 function svgHuehnerstall(w, h, huehner) {
   let huehnerSvg = '';
   for (let i = 0; i < Math.min(huehner, 6); i++) {
-    huehnerSvg += `<g transform="translate(${w*0.55 + (i%3)*22},${h*0.78 + Math.floor(i/3)*20})">
-      <ellipse cx="9" cy="14" rx="9" ry="2" fill="#000" opacity=".3"/>
-      <ellipse cx="9" cy="9" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1.2"/>
-      <circle cx="14" cy="5" r="4.5" fill="#fff" stroke="#000" stroke-width="1.2"/>
-      <polygon points="17,4 21,5 17,6" fill="#ffa726" stroke="#000" stroke-width=".5"/>
-      <path d="M 11 1 L 12 -1 L 13 1 L 14 -1 L 15 1" fill="#e53935" stroke="#000" stroke-width=".5"/>
-      <circle cx="15" cy="4" r="1" fill="#000"/>
-    </g>`;
+    const cx = w*0.55 + (i%3)*30, cy = h*0.78 + Math.floor(i/3)*26;
+    huehnerSvg += imgEmoji('🐔', cx, cy, 32);
   }
   return `
     <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="11" fill="#000" opacity=".35"/>
@@ -1285,7 +1261,7 @@ function svgHuehnerstall(w, h, huehner) {
     <line x1="${w/2-12}" y1="${h*0.34}" x2="${w/2+12}" y2="${h*0.34}" stroke="#5d4037" stroke-width="3"/>
     <polygon points="-5,${h*0.42} ${w/2},${h*0.12} ${w+5},${h*0.42}" fill="url(#ziegelRot)" stroke="#000" stroke-width="3"/>
     <polygon points="${w+5},${h*0.42} ${w+25},${h*0.44} ${w/2+20},${h*0.14} ${w/2},${h*0.12}" fill="url(#ziegelDachSeite)" stroke="#000" stroke-width="2.5"/>
-    <text x="${w/2}" y="${h*0.09}" text-anchor="middle" font-size="22">🐔</text>
+    ${imgEmoji('🐔', w/2, h*0.07, 36)}
     ${huehnerSvg}
   `;
 }
@@ -1300,7 +1276,7 @@ function svgSteinstall(w, h) {
     <rect x="${w-76}" y="${h*0.48}" width="36" height="28" fill="#3e2723" stroke="#000" stroke-width="2"/>
     <polygon points="-5,${h*0.4} ${w/2},${h*0.1} ${w+5},${h*0.4}" fill="#a52525" stroke="#000" stroke-width="3"/>
     <polygon points="${w+5},${h*0.4} ${w+22},${h*0.42} ${w/2+18},${h*0.12} ${w/2},${h*0.1}" fill="#8b1e1e" stroke="#000" stroke-width="2"/>
-    <text x="${w/2}" y="${h*0.06}" text-anchor="middle" font-size="22">🐂</text>
+    ${imgEmoji('🐂', w/2, h*0.05, 36)}
   `;
 }
 
@@ -1319,7 +1295,7 @@ function svgMuehle(w, h) {
     <line x1="${w-5-h*0.22}" y1="${h*0.7}" x2="${w-5+h*0.22}" y2="${h*0.7}" stroke="#3e2723" stroke-width="3"/>
     <line x1="${w-5-h*0.16}" y1="${h*0.7-h*0.16}" x2="${w-5+h*0.16}" y2="${h*0.7+h*0.16}" stroke="#3e2723" stroke-width="3"/>
     <line x1="${w-5+h*0.16}" y1="${h*0.7-h*0.16}" x2="${w-5-h*0.16}" y2="${h*0.7+h*0.16}" stroke="#3e2723" stroke-width="3"/>
-    <text x="${w/2}" y="${h*0.4}" text-anchor="middle" font-size="22">⚙️</text>
+    ${imgEmoji('⚙️', w/2, h*0.36, 36)}
   `;
 }
 
@@ -1368,7 +1344,7 @@ function svgSchmiede(w, h) {
       <circle cx="${w*0.7+10}" cy="${h*0.05}" r="9" fill="#90a4ae"/>
       <circle cx="${w*0.7+18}" cy="${h*-0.02}" r="11" fill="#b0bec5"/>
     </g>
-    <text x="${w/2}" y="${h*0.42}" text-anchor="middle" font-size="22">⚒️</text>
+    ${imgEmoji('⚒️', w/2, h*0.38, 36)}
     <!-- glühender Amboss -->
     <ellipse cx="${w*0.25}" cy="${h*0.78}" rx="14" ry="3" fill="#ff5722" opacity=".7"/>
     <rect x="${w*0.21}" y="${h*0.7}" width="20" height="${h*0.08}" fill="#212121" stroke="#000" stroke-width="2"/>
@@ -1393,7 +1369,7 @@ function svgKuhstall(w, h) {
     <polygon points="-5,${h*0.45} ${w/2},${h*0.13} ${w+5},${h*0.45}" fill="url(#ziegelRot)" stroke="#000" stroke-width="3"/>
     <polygon points="${w+5},${h*0.45} ${w+25},${h*0.47} ${w/2+22},${h*0.15} ${w/2},${h*0.13}" fill="url(#ziegelDachSeite)" stroke="#000" stroke-width="2.5"/>
     <rect x="${w/2-12}" y="${h*0.25}" width="24" height="22" fill="#3e2723" stroke="#000" stroke-width="2"/>
-    <text x="${w/2}" y="${h*0.1}" text-anchor="middle" font-size="22">🐮</text>
+    ${imgEmoji('🐄', w/2, h*0.07, 38)}
   `;
 }
 
@@ -1413,7 +1389,7 @@ function svgScheune(w, h) {
     <line x1="${w/2+40}" y1="${h*0.5}" x2="${w/2-40}" y2="${h*0.9}" stroke="#3e2723" stroke-width="2"/>
     <polygon points="-5,${h*0.45} ${w/2},${h*0.1} ${w+5},${h*0.45}" fill="#c62828" stroke="#000" stroke-width="3"/>
     <polygon points="${w+5},${h*0.45} ${w+25},${h*0.47} ${w/2+22},${h*0.12} ${w/2},${h*0.1}" fill="#8b1e1e" stroke="#000" stroke-width="2.5"/>
-    <text x="${w/2}" y="${h*0.32}" text-anchor="middle" font-size="22">🌾</text>
+    ${imgEmoji('🌾', w/2, h*0.28, 38)}
   `;
 }
 function svgSilo(w, h) {
@@ -1442,7 +1418,7 @@ function svgWerkstatt(w, h) {
     <line x1="${w/2-35}" y1="${h*0.8}" x2="${w/2+35}" y2="${h*0.8}" stroke="#5d4037" stroke-width="1.5"/>
     <rect x="20" y="${h*0.5}" width="32" height="28" fill="#fbc02d" stroke="#000" stroke-width="2"/>
     <rect x="${w-52}" y="${h*0.5}" width="32" height="28" fill="#fbc02d" stroke="#000" stroke-width="2"/>
-    <text x="${w/2}" y="${h*0.45}" text-anchor="middle" font-size="22">🔧</text>
+    ${imgEmoji('🔧', w/2, h*0.42, 38)}
   `;
 }
 function svgHofladen(w, h) {
@@ -1457,7 +1433,7 @@ function svgHofladen(w, h) {
     <polygon points="${w-100},${h*0.5} ${w-80},${h*0.5} ${w-90},${h*0.62}" fill="#fff"/>
     <rect x="${w/2-25}" y="${h*0.65}" width="50" height="${h*0.3}" fill="#5d4037" stroke="#000" stroke-width="3"/>
     <rect x="${w/2-22}" y="${h*0.7}" width="44" height="22" fill="#90caf9" stroke="#000" stroke-width="2"/>
-    <text x="${w/2}" y="${h*0.34}" text-anchor="middle" font-size="22">🏪</text>
+    ${imgEmoji('🏪', w/2, h*0.3, 38)}
     <text x="${w/2}" y="${h-2}" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" stroke="#000" stroke-width="3" paint-order="stroke">HOFLADEN</text>
   `;
 }
@@ -1472,7 +1448,7 @@ function svgTankstelle(w, h) {
     <rect x="${w*0.1}" y="${h*0.18}" width="${w*0.8}" height="14" fill="#fbc02d" stroke="#000" stroke-width="3"/>
     <rect x="${w*0.15}" y="${h*0.18}" width="14" height="${h*0.4}" fill="#90a4ae" stroke="#000" stroke-width="2"/>
     <rect x="${w*0.78}" y="${h*0.18}" width="14" height="${h*0.4}" fill="#90a4ae" stroke="#000" stroke-width="2"/>
-    <text x="${w/2}" y="${h*0.3}" text-anchor="middle" font-size="22">⛽</text>
+    ${imgEmoji('⛽', w/2, h*0.26, 38)}
   `;
 }
 function svgBiogas(w, h) {
@@ -1484,7 +1460,7 @@ function svgBiogas(w, h) {
     <rect x="${w*0.7}" y="${h*0.4}" width="${w*0.25}" height="14" fill="#cfd8dc"/>
     <rect x="${w*0.74}" y="${h*0.5}" width="14" height="14" fill="#fbc02d" stroke="#000" stroke-width="1.5"/>
     <text x="${w*0.74+7}" y="${h*0.62}" text-anchor="middle" font-size="14" font-weight="900" fill="#000">⚡</text>
-    <text x="${w/2}" y="${h*0.18}" text-anchor="middle" font-size="22">🔋</text>
+    ${imgEmoji('🔋', w/2, h*0.14, 38)}
   `;
 }
 function svgGeneric(w, h, em) { return svgGenericFarbig(w, h, '#bcaaa4', '#c62828', em); }
@@ -1498,7 +1474,7 @@ function svgGenericFarbig(w, h, wand, dach, em) {
     <rect x="${w*0.4}" y="${h*0.65}" width="${w*0.2}" height="${h*0.3}" fill="#3e2723" stroke="#000" stroke-width="2"/>
     <polygon points="-5,${h*0.4} ${w/2},${h*0.05} ${w+5},${h*0.4}" fill="${dach}" stroke="#000" stroke-width="3"/>
     <polygon points="${w+5},${h*0.4} ${w+22},${h*0.4 + 14} ${w/2 + 17},${h*0.05 + 14} ${w/2},${h*0.05}" fill="${dach}" stroke="#000" stroke-width="2" opacity=".7"/>
-    <text x="${w/2}" y="${h*0.5}" text-anchor="middle" font-size="44">${em}</text>
+    ${imgEmoji(em, w/2, h*0.45, 60)}
   `;
 }
 
@@ -1657,18 +1633,35 @@ function updateTreckerPosition() {
 }
 
 function drawTiereInto(svg) {
-  const schweine = GS.tiere.schwein || 0;
-  for (let i = 0; i < schweine; i++) {
-    const tx = 1200 + (i%3) * 60;
-    const ty = 1100 + Math.floor(i/3) * 50;
-    const g = svgEl('g', {transform:`translate(${tx},${ty}) scale(1.3)`});
+  // Frei laufende Tiere im Hof – jeweils detaillierte Twemoji-SVGs
+  const tierLayouts = [
+    { typ:'schwein', em:'🐷', count: GS.tiere.schwein || 0, baseX:1200, baseY:1100, cols:3, sz:60 },
+    { typ:'schaf',   em:'🐑', count: GS.tiere.schaf || 0,   baseX:900,  baseY:1180, cols:4, sz:60 },
+    { typ:'kuh',     em:'🐄', count: Math.min(GS.tiere.kuh || 0, 4),   baseX:1500, baseY:1080, cols:2, sz:70 },
+    { typ:'pferd',   em:'🐎', count: GS.tiere.pferd ? 1 : 0, baseX:780, baseY:1180, cols:1, sz:70 },
+    { typ:'hund',    em:'🐶', count: GS.tiere.hund ? 1 : 0, baseX:850, baseY:680, cols:1, sz:50 },
+    { typ:'ochse',   em:'🐂', count: GS.tiere.ochse || 0,   baseX:1620, baseY:1180, cols:2, sz:65 }
+  ];
+  for (const tl of tierLayouts) {
+    for (let i = 0; i < tl.count; i++) {
+      const tx = tl.baseX + (i % tl.cols) * (tl.sz + 8);
+      const ty = tl.baseY + Math.floor(i / tl.cols) * (tl.sz + 4);
+      const g = svgEl('g');
+      g.innerHTML = `
+        <ellipse cx="${tx + tl.sz/2}" cy="${ty + tl.sz - 4}" rx="${tl.sz*0.45}" ry="${tl.sz*0.1}" fill="#000" opacity=".35"/>
+        ${imgEmoji(tl.em, tx + tl.sz/2, ty + tl.sz/2, tl.sz)}
+      `;
+      svg.appendChild(g);
+    }
+  }
+  // Hühner laufen auch frei rum (zusätzlich zum Stall)
+  const huehner = Math.min(GS.tiere.huhn || 0, 8);
+  for (let i = 0; i < huehner; i++) {
+    const tx = 1180 + (i % 4) * 36, ty = 700 + Math.floor(i / 4) * 32;
+    const g = svgEl('g');
     g.innerHTML = `
-      <ellipse cx="15" cy="26" rx="18" ry="4" fill="#000" opacity=".35"/>
-      <ellipse cx="15" cy="17" rx="16" ry="9" fill="#f8bbd0" stroke="#c2185b" stroke-width="1.5"/>
-      <circle cx="2" cy="14" r="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="1.5"/>
-      <ellipse cx="-3" cy="15" rx="3.5" ry="3" fill="#ec407a"/>
-      <circle cx="0" cy="11" r="1" fill="#000"/>
-      <path d="M 30 14 Q 35 13 33 17" stroke="#c2185b" stroke-width="1.8" fill="none"/>
+      <ellipse cx="${tx+22}" cy="${ty+40}" rx="18" ry="4" fill="#000" opacity=".3"/>
+      ${imgEmoji('🐔', tx+22, ty+22, 44)}
     `;
     svg.appendChild(g);
   }
@@ -2036,17 +2029,14 @@ function openHuehnerstallInnen() {
   const eier = huehner * 2;
   let huehnerSvg = '';
   for (let i = 0; i < Math.min(huehner, 12); i++) {
-    const cx = 30 + (i % 4) * 90, cy = 60 + Math.floor(i / 4) * 70;
-    huehnerSvg += `<g transform="translate(${cx},${cy}) scale(2)">
-      <ellipse cx="9" cy="14" rx="9" ry="2" fill="#000" opacity=".3"/>
-      <ellipse cx="9" cy="9" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1.2"/>
-      <circle cx="14" cy="5" r="4.5" fill="#fff" stroke="#000" stroke-width="1.2"/>
-      <polygon points="17,4 21,5 17,6" fill="#ffa726"/>
-      <circle cx="15" cy="4" r="1" fill="#000"/>
-    </g>`;
+    const cx = 50 + (i % 4) * 90, cy = 80 + Math.floor(i / 4) * 60;
+    huehnerSvg += `<ellipse cx="${cx}" cy="${cy+24}" rx="22" ry="5" fill="#000" opacity=".3"/>` + imgEmoji('🐔', cx, cy, 56);
+    if ((huehner - i) > 0 && Math.random() < 0.5) huehnerSvg += imgEmoji('🥚', cx + 18, cy + 18, 16);
   }
   card.innerHTML += `<svg viewBox="0 0 400 250" style="width:100%;background:#fff8e1;border-radius:14px;border:3px solid #5d4037">
     <rect x="0" y="180" width="400" height="70" fill="#fbc02d"/>
+    <rect x="0" y="180" width="400" height="6" fill="#f9a825"/>
+    ${[40,150,260,360].map(x => `<line x1="${x}" y1="195" x2="${x+10}" y2="240" stroke="#f57f17" stroke-width="2"/>`).join('')}
     ${huehnerSvg}
     ${huehner === 0 ? '<text x="200" y="120" text-anchor="middle" font-size="20" fill="#666">Keine Hühner!</text>' : ''}
   </svg>`;
@@ -2064,8 +2054,16 @@ function openKuhstallInnen() {
   card.appendChild(el('button', {class:'close', onclick: closeModal}, '✕'));
   card.appendChild(el('h2', {}, '🐮 Kuhstall'));
   const kuehe = GS.tiere.kuh || 0, milch = kuehe * 8;
+  let kuehSvg = '';
+  for (let i = 0; i < Math.min(kuehe, 8); i++) {
+    const cx = 60 + (i % 4) * 90, cy = 70 + Math.floor(i / 4) * 70;
+    kuehSvg += `<ellipse cx="${cx}" cy="${cy+30}" rx="32" ry="6" fill="#000" opacity=".3"/>` + imgEmoji('🐄', cx, cy, 70);
+  }
   card.innerHTML += `<svg viewBox="0 0 400 200" style="width:100%;background:#fff8e1;border-radius:14px;border:3px solid #5d4037">
     <rect x="0" y="140" width="400" height="60" fill="#a1887f"/>
+    <rect x="0" y="140" width="400" height="8" fill="#5d4037"/>
+    ${[60,180,300].map(x => `<rect x="${x}" y="120" width="50" height="20" fill="#fbc02d" stroke="#5d4037" stroke-width="1.5"/><text x="${x+25}" y="135" text-anchor="middle" font-size="9" fill="#5d4037">Heu</text>`).join('')}
+    ${kuehSvg}
     ${kuehe === 0 ? '<text x="200" y="100" text-anchor="middle" font-size="20" fill="#666">Keine Kühe</text>' : ''}
   </svg>`;
   card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px 0', 'font-weight':'700'}}, `${kuehe} Kühe · ${milch} L`));
@@ -2093,6 +2091,16 @@ function openSchafstallInnen() {
   card.appendChild(el('h2', {}, '🐑 Schafstall'));
   const schafe = GS.tiere.schaf || 0;
   const wolle = schafe * 2, milch = schafe * 1;
+  let schafeSvg = '';
+  for (let i = 0; i < Math.min(schafe, 8); i++) {
+    const cx = 60 + (i % 4) * 90, cy = 70 + Math.floor(i / 4) * 70;
+    schafeSvg += `<ellipse cx="${cx}" cy="${cy+28}" rx="28" ry="5" fill="#000" opacity=".3"/>` + imgEmoji('🐑', cx, cy, 60);
+  }
+  card.innerHTML += `<svg viewBox="0 0 400 200" style="width:100%;background:#fff8e1;border-radius:14px;border:3px solid #5d4037">
+    <rect x="0" y="140" width="400" height="60" fill="#aed581"/>
+    ${schafeSvg}
+    ${schafe === 0 ? '<text x="200" y="100" text-anchor="middle" font-size="20" fill="#666">Keine Schafe</text>' : ''}
+  </svg>`;
   card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px'}}, `${schafe} Schafe · ${wolle} Wolle · ${milch} L Milch`));
   card.appendChild(aktionBtn('🧶 Wolle scheren', `+${wolle*8}€`, () => {
     if (schafe === 0) { toast('Keine Schafe', '#ef5350'); return; }
@@ -2111,6 +2119,17 @@ function openSchweinestallInnen() {
   card.appendChild(el('button', {class:'close', onclick: closeModal}, '✕'));
   card.appendChild(el('h2', {}, '🐷 Schweinestall'));
   const schweine = GS.tiere.schwein || 0;
+  let svg = '';
+  for (let i = 0; i < Math.min(schweine, 8); i++) {
+    const cx = 60 + (i % 4) * 90, cy = 70 + Math.floor(i / 4) * 70;
+    svg += `<ellipse cx="${cx}" cy="${cy+28}" rx="28" ry="5" fill="#000" opacity=".3"/>` + imgEmoji('🐷', cx, cy, 60);
+  }
+  card.innerHTML += `<svg viewBox="0 0 400 200" style="width:100%;background:#fff8e1;border-radius:14px;border:3px solid #5d4037">
+    <rect x="0" y="140" width="400" height="60" fill="#8d6e63"/>
+    <ellipse cx="200" cy="180" rx="80" ry="12" fill="#5d4037" opacity=".5"/>
+    ${svg}
+    ${schweine === 0 ? '<text x="200" y="100" text-anchor="middle" font-size="20" fill="#666">Keine Schweine</text>' : ''}
+  </svg>`;
   card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px'}}, `${schweine} Schweine`));
   card.appendChild(aktionBtn('🍖 Verkaufen', '+50 € pro Schwein', () => {
     if (schweine === 0) { toast('Keine!', '#ef5350'); return; }
@@ -2233,13 +2252,15 @@ function openTreckerGarage() {
     const owned = GS.treckerOwn.includes(tid);
     const isAktiv = GS.treckerAktiv === tid;
     const lockedEpoche = !epocheUnlocked(t.epoche);
+    const cellPic = el('div', {style:{height:'56px'}});
+    cellPic.innerHTML = `<svg viewBox="0 0 56 56" width="56" height="56">${imgEmoji(t.em, 28, 28, 50)}</svg>`;
     const cell = el('div', {style:{
       background: isAktiv ? '#dcedc8' : (owned ? '#f5f5f5' : '#eee'),
       border: '3px solid ' + (isAktiv ? '#1b5e20' : 'transparent'),
       'border-radius':'12px', padding:'12px', 'text-align':'center',
       cursor: lockedEpoche ? 'not-allowed' : 'pointer', opacity: lockedEpoche ? '.4' : '1'
     }},
-      el('div', {style:{'font-size':'40px'}}, t.em),
+      cellPic,
       el('div', {style:{'font-weight':'900', 'font-size':'14px'}}, t.name),
       el('div', {style:{'font-size':'11px', color:'#666', 'margin-top':'2px'}}, `Tempo ×${t.speed}`),
       lockedEpoche
@@ -2307,8 +2328,10 @@ function openShop() {
     const tooExpensive = !epochenLock && !required && GS.geld < item.preis;
     const cls = item.wiederholbar ? '' : (owned ? 'gekauft' : ((epochenLock || required) ? 'locked' : (tooExpensive ? 'zuteuer' : '')));
 
+    const cellPic = el('span', {class:'em', style:{display:'inline-block', height:'48px', width:'48px'}});
+    cellPic.innerHTML = `<svg viewBox="0 0 48 48" width="48" height="48">${imgEmoji(meta.em, 24, 24, 44)}</svg>`;
     const cell = el('div', {class:'shop-item ' + cls},
-      el('span', {class:'em'}, meta.em),
+      cellPic,
       el('div', {class:'name'}, (meta.name || item.name) + (item.wiederholbar ? ` (${ownedCount}/${item.max||999})` : '')),
       el('div', {class:'desc'}, item.desc || ''),
       el('div', {class:'preis'}, formatGeld(item.preis))
