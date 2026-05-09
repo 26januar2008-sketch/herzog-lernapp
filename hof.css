@@ -1,0 +1,72 @@
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,#7ec8e3 0%,#90c779 80%);color:#222}
+#hof-app{height:100%;display:flex;flex-direction:column}
+
+/* === Top-Bar === */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,0,0,.4);color:#fff;flex-shrink:0;z-index:10}
+.topbar .back{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer}
+.geld{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:20px;font-weight:900;font-size:16px}
+.geld .coin{width:22px;height:22px;border-radius:50%;background:radial-gradient(#fff59d,#ffd700);display:flex;align-items:center;justify-content:center;color:#5d4037;font-weight:900;font-size:11px}
+.shop-btn{background:#ff7043;border:none;color:#fff;padding:8px 18px;border-radius:10px;font-weight:900;font-size:14px;cursor:pointer;box-shadow:0 4px 0 #d84315}
+.shop-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #d84315}
+
+/* === Spielfläche === */
+.spielflaeche{flex:1;position:relative;overflow:hidden;touch-action:none;background:linear-gradient(180deg,#7ec8e3 0%,#a5d6a7 30%,#7cb342 100%)}
+.spielflaeche svg{width:100%;height:100%;display:block}
+
+/* === Bauplatz / Feld interaktiv === */
+.feld,.bauplatz,.gebaeude,.avatar,.trecker,.tier{cursor:pointer;transition:filter .2s}
+.feld:active,.bauplatz:active,.gebaeude:active,.tier:active{filter:brightness(1.2)}
+.feld.reif{animation:reifPulse 2s ease-in-out infinite}
+@keyframes reifPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15) drop-shadow(0 0 8px gold)}}
+
+.bauplatz{stroke-dasharray:8 6;animation:bauplatzPulse 2s ease-in-out infinite}
+@keyframes bauplatzPulse{0%,100%{opacity:.5}50%{opacity:.85}}
+
+/* === Modal / Popup === */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-card{background:#fff;border-radius:20px;padding:24px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.modal-card h2{color:#1b5e20;margin-bottom:14px;font-size:22px;text-align:center}
+.modal-card .close{position:absolute;top:14px;right:14px;background:#e0e0e0;border:none;width:36px;height:36px;border-radius:50%;font-size:20px;font-weight:900;cursor:pointer}
+
+/* === Mathe-Aufgabe === */
+.mathe-aufgabe{text-align:center}
+.mathe-aufgabe .visual{font-size:38px;margin:14px 0;line-height:1.4;letter-spacing:2px}
+.mathe-aufgabe .frage{font-size:18px;font-weight:700;margin:14px 0;line-height:1.4;color:#1b5e20}
+.mathe-aufgabe .opt{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.mathe-aufgabe .opt button{padding:18px 14px;font-size:22px;font-weight:900;border:none;border-radius:14px;background:#43a047;color:#fff;cursor:pointer;box-shadow:0 4px 0 #1b5e20}
+.mathe-aufgabe .opt button:active{transform:translateY(2px);box-shadow:0 2px 0 #1b5e20}
+.mathe-aufgabe .opt button.correct{background:#66bb6a;animation:greenPulse .5s}
+.mathe-aufgabe .opt button.wrong{background:#e53935;animation:shake .3s}
+@keyframes greenPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* === Shop === */
+.shop-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.shop-tab{padding:10px 14px;background:#e0e0e0;color:#222;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;flex:1;min-width:80px}
+.shop-tab.aktiv{background:#1b5e20;color:#fff}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shop-item{background:#f5f5f5;border:2px solid transparent;border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all .2s}
+.shop-item .em{font-size:42px;display:block;margin-bottom:6px}
+.shop-item .name{font-weight:700;font-size:13px;margin-bottom:4px}
+.shop-item .desc{font-size:11px;color:#666;margin-bottom:8px;line-height:1.3}
+.shop-item .preis{background:#ff7043;color:#fff;padding:5px 12px;border-radius:14px;font-weight:900;font-size:13px;display:inline-block}
+.shop-item.gekauft{background:#a5d6a7;border-color:#1b5e20;cursor:default}
+.shop-item.gekauft .preis{background:#1b5e20}
+.shop-item.gekauft::after{content:'✓';display:block;margin-top:4px;color:#1b5e20;font-weight:900}
+.shop-item.zuteuer{opacity:.4;cursor:not-allowed}
+.shop-item.zuteuer .preis{background:#9e9e9e}
+.shop-item.locked{opacity:.4;cursor:not-allowed}
+.shop-item.locked::after{content:'🔒 später';display:block;margin-top:4px;color:#666;font-size:10px}
+
+/* === Notification === */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1b5e20;color:#fff;padding:14px 24px;border-radius:14px;font-weight:700;z-index:200;animation:toastIn .3s,toastOut .3s 2.7s forwards;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+@keyframes toastIn{from{transform:translate(-50%,40px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@keyframes toastOut{to{transform:translate(-50%,40px);opacity:0;display:none}}
+
+/* === Hilfe-Tooltip am Anfang === */
+.tooltip{position:fixed;background:#fbc02d;color:#3e2723;padding:14px 18px;border-radius:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);max-width:280px;z-index:50;text-align:center;font-size:14px;line-height:1.4}
+.tooltip::after{content:'';position:absolute;width:0;height:0;border:10px solid transparent}
+.tooltip.unten::after{bottom:-20px;left:50%;transform:translateX(-50%);border-top-color:#fbc02d}
+.tooltip.oben::after{top:-20px;left:50%;transform:translateX(-50%);border-bottom-color:#fbc02d}
