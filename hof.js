@@ -53,11 +53,16 @@ const CROP_CONFIG = {
   wiese:  {em:'🍃', name:'Heu', wachstumMs:90000, ertragSaecke:5, preisProSack:10, saatkosten:0}
 };
 
+// === Test-Modus ===
+const TEST_MODE = new URLSearchParams(location.search).has('test');
+const SAVE_KEY = TEST_MODE ? 'liam_hof_test' : 'liam_hof_v2';
+const ZEIT_FAKTOR = TEST_MODE ? 0.1 : 1; // im Test 10× schneller wachsen
+
 // === Game-State ===
 let GS = null;
 
 const DEFAULT_STATE = {
-  geld: 50,
+  geld: TEST_MODE ? 10000 : 50,
   gekauft: ['wohnhaus','feld_weizen','fendt312'],
   felder: { feld_weizen: {type:'weizen', stage:0, plantedAt:null} },
   tiere: {},
@@ -69,7 +74,7 @@ const DEFAULT_STATE = {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem('liam_hof_v2');
+    const raw = localStorage.getItem(SAVE_KEY);
     GS = raw ? Object.assign({}, DEFAULT_STATE, JSON.parse(raw)) : structuredClone(DEFAULT_STATE);
   } catch { GS = structuredClone(DEFAULT_STATE); }
   // Migration: stelle sicher dass alle Felder existieren
@@ -83,14 +88,15 @@ function loadState() {
     if (f.stage === 2 && f.plantedAt) {
       const ms = Date.now() - f.plantedAt;
       const cfg = CROP_CONFIG[f.type];
-      if (cfg && ms >= cfg.wachstumMs) f.stage = 3; // reif
+      if (cfg && ms >= cfg.wachstumMs * ZEIT_FAKTOR) f.stage = 3; // reif
     }
   }
 }
 
 function saveState() {
-  localStorage.setItem('liam_hof_v2', JSON.stringify(GS));
-  // Auch zu Supabase syncen (debounced)
+  localStorage.setItem(SAVE_KEY, JSON.stringify(GS));
+  // Test-Mode kein Supabase-Sync
+  if (TEST_MODE) return;
   clearTimeout(saveState._t);
   saveState._t = setTimeout(syncToSupabase, 2000);
 }
@@ -164,10 +170,44 @@ function render() {
   );
   root.appendChild(top);
 
+  // Test-Modus Cheat-Toolbar
+  if (TEST_MODE) {
+    const cheats = el('div', {style:'background:#ff7043;color:#fff;padding:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:12px;flex-shrink:0'},
+      el('span', {style:'padding:6px 10px'}, '🧪 TEST-MODUS'),
+      cheatBtn('+1000 €', () => { GS.geld += 1000; saveState(); render(); }),
+      cheatBtn('+10.000 €', () => { GS.geld += 10000; saveState(); render(); }),
+      cheatBtn('🌾 Alle reif', () => {
+        for (const fid in GS.felder) { GS.felder[fid].stage = 3; }
+        saveState(); render();
+      }),
+      cheatBtn('🛒 Alles bauen', () => {
+        const all = [...SHOP_KATALOG.gebaeude, ...SHOP_KATALOG.felder, ...SHOP_KATALOG.maschinen]
+          .filter(i => !i.wiederholbar);
+        all.forEach(i => { if (!GS.gekauft.includes(i.id)) GS.gekauft.push(i.id); });
+        GS.tiere.huhn = 8; GS.tiere.kuh = 6;
+        saveState(); render();
+      }),
+      cheatBtn('🔄 Reset', () => {
+        if (confirm('Test-Hof zurücksetzen?')) {
+          localStorage.removeItem(SAVE_KEY);
+          GS = structuredClone(DEFAULT_STATE);
+          saveState(); render();
+        }
+      })
+    );
+    root.appendChild(cheats);
+  }
+
   // Spielfläche
   const sp = el('div', {class:'spielflaeche', id:'spielflaeche'});
   root.appendChild(sp);
   renderSzene(sp);
+}
+
+function cheatBtn(label, fn) {
+  const b = el('button', {style:'background:rgba(255,255,255,.25);border:none;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer'}, label);
+  b.addEventListener('click', fn);
+  return b;
 }
 
 function zurueckZurApp() {
@@ -420,7 +460,8 @@ function drawFeld(svg, fid, x, y, w, h) {
     if (f.stage === 2 && f.plantedAt) {
       const cfg = CROP_CONFIG[f.type];
       const elapsed = Date.now() - f.plantedAt;
-      const pct = Math.min(100, elapsed / cfg.wachstumMs * 100);
+      const wachsMs = cfg.wachstumMs * ZEIT_FAKTOR;
+      const pct = Math.min(100, elapsed / wachsMs * 100);
       g.appendChild(svgEl('rect', {x:'5', y:String(h-10), width:String(w-10), height:'5', fill:'rgba(0,0,0,.4)', rx:'2'}));
       g.appendChild(svgEl('rect', {x:'5', y:String(h-10), width:String((w-10)*pct/100), height:'5', fill:'#fbc02d', rx:'2'}));
     }
@@ -553,15 +594,15 @@ function onFeldClick(fid) {
     f.plantedAt = Date.now();
     saveState();
     render();
-    toast(`🌱 Gesät! Wächst ${Math.round(cfg.wachstumMs/1000)} Sek`);
-    // Auto-Update wenn fertig
+    const wachsMs = cfg.wachstumMs * ZEIT_FAKTOR;
+    toast(`🌱 Gesät! Wächst ${Math.round(wachsMs/1000)} Sek`);
     setTimeout(() => {
-      if (f.stage === 2 && f.plantedAt && (Date.now() - f.plantedAt) >= cfg.wachstumMs) {
+      if (f.stage === 2 && f.plantedAt && (Date.now() - f.plantedAt) >= wachsMs) {
         f.stage = 3;
         saveState();
         render();
       }
-    }, cfg.wachstumMs + 100);
+    }, wachsMs + 100);
   } else if (f.stage === 3) {
     // Ernten
     const cfg = CROP_CONFIG[f.type];
@@ -577,7 +618,8 @@ function onFeldClick(fid) {
     // Wächst noch
     const cfg = CROP_CONFIG[f.type];
     const elapsed = Date.now() - f.plantedAt;
-    const restSek = Math.max(0, Math.round((cfg.wachstumMs - elapsed)/1000));
+    const wachsMs = cfg.wachstumMs * ZEIT_FAKTOR;
+    const restSek = Math.max(0, Math.round((wachsMs - elapsed)/1000));
     toast(`⏳ Noch ${restSek} Sekunden bis reif`);
   }
 }
@@ -882,14 +924,14 @@ function showHilfe() {
 loadState();
 render();
 
-// Auto-Refresh für Wachstum (alle 5 Sek)
+// Auto-Refresh für Wachstum
 setInterval(() => {
   let dirty = false;
   for (const fid in GS.felder) {
     const f = GS.felder[fid];
     if (f.stage === 2 && f.plantedAt) {
       const cfg = CROP_CONFIG[f.type];
-      if (Date.now() - f.plantedAt >= cfg.wachstumMs) {
+      if (Date.now() - f.plantedAt >= cfg.wachstumMs * ZEIT_FAKTOR) {
         f.stage = 3;
         dirty = true;
       }
@@ -897,8 +939,8 @@ setInterval(() => {
   }
   if (dirty) { saveState(); render(); }
   else {
-    // Nur Wachstumsbalken updaten ohne kompletten Render
+    // Nur Wachstumsbalken updaten
     const sp = document.getElementById('spielflaeche');
     if (sp) renderSzene(sp);
   }
-}, 5000);
+}, TEST_MODE ? 1000 : 5000);
