@@ -533,35 +533,67 @@ function drawPflanzenSchoen(g, type, w, h, reif) {
 // === Gebäude ===
 function drawWohnhaus(svg, x, y) {
   const g = svgEl('g', {transform:`translate(${x},${y})`});
+  // Hay-Day-Stil mit isometrischer 3/4-Perspektive (Seitenwand sichtbar)
   g.innerHTML = `
-    <ellipse cx="100" cy="216" rx="80" ry="6" fill="#000" opacity=".3"/>
-    <rect x="30" y="200" width="140" height="16" fill="url(#steinSockel)" stroke="#5d4037" stroke-width="1"/>
-    <rect x="30" y="120" width="140" height="80" fill="#fff8e1" stroke="#5d4037" stroke-width="2"/>
-    <rect x="30" y="155" width="140" height="3" fill="#5d4037"/>
-    <rect x="98" y="120" width="4" height="80" fill="#5d4037"/>
-    <rect x="42" y="130" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
-    <line x1="59" y1="130" x2="59" y2="152" stroke="#5d4037" stroke-width="1.5"/>
-    <line x1="42" y1="141" x2="76" y2="141" stroke="#5d4037" stroke-width="1.5"/>
-    <rect x="38" y="152" width="42" height="6" fill="#5d4037"/>
-    <circle cx="46" cy="152" r="2.5" fill="#e91e63"/>
-    <circle cx="54" cy="152" r="2.5" fill="#fff59d"/>
-    <circle cx="62" cy="152" r="2.5" fill="#9c27b0"/>
-    <circle cx="70" cy="152" r="2.5" fill="#ff9800"/>
-    <rect x="124" y="130" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
-    <line x1="141" y1="130" x2="141" y2="152" stroke="#5d4037" stroke-width="1.5"/>
-    <line x1="124" y1="141" x2="158" y2="141" stroke="#5d4037" stroke-width="1.5"/>
-    <rect x="86" y="160" width="28" height="40" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
-    <circle cx="108" cy="180" r="1.5" fill="#fbc02d"/>
-    <polygon points="20,120 100,55 180,120" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="2.5"/>
-    <rect x="88" y="98" width="24" height="22" fill="#fff8e1" stroke="#5d4037" stroke-width="1.5"/>
-    <polygon points="84,98 100,82 116,98" fill="#c62828" stroke="#3e2723" stroke-width="1.5"/>
-    <rect x="93" y="104" width="14" height="14" fill="#42a5f5" stroke="#5d4037" stroke-width="1.5"/>
-    <rect x="50" y="65" width="14" height="38" fill="#a1887f" stroke="#3e2723" stroke-width="1"/>
-    <rect x="48" y="62" width="18" height="5" fill="#5d4037"/>
-    <g opacity=".7">
-      <circle cx="57" cy="54" r="6" fill="#eceff1"/>
-      <circle cx="62" cy="42" r="8" fill="#eceff1"/>
-      <circle cx="55" cy="32" r="9" fill="#eceff1"/>
+    <ellipse cx="105" cy="216" rx="90" ry="9" fill="#000" opacity=".35"/>
+
+    <!-- Stein-Sockel mit Tiefe -->
+    <polygon points="20,205 175,205 195,215 40,215" fill="#8d6e63" stroke="#000" stroke-width="2"/>
+    <rect x="20" y="195" width="155" height="10" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
+
+    <!-- SEITENWAND rechts (Tiefe = 3D Effekt) -->
+    <polygon points="175,120 195,135 195,205 175,195" fill="#5d4037" stroke="#000" stroke-width="2"/>
+    <!-- Frontwand -->
+    <rect x="20" y="120" width="155" height="75" fill="#fff8e1" stroke="#000" stroke-width="2.5"/>
+    <!-- Holzbalken -->
+    <rect x="20" y="155" width="155" height="4" fill="#5d4037"/>
+    <rect x="93" y="120" width="5" height="75" fill="#5d4037"/>
+    <rect x="20" y="120" width="5" height="75" fill="#8d6e63"/>
+    <rect x="170" y="120" width="5" height="75" fill="#5d4037"/>
+
+    <!-- Fenster links mit Rahmen + Highlight + Blumen -->
+    <rect x="35" y="130" width="36" height="22" fill="#90caf9" stroke="#000" stroke-width="2.5" rx="1"/>
+    <polygon points="37,132 47,132 42,142" fill="#fff" opacity=".4"/>
+    <line x1="53" y1="130" x2="53" y2="152" stroke="#5d4037" stroke-width="1.5"/>
+    <line x1="35" y1="141" x2="71" y2="141" stroke="#5d4037" stroke-width="1.5"/>
+    <rect x="32" y="152" width="42" height="6" fill="#5d4037" stroke="#000" stroke-width="1"/>
+    <circle cx="40" cy="151" r="3" fill="#e91e63" stroke="#000" stroke-width=".5"/>
+    <circle cx="48" cy="151" r="3" fill="#fff59d" stroke="#000" stroke-width=".5"/>
+    <circle cx="56" cy="151" r="3" fill="#9c27b0" stroke="#000" stroke-width=".5"/>
+    <circle cx="64" cy="151" r="3" fill="#ff9800" stroke="#000" stroke-width=".5"/>
+
+    <!-- Fenster rechts -->
+    <rect x="119" y="130" width="36" height="22" fill="#90caf9" stroke="#000" stroke-width="2.5" rx="1"/>
+    <polygon points="121,132 131,132 126,142" fill="#fff" opacity=".4"/>
+    <line x1="137" y1="130" x2="137" y2="152" stroke="#5d4037" stroke-width="1.5"/>
+    <line x1="119" y1="141" x2="155" y2="141" stroke="#5d4037" stroke-width="1.5"/>
+
+    <!-- Tür mit Tiefe -->
+    <rect x="78" y="160" width="32" height="35" fill="#5d4037" stroke="#000" stroke-width="2.5" rx="1"/>
+    <rect x="80" y="162" width="28" height="33" fill="#3e2723"/>
+    <rect x="82" y="164" width="24" height="14" fill="#5d4037"/>
+    <circle cx="103" cy="180" r="2" fill="#fbc02d" stroke="#000" stroke-width=".5"/>
+
+    <!-- DACH ISOMETRISCH (mit Seite!) -->
+    <!-- Hauptdach -->
+    <polygon points="10,120 95,55 180,120" fill="url(#ziegelRot)" stroke="#000" stroke-width="2.5"/>
+    <!-- Dach-Seite rechts -->
+    <polygon points="180,120 200,135 115,70 95,55" fill="#a52525" stroke="#000" stroke-width="2"/>
+
+    <!-- Dachgaube -->
+    <rect x="83" y="100" width="24" height="22" fill="#fff8e1" stroke="#000" stroke-width="2"/>
+    <polygon points="79,100 95,84 111,100" fill="#c62828" stroke="#000" stroke-width="2"/>
+    <rect x="88" y="106" width="14" height="14" fill="#90caf9" stroke="#000" stroke-width="1.5"/>
+    <line x1="95" y1="106" x2="95" y2="120" stroke="#5d4037" stroke-width="1"/>
+
+    <!-- Schornstein mit Kragen -->
+    <rect x="45" y="65" width="14" height="38" fill="#8d6e63" stroke="#000" stroke-width="2"/>
+    <rect x="42" y="62" width="20" height="6" fill="#5d4037" stroke="#000" stroke-width="1.5"/>
+    <!-- Rauch -->
+    <g opacity=".75">
+      <circle cx="52" cy="56" r="6" fill="#eceff1" stroke="#cfd8dc" stroke-width=".8"/>
+      <circle cx="58" cy="44" r="8" fill="#eceff1" stroke="#cfd8dc" stroke-width=".8"/>
+      <circle cx="50" cy="32" r="10" fill="#fff" stroke="#cfd8dc" stroke-width=".8"/>
     </g>
   `;
   svg.appendChild(g);
@@ -571,80 +603,148 @@ function drawGebaeude(svg, gid, layout) {
   const g = svgEl('g', {transform:`translate(${layout.x},${layout.y})`});
   if (gid === 'huehnerstall') {
     g.innerHTML = `
-      <ellipse cx="80" cy="156" rx="65" ry="5" fill="#000" opacity=".3"/>
-      <rect x="15" y="140" width="130" height="14" fill="url(#steinSockel)"/>
-      <rect x="15" y="80" width="130" height="60" fill="url(#holzWand)" stroke="#3e2723" stroke-width="2"/>
-      <rect x="65" y="105" width="30" height="35" fill="#3e2723"/>
-      <circle cx="80" cy="60" r="14" fill="#3e2723"/>
-      <line x1="66" y1="60" x2="94" y2="60" stroke="#5d4037" stroke-width="2"/>
-      <line x1="80" y1="46" x2="80" y2="74" stroke="#5d4037" stroke-width="2"/>
-      <polygon points="5,80 80,30 155,80" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="2"/>
+      <ellipse cx="80" cy="160" rx="72" ry="8" fill="#000" opacity=".35"/>
+      <!-- Sockel mit Tiefe -->
+      <polygon points="10,150 150,150 165,158 25,158" fill="#8d6e63" stroke="#000" stroke-width="2"/>
+      <rect x="10" y="142" width="140" height="10" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
+      <!-- Seitenwand rechts -->
+      <polygon points="150,80 168,95 168,150 150,140" fill="#7d5a3a" stroke="#000" stroke-width="2"/>
+      <!-- Frontwand -->
+      <rect x="10" y="80" width="140" height="62" fill="#a1887f" stroke="#000" stroke-width="2.5"/>
+      <!-- Holzbretter -->
+      <line x1="10" y1="100" x2="150" y2="100" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="10" y1="120" x2="150" y2="120" stroke="#5d4037" stroke-width="1.5"/>
+      <!-- Tür mit Hühnerklappe -->
+      <rect x="65" y="105" width="30" height="37" fill="#3e2723" stroke="#000" stroke-width="2"/>
+      <rect x="68" y="108" width="24" height="20" fill="#5d4037"/>
+      <rect x="72" y="125" width="16" height="17" fill="#a1887f"/>
+      <!-- Rundes Loch oben für Hühner -->
+      <circle cx="80" cy="62" r="14" fill="#3e2723" stroke="#000" stroke-width="2"/>
+      <circle cx="80" cy="62" r="10" fill="#1a1a1a"/>
+      <!-- Sitzstange im Loch -->
+      <line x1="68" y1="62" x2="92" y2="62" stroke="#5d4037" stroke-width="3"/>
+      <!-- DACH isometrisch -->
+      <polygon points="0,80 80,30 160,80" fill="url(#ziegelRot)" stroke="#000" stroke-width="2.5"/>
+      <polygon points="160,80 178,93 98,43 80,30" fill="#a52525" stroke="#000" stroke-width="2"/>
+      <!-- Hahn auf Dach -->
+      <line x1="80" y1="20" x2="80" y2="30" stroke="#000" stroke-width="2"/>
+      <text x="80" y="22" text-anchor="middle" font-size="22">🐔</text>
     `;
-    // Hühner draußen
+    // Hühner draußen mit Details
     const huehner = GS.tiere.huhn || 0;
+    let hStr = '';
     for (let i = 0; i < Math.min(huehner, 4); i++) {
-      g.innerHTML += `<g transform="translate(${155 + i*16},${145})">
-        <ellipse cx="6" cy="5" rx="5" ry="4" fill="#fff" stroke="#3e2723" stroke-width=".5"/>
-        <circle cx="10" cy="2" r="3" fill="#fff"/>
-        <polygon points="12,1 14,2 12,3" fill="#ffa726"/>
+      hStr += `<g transform="translate(${160 + i*22},${147})">
+        <ellipse cx="9" cy="14" rx="9" ry="2" fill="#000" opacity=".3"/>
+        <ellipse cx="9" cy="9" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1.2"/>
+        <ellipse cx="6" cy="10" rx="5" ry="5" fill="#eceff1" stroke="#bdbdbd" stroke-width=".5"/>
+        <circle cx="14" cy="5" r="4.5" fill="#fff" stroke="#000" stroke-width="1.2"/>
+        <polygon points="17,4 21,5 17,6" fill="#ffa726" stroke="#000" stroke-width=".5"/>
+        <path d="M 11 1 L 12 -1 L 13 1 L 14 -1 L 15 1 L 16 -1 L 17 1" fill="#e53935" stroke="#000" stroke-width=".5"/>
+        <ellipse cx="15" cy="7" rx="1.5" ry="1.5" fill="#e53935"/>
+        <circle cx="15" cy="4" r="1" fill="#000"/>
+        <circle cx="15.2" cy="3.7" r=".3" fill="#fff"/>
+        <line x1="6" y1="14" x2="6" y2="17" stroke="#fbc02d" stroke-width="1.5"/>
+        <line x1="11" y1="14" x2="11" y2="17" stroke="#fbc02d" stroke-width="1.5"/>
       </g>`;
     }
+    g.innerHTML += hStr;
     g.style.cursor = 'pointer';
     g.addEventListener('click', () => openTierMenu('huehnerstall'));
+
   } else if (gid === 'kuhstall') {
     g.innerHTML = `
-      <ellipse cx="120" cy="226" rx="100" ry="6" fill="#000" opacity=".3"/>
-      <rect x="20" y="210" width="200" height="18" fill="url(#steinSockel)"/>
-      <rect x="20" y="120" width="200" height="90" fill="url(#holzWand)" stroke="#3e2723" stroke-width="2"/>
-      <line x1="20" y1="120" x2="220" y2="120" stroke="#3e2723" stroke-width="3"/>
-      <line x1="20" y1="165" x2="220" y2="165" stroke="#3e2723" stroke-width="3"/>
-      <line x1="20" y1="210" x2="220" y2="210" stroke="#3e2723" stroke-width="3"/>
-      <line x1="120" y1="120" x2="120" y2="210" stroke="#3e2723" stroke-width="2.5"/>
-      <line x1="20" y1="120" x2="120" y2="165" stroke="#3e2723" stroke-width="1.8"/>
-      <line x1="20" y1="165" x2="120" y2="120" stroke="#3e2723" stroke-width="1.8"/>
-      <line x1="120" y1="120" x2="220" y2="165" stroke="#3e2723" stroke-width="1.8"/>
-      <line x1="120" y1="165" x2="220" y2="120" stroke="#3e2723" stroke-width="1.8"/>
-      <rect x="100" y="170" width="40" height="40" fill="#3e2723"/>
-      <line x1="120" y1="170" x2="120" y2="210" stroke="#5d4037" stroke-width="2"/>
-      <polygon points="10,120 120,30 230,120" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="2.5"/>
+      <ellipse cx="120" cy="232" rx="110" ry="10" fill="#000" opacity=".35"/>
+      <polygon points="10,222 220,222 240,232 30,232" fill="#8d6e63" stroke="#000" stroke-width="2"/>
+      <rect x="10" y="212" width="210" height="12" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
+      <!-- Seitenwand -->
+      <polygon points="220,120 240,135 240,222 220,210" fill="#7d5a3a" stroke="#000" stroke-width="2"/>
+      <!-- Frontwand mit Fachwerk -->
+      <rect x="10" y="120" width="210" height="92" fill="#fff8e1" stroke="#000" stroke-width="2.5"/>
+      <!-- Fachwerk-Balken (sauber im Raster) -->
+      <line x1="10" y1="120" x2="220" y2="120" stroke="#5d4037" stroke-width="3"/>
+      <line x1="10" y1="165" x2="220" y2="165" stroke="#5d4037" stroke-width="3"/>
+      <line x1="120" y1="120" x2="120" y2="212" stroke="#5d4037" stroke-width="3"/>
+      <!-- Andreas-Kreuze -->
+      <line x1="10" y1="120" x2="120" y2="165" stroke="#5d4037" stroke-width="2"/>
+      <line x1="10" y1="165" x2="120" y2="120" stroke="#5d4037" stroke-width="2"/>
+      <line x1="120" y1="120" x2="220" y2="165" stroke="#5d4037" stroke-width="2"/>
+      <line x1="120" y1="165" x2="220" y2="120" stroke="#5d4037" stroke-width="2"/>
+      <!-- Großes Stalltor -->
+      <rect x="100" y="170" width="40" height="42" fill="#3e2723" stroke="#000" stroke-width="2.5"/>
+      <line x1="120" y1="170" x2="120" y2="212" stroke="#5d4037" stroke-width="2"/>
+      <line x1="100" y1="190" x2="140" y2="190" stroke="#5d4037" stroke-width="1.5"/>
+      <circle cx="116" cy="190" r="2" fill="#fbc02d"/>
+      <circle cx="124" cy="190" r="2" fill="#fbc02d"/>
+      <!-- Fenster mit Vorhängen -->
+      <rect x="35" y="175" width="22" height="22" fill="#90caf9" stroke="#000" stroke-width="2"/>
+      <polygon points="37,177 47,177 42,187" fill="#fff" opacity=".4"/>
+      <rect x="183" y="175" width="22" height="22" fill="#90caf9" stroke="#000" stroke-width="2"/>
+      <polygon points="185,177 195,177 190,187" fill="#fff" opacity=".4"/>
+      <!-- DACH ISOMETRISCH -->
+      <polygon points="0,120 120,35 240,120" fill="url(#ziegelRot)" stroke="#000" stroke-width="2.5"/>
+      <polygon points="240,120 258,135 138,50 120,35" fill="#a52525" stroke="#000" stroke-width="2"/>
+      <!-- Heuluken im Dach -->
+      <rect x="112" y="65" width="16" height="22" fill="#3e2723" stroke="#000" stroke-width="2"/>
+      <line x1="120" y1="65" x2="120" y2="87" stroke="#5d4037" stroke-width="1"/>
+      <line x1="120" y1="65" x2="120" y2="50" stroke="#3e2723" stroke-width="1.5"/>
+      <circle cx="120" cy="48" r="3" fill="#3e2723" stroke="#000" stroke-width="1"/>
+      <!-- Wetterhahn -->
+      <line x1="120" y1="35" x2="120" y2="20" stroke="#000" stroke-width="2"/>
+      <polygon points="112,20 120,12 128,20 120,24" fill="#fbc02d" stroke="#000" stroke-width="1"/>
     `;
     g.style.cursor = 'pointer';
     g.addEventListener('click', () => openTierMenu('kuhstall'));
+
   } else if (gid === 'silo') {
     g.innerHTML = `
-      <ellipse cx="40" cy="276" rx="38" ry="6" fill="#000" opacity=".3"/>
-      <ellipse cx="40" cy="265" rx="40" ry="10" fill="#5d4037"/>
-      <ellipse cx="40" cy="258" rx="38" ry="10" fill="#78909c"/>
-      <rect x="2" y="80" width="76" height="180" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/>
-      <rect x="8" y="80" width="6" height="180" fill="#fff" opacity=".4"/>
-      <rect x="68" y="80" width="6" height="180" fill="#90a4ae"/>
-      <ellipse cx="40" cy="80" rx="38" ry="8" fill="#90a4ae" stroke="#37474f" stroke-width="1"/>
-      <ellipse cx="40" cy="140" rx="38" ry="3" fill="#90a4ae" opacity=".6"/>
-      <ellipse cx="40" cy="200" rx="38" ry="3" fill="#90a4ae" opacity=".6"/>
-      <path d="M 2 80 Q 40 25 78 80 Z" fill="#b0bec5" stroke="#78909c" stroke-width="2"/>
-      <line x1="40" y1="30" x2="40" y2="42" stroke="#3e2723" stroke-width="2"/>
-      <circle cx="40" cy="28" r="3" fill="#fbc02d"/>
-      <text x="40" y="170" text-anchor="middle" font-size="14" font-weight="900" fill="#3e2723">FUTTER</text>
+      <ellipse cx="40" cy="280" rx="40" ry="7" fill="#000" opacity=".35"/>
+      <!-- Sockel -->
+      <ellipse cx="40" cy="262" rx="42" ry="11" fill="#5d4037" stroke="#000" stroke-width="2"/>
+      <ellipse cx="40" cy="255" rx="40" ry="11" fill="#90a4ae" stroke="#000" stroke-width="2"/>
+      <!-- Hauptzylinder -->
+      <rect x="0" y="80" width="80" height="180" fill="#cfd8dc" stroke="#000" stroke-width="2.5"/>
+      <!-- Highlight-Streifen -->
+      <rect x="6" y="80" width="8" height="180" fill="#fff" opacity=".5"/>
+      <rect x="68" y="80" width="8" height="180" fill="#78909c"/>
+      <!-- Horizontal-Bänder -->
+      <ellipse cx="40" cy="80" rx="40" ry="9" fill="#90a4ae" stroke="#000" stroke-width="2"/>
+      <ellipse cx="40" cy="140" rx="40" ry="3" fill="#78909c"/>
+      <ellipse cx="40" cy="200" rx="40" ry="3" fill="#78909c"/>
+      <!-- Kuppel mit Highlight -->
+      <path d="M 0 80 Q 40 20 80 80 Z" fill="#b0bec5" stroke="#000" stroke-width="2.5"/>
+      <path d="M 8 50 Q 40 25 72 50" stroke="#fff" stroke-width="3" opacity=".6" fill="none"/>
+      <!-- Spitze -->
+      <line x1="40" y1="20" x2="40" y2="40" stroke="#000" stroke-width="2.5"/>
+      <circle cx="40" cy="18" r="4" fill="#fbc02d" stroke="#000" stroke-width="1.5"/>
+      <!-- Leiter seitlich -->
+      <line x1="78" y1="100" x2="78" y2="245" stroke="#000" stroke-width="1.5"/>
+      ${[100,120,140,160,180,200,220,240].map(y => `<line x1="74" y1="${y}" x2="82" y2="${y}" stroke="#000" stroke-width="1.5"/>`).join('')}
+      <!-- Schriftzug mit Schatten -->
+      <text x="42" y="171" text-anchor="middle" font-size="16" font-weight="900" fill="#000" opacity=".5">FUTTER</text>
+      <text x="40" y="170" text-anchor="middle" font-size="16" font-weight="900" fill="#3e2723">FUTTER</text>
     `;
-  } else if (gid === 'schweinestall' || gid === 'scheune' || gid === 'hofladen' || gid === 'werkstatt' || gid === 'tankstelle' || gid === 'biogas') {
-    // Generisches Gebäude für die Restlichen
+  } else {
+    // Generisches Gebäude für andere
     const farben = {
-      schweinestall:{wand:'#bf360c', dach:'#5d4037'},
-      scheune:{wand:'#8d6e63', dach:'#c62828'},
-      hofladen:{wand:'#43a047', dach:'#fbc02d'},
-      werkstatt:'gray',
-      tankstelle:{wand:'#1565c0', dach:'#fff'},
-      biogas:{wand:'#558b2f', dach:'#7cb342'}
+      schweinestall:{wand:'#bf360c', dach:'#5d4037', em:'🐷'},
+      scheune:{wand:'#8d6e63', dach:'#c62828', em:'🏚️'},
+      hofladen:{wand:'#43a047', dach:'#fbc02d', em:'🏪'},
+      werkstatt:{wand:'#90a4ae', dach:'#37474f', em:'🔧'},
+      tankstelle:{wand:'#1565c0', dach:'#fff', em:'⛽'},
+      biogas:{wand:'#558b2f', dach:'#7cb342', em:'🔋'}
     };
-    const farb = farben[gid] || {wand:'#bcaaa4', dach:'#c62828'};
-    const emojis = {schweinestall:'🐷', scheune:'🏚️', hofladen:'🏪', werkstatt:'🔧', tankstelle:'⛽', biogas:'🔋'};
+    const f = farben[gid] || {wand:'#bcaaa4', dach:'#c62828', em:'🏠'};
     g.innerHTML = `
-      <ellipse cx="${layout.w/2}" cy="${layout.h-4}" rx="${layout.w/2 - 5}" ry="6" fill="#000" opacity=".3"/>
-      <rect x="5" y="${layout.h-30}" width="${layout.w-10}" height="20" fill="url(#steinSockel)"/>
-      <rect x="5" y="${layout.h*0.4}" width="${layout.w-10}" height="${layout.h*0.5}" fill="${farb.wand || '#bcaaa4'}" stroke="#3e2723" stroke-width="2"/>
-      <rect x="${layout.w*0.4}" y="${layout.h*0.6}" width="${layout.w*0.2}" height="${layout.h*0.3}" fill="#3e2723"/>
-      <polygon points="-5,${layout.h*0.4} ${layout.w/2},${layout.h*0.1} ${layout.w+5},${layout.h*0.4}" fill="${farb.dach || '#c62828'}" stroke="#3e2723" stroke-width="2"/>
-      <text x="${layout.w/2}" y="${layout.h*0.55}" text-anchor="middle" font-size="32">${emojis[gid] || '🏠'}</text>
+      <ellipse cx="${layout.w/2}" cy="${layout.h-2}" rx="${layout.w/2 - 5}" ry="8" fill="#000" opacity=".35"/>
+      <polygon points="5,${layout.h-22} ${layout.w-5},${layout.h-22} ${layout.w+10},${layout.h-12} 20,${layout.h-12}" fill="#8d6e63" stroke="#000" stroke-width="1.5"/>
+      <rect x="5" y="${layout.h-30}" width="${layout.w-10}" height="10" fill="url(#steinSockel)" stroke="#000" stroke-width="1.5"/>
+      <polygon points="${layout.w-5},${layout.h*0.4} ${layout.w+15},${layout.h*0.4 + 15} ${layout.w+15},${layout.h-12} ${layout.w-5},${layout.h-22}" fill="${f.wand}" stroke="#000" stroke-width="1.5" opacity=".7"/>
+      <rect x="5" y="${layout.h*0.4}" width="${layout.w-10}" height="${layout.h*0.5 - 12}" fill="${f.wand}" stroke="#000" stroke-width="2"/>
+      <rect x="${layout.w*0.4}" y="${layout.h*0.65}" width="${layout.w*0.2}" height="${layout.h*0.25}" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+      <polygon points="-5,${layout.h*0.4} ${layout.w/2},${layout.h*0.05} ${layout.w+5},${layout.h*0.4}" fill="${f.dach}" stroke="#000" stroke-width="2.5"/>
+      <polygon points="${layout.w+5},${layout.h*0.4} ${layout.w+20},${layout.h*0.4 + 12} ${layout.w/2 + 15},${layout.h*0.05 + 12} ${layout.w/2},${layout.h*0.05}" fill="${f.dach}" stroke="#000" stroke-width="1.5" opacity=".75"/>
+      <text x="${layout.w/2}" y="${layout.h*0.62}" text-anchor="middle" font-size="40" filter="drop-shadow(0 2px 0 rgba(0,0,0,.4))">${f.em}</text>
     `;
   }
   svg.appendChild(g);
@@ -661,86 +761,207 @@ function drawBauplatz(svg, gid, layout, preis) {
 }
 
 function drawTreckerInto(g) {
+  // Hay-Day-Stil Trecker, isometrische 3/4-Perspective von schräg oben
   g.innerHTML = `
-    <g transform="translate(-90,-65)">
-      <ellipse cx="90" cy="120" rx="80" ry="8" fill="#000" opacity=".4"/>
-      <rect x="50" y="20" width="8" height="40" fill="#37474f"/>
-      <rect x="48" y="18" width="12" height="5" fill="#212121"/>
-      <g opacity=".6">
-        <circle cx="54" cy="12" r="5" fill="#cfd8dc"/>
-        <circle cx="60" cy="3" r="7" fill="#eceff1"/>
+    <g id="treckerInner" transform="translate(-75,-60)">
+      <!-- großer weicher Schatten -->
+      <ellipse cx="75" cy="115" rx="70" ry="9" fill="#000" opacity=".35"/>
+      <!-- HINTER-Räder (groß, sichtbar an den Seiten) -->
+      <ellipse cx="35" cy="110" rx="15" ry="7" fill="#1a1a1a"/>
+      <ellipse cx="35" cy="105" rx="15" ry="13" fill="#212121" stroke="#000" stroke-width="2"/>
+      <ellipse cx="35" cy="105" rx="9" ry="8" fill="#fbc02d" stroke="#000" stroke-width="1.5"/>
+      <circle cx="35" cy="105" r="3" fill="#3e2723"/>
+      <ellipse cx="115" cy="110" rx="15" ry="7" fill="#1a1a1a"/>
+      <ellipse cx="115" cy="105" rx="15" ry="13" fill="#212121" stroke="#000" stroke-width="2"/>
+      <ellipse cx="115" cy="105" rx="9" ry="8" fill="#fbc02d" stroke="#000" stroke-width="1.5"/>
+      <circle cx="115" cy="105" r="3" fill="#3e2723"/>
+      <!-- VORDER-Räder (etwas kleiner, vorne dran) -->
+      <ellipse cx="135" cy="105" rx="9" ry="5" fill="#1a1a1a"/>
+      <ellipse cx="135" cy="100" rx="9" ry="9" fill="#212121" stroke="#000" stroke-width="1.5"/>
+      <circle cx="135" cy="100" r="5" fill="#fbc02d" stroke="#000" stroke-width="1"/>
+      <circle cx="135" cy="100" r="2" fill="#3e2723"/>
+
+      <!-- HAUPTKÖRPER (3D-look mit Schattierung) -->
+      <!-- Untere/Schatten-Seite -->
+      <rect x="10" y="68" width="115" height="35" rx="6" fill="#0d3010" stroke="#000" stroke-width="2.5"/>
+      <!-- Helle Hauptseite -->
+      <rect x="10" y="55" width="115" height="20" rx="6" fill="url(#trkGreen)" stroke="#000" stroke-width="2.5"/>
+      <!-- Highlight oben -->
+      <rect x="14" y="58" width="105" height="4" rx="2" fill="#81c784" opacity=".7"/>
+
+      <!-- Motor-Haube vorne (höher) -->
+      <rect x="95" y="50" width="35" height="40" rx="6" fill="url(#trkGreen)" stroke="#000" stroke-width="2.5"/>
+      <rect x="95" y="50" width="35" height="6" fill="#81c784" opacity=".7"/>
+
+      <!-- KABINE (auf Hauptkörper) -->
+      <rect x="35" y="20" width="55" height="50" rx="8" fill="url(#trkGreen)" stroke="#000" stroke-width="2.5"/>
+      <!-- Kabine-Schatten unten -->
+      <rect x="35" y="60" width="55" height="10" fill="#0d3010" opacity=".5"/>
+      <!-- Frontscheibe -->
+      <rect x="40" y="26" width="45" height="25" rx="4" fill="#90caf9" stroke="#000" stroke-width="2"/>
+      <!-- Scheibe-Highlight -->
+      <polygon points="42,28 50,28 47,40" fill="#fff" opacity=".4"/>
+      <!-- Trennstege Scheibe -->
+      <line x1="55" y1="26" x2="55" y2="51" stroke="#0d3010" stroke-width="1.5"/>
+      <line x1="70" y1="26" x2="70" y2="51" stroke="#0d3010" stroke-width="1.5"/>
+
+      <!-- Dach mit Lichtbalken -->
+      <rect x="32" y="14" width="61" height="9" rx="3" fill="#212121" stroke="#000" stroke-width="2"/>
+      <rect x="38" y="10" width="49" height="6" rx="2" fill="#37474f" stroke="#000" stroke-width="1.5"/>
+      <circle cx="45" cy="13" r="2" fill="#fff59d"/>
+      <circle cx="55" cy="13" r="2" fill="#fff59d"/>
+      <circle cx="65" cy="13" r="2" fill="#fff59d"/>
+      <circle cx="75" cy="13" r="2" fill="#fff59d"/>
+
+      <!-- Auspuff -->
+      <rect x="28" y="-2" width="9" height="20" fill="#37474f" stroke="#000" stroke-width="1.5"/>
+      <rect x="26" y="-4" width="13" height="6" rx="2" fill="#212121" stroke="#000" stroke-width="1.5"/>
+      <!-- Rauch -->
+      <g opacity=".7">
+        <circle cx="32" cy="-12" r="6" fill="#cfd8dc"/>
+        <circle cx="38" cy="-22" r="8" fill="#eceff1"/>
+        <circle cx="28" cy="-30" r="9" fill="#fff"/>
       </g>
-      <rect x="10" y="50" width="60" height="30" rx="4" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
-      <rect x="65" y="32" width="50" height="48" rx="5" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
-      <rect x="115" y="55" width="30" height="25" rx="3" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
-      <rect x="70" y="38" width="40" height="20" rx="2" fill="#90caf9" stroke="#0d3010" stroke-width="1.5"/>
-      <line x1="83" y1="38" x2="83" y2="58" stroke="#37474f" stroke-width=".8"/>
-      <line x1="97" y1="38" x2="97" y2="58" stroke="#37474f" stroke-width=".8"/>
-      <rect x="63" y="28" width="54" height="6" rx="2" fill="#212121"/>
-      <rect x="70" y="24" width="40" height="5" rx="1" fill="#37474f"/>
-      <circle cx="76" cy="26.5" r="1.5" fill="#fff59d"/>
-      <circle cx="84" cy="26.5" r="1.5" fill="#fff59d"/>
-      <circle cx="92" cy="26.5" r="1.5" fill="#fff59d"/>
-      <circle cx="100" cy="26.5" r="1.5" fill="#fff59d"/>
-      <circle cx="108" cy="26.5" r="1.5" fill="#fff59d"/>
-      <rect x="12" y="56" width="6" height="20" fill="#000"/>
-      <line x1="12" y1="60" x2="18" y2="60" stroke="#fbc02d" stroke-width=".8"/>
-      <line x1="12" y1="65" x2="18" y2="65" stroke="#fbc02d" stroke-width=".8"/>
-      <line x1="12" y1="70" x2="18" y2="70" stroke="#fbc02d" stroke-width=".8"/>
-      <rect x="22" y="55" width="40" height="6" fill="#fbc02d"/>
-      <text x="42" y="60" text-anchor="middle" font-size="5" font-weight="900" fill="#1b5e20">JOHN DEERE</text>
-      <ellipse cx="12" cy="52" rx="4" ry="3" fill="#fff59d" stroke="#0d3010" stroke-width="1"/>
-      <rect x="130" y="58" width="14" height="18" fill="#fbc02d" stroke="#0d3010" stroke-width="1.5"/>
-      <circle cx="30" cy="92" r="14" fill="#212121"/>
-      <circle cx="30" cy="92" r="9" fill="#fbc02d" stroke="#212121" stroke-width="1"/>
-      <circle cx="30" cy="92" r="3" fill="#212121"/>
-      <line x1="30" y1="83" x2="30" y2="101" stroke="#212121" stroke-width="1.5"/>
-      <line x1="21" y1="92" x2="39" y2="92" stroke="#212121" stroke-width="1.5"/>
-      <circle cx="115" cy="92" r="22" fill="#212121"/>
-      <circle cx="115" cy="92" r="13" fill="#fbc02d" stroke="#212121" stroke-width="1.5"/>
-      <circle cx="115" cy="92" r="4" fill="#212121"/>
-      <line x1="115" y1="79" x2="115" y2="105" stroke="#212121" stroke-width="2"/>
-      <line x1="102" y1="92" x2="128" y2="92" stroke="#212121" stroke-width="2"/>
-      <line x1="106" y1="83" x2="124" y2="101" stroke="#212121" stroke-width="1.5"/>
-      <line x1="106" y1="101" x2="124" y2="83" stroke="#212121" stroke-width="1.5"/>
-      <line x1="65" y1="34" x2="58" y2="29" stroke="#212121" stroke-width="1.5"/>
-      <ellipse cx="56" cy="28" rx="3" ry="2" fill="#90caf9" stroke="#212121" stroke-width="1"/>
+
+      <!-- Kühlergrill vorne -->
+      <rect x="125" y="62" width="6" height="22" fill="#000"/>
+      <line x1="125" y1="66" x2="131" y2="66" stroke="#fbc02d" stroke-width=".8"/>
+      <line x1="125" y1="70" x2="131" y2="70" stroke="#fbc02d" stroke-width=".8"/>
+      <line x1="125" y1="74" x2="131" y2="74" stroke="#fbc02d" stroke-width=".8"/>
+      <line x1="125" y1="78" x2="131" y2="78" stroke="#fbc02d" stroke-width=".8"/>
+
+      <!-- John Deere Logo -->
+      <rect x="98" y="68" width="30" height="8" rx="2" fill="#fbc02d" stroke="#000" stroke-width="1"/>
+      <text x="113" y="74" text-anchor="middle" font-size="6" font-weight="900" fill="#1b5e20">JOHN DEERE</text>
+
+      <!-- Frontscheinwerfer -->
+      <ellipse cx="128" cy="58" rx="5" ry="3" fill="#fff59d" stroke="#000" stroke-width="1.5"/>
+      <ellipse cx="128" cy="58" rx="2.5" ry="1.5" fill="#fff"/>
+
+      <!-- Spiegel -->
+      <line x1="35" y1="32" x2="28" y2="26" stroke="#212121" stroke-width="2"/>
+      <ellipse cx="26" cy="25" rx="4" ry="3" fill="#90caf9" stroke="#000" stroke-width="1.5"/>
+      <line x1="90" y1="32" x2="97" y2="26" stroke="#212121" stroke-width="2"/>
+      <ellipse cx="99" cy="25" rx="4" ry="3" fill="#90caf9" stroke="#000" stroke-width="1.5"/>
     </g>
   `;
 }
 
 function updateTreckerPosition() {
   if (!treckerGrp) return;
-  treckerGrp.setAttribute('transform', `translate(${GS.trecker.x},${GS.trecker.y}) rotate(${GS.trecker.rot})`);
+  // KEIN ROTATE auf den ganzen Trecker → nur SPIEGELN wenn nach links
+  // Plus: ganz leichte vertikale Neigung wenn auf-/ab-Bewegung
+  const inner = document.getElementById('treckerInner');
+  if (inner) {
+    // Wir nutzen die x-Bewegung als „facing": rot zwischen -90 und 90 = nach rechts, sonst nach links
+    const facingRight = (GS.trecker.rot >= -90 && GS.trecker.rot <= 90);
+    inner.setAttribute('transform', `translate(-75,-60)${facingRight ? '' : ' scale(-1,1) translate(-150,0)'}`);
+  }
+  // Position ohne rotate
+  treckerGrp.setAttribute('transform', `translate(${GS.trecker.x},${GS.trecker.y})`);
 }
 
 function drawTiere(svg) {
-  // Hühner verstreut wenn mehr als 4
+  // Hühner verstreut wenn mehr als 4 - DETAILLIERT (Hay-Day-Stil)
   const huehner = GS.tiere.huhn || 0;
   for (let i = 4; i < huehner; i++) {
-    const tx = 1100 - (i-4) * 30;
-    const ty = 420 + (i % 2) * 40;
-    const g = svgEl('g', {transform:`translate(${tx},${ty})`});
+    const tx = 1100 - (i-4) * 35;
+    const ty = 460 + (i % 2) * 45;
+    const g = svgEl('g', {transform:`translate(${tx},${ty}) scale(1.5)`});
     g.innerHTML = `
-      <ellipse cx="6" cy="5" rx="6" ry="5" fill="#fff" stroke="#3e2723" stroke-width=".8"/>
-      <circle cx="11" cy="2" r="3.5" fill="#fff"/>
-      <polygon points="14,1 17,2 14,3" fill="#ffa726"/>
+      <ellipse cx="9" cy="14" rx="9" ry="2" fill="#000" opacity=".3"/>
+      <ellipse cx="9" cy="9" rx="8" ry="6" fill="#fff" stroke="#000" stroke-width="1.2"/>
+      <ellipse cx="6" cy="10" rx="5" ry="5" fill="#eceff1" stroke="#bdbdbd" stroke-width=".5"/>
+      <circle cx="14" cy="5" r="4.5" fill="#fff" stroke="#000" stroke-width="1.2"/>
+      <polygon points="17,4 21,5 17,6" fill="#ffa726" stroke="#000" stroke-width=".5"/>
+      <path d="M 11 1 L 12 -1 L 13 1 L 14 -1 L 15 1 L 16 -1 L 17 1" fill="#e53935" stroke="#000" stroke-width=".5"/>
+      <ellipse cx="15" cy="7" rx="1.5" ry="1.5" fill="#e53935"/>
+      <circle cx="15" cy="4" r="1" fill="#000"/>
+      <circle cx="15.2" cy="3.7" r=".3" fill="#fff"/>
+      <line x1="6" y1="14" x2="6" y2="17" stroke="#fbc02d" stroke-width="1.5"/>
+      <line x1="11" y1="14" x2="11" y2="17" stroke="#fbc02d" stroke-width="1.5"/>
     `;
     svg.appendChild(g);
   }
+  // Kühe DETAILLIERT
   const kuehe = GS.tiere.kuh || 0;
   for (let i = 0; i < kuehe; i++) {
-    const tx = 730 + (i%3) * 50;
-    const ty = 400 + Math.floor(i/3) * 45;
-    const g = svgEl('g', {transform:`translate(${tx},${ty})`, style:'cursor:pointer'});
+    const tx = 760 + (i%3) * 60;
+    const ty = 410 + Math.floor(i/3) * 55;
+    const g = svgEl('g', {transform:`translate(${tx},${ty}) scale(1.4)`, style:'cursor:pointer'});
     g.innerHTML = `
-      <ellipse cx="15" cy="20" rx="20" ry="4" fill="#000" opacity=".3"/>
-      <ellipse cx="15" cy="14" rx="18" ry="10" fill="#fff" stroke="#3e2723" stroke-width="1"/>
-      <ellipse cx="8" cy="11" rx="5" ry="4" fill="#3e2723"/>
-      <ellipse cx="-3" cy="10" rx="5" ry="4" fill="#fff" stroke="#3e2723"/>
-      <ellipse cx="-3" cy="12" rx="2.5" ry="1.5" fill="#ffcdd2"/>
+      <ellipse cx="15" cy="28" rx="22" ry="4" fill="#000" opacity=".35"/>
+      <!-- Körper -->
+      <ellipse cx="15" cy="18" rx="20" ry="11" fill="#fff" stroke="#000" stroke-width="1.5"/>
+      <!-- Schwarz-weiße Flecken -->
+      <ellipse cx="6" cy="14" rx="6" ry="4" fill="#1a1a1a"/>
+      <ellipse cx="22" cy="13" rx="5" ry="3" fill="#1a1a1a"/>
+      <ellipse cx="18" cy="22" rx="4" ry="2" fill="#1a1a1a"/>
+      <!-- Bauch / Highlight -->
+      <ellipse cx="15" cy="22" rx="14" ry="4" fill="#fff" opacity=".5"/>
+      <!-- Beine mit Hufen -->
+      <rect x="3" y="25" width="3" height="6" fill="#fff" stroke="#000" stroke-width="1"/>
+      <rect x="24" y="25" width="3" height="6" fill="#fff" stroke="#000" stroke-width="1"/>
+      <rect x="10" y="26" width="3" height="5" fill="#1a1a1a" stroke="#000" stroke-width=".8"/>
+      <rect x="20" y="26" width="3" height="5" fill="#1a1a1a" stroke="#000" stroke-width=".8"/>
+      <rect x="3" y="30" width="3" height="2" fill="#3e2723"/>
+      <rect x="24" y="30" width="3" height="2" fill="#3e2723"/>
+      <!-- Kopf -->
+      <ellipse cx="-3" cy="14" rx="6" ry="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+      <ellipse cx="-3" cy="16.5" rx="3" ry="2.5" fill="#ffcdd2" stroke="#e57373" stroke-width=".5"/>
+      <!-- Hörner -->
+      <path d="M -7 9 Q -8 6 -7 4" stroke="#fbc02d" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M 1 9 Q 2 6 1 4" stroke="#fbc02d" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Ohren -->
+      <ellipse cx="-7" cy="11" rx="2.5" ry="3.5" fill="#fff" stroke="#000" stroke-width="1"/>
+      <ellipse cx="1" cy="11" rx="2.5" ry="3.5" fill="#1a1a1a" stroke="#000" stroke-width="1"/>
+      <!-- Augen -->
+      <circle cx="-5" cy="13" r="1.2" fill="#000"/>
+      <circle cx="-1" cy="13" r="1.2" fill="#000"/>
+      <circle cx="-4.7" cy="12.7" r=".4" fill="#fff"/>
+      <circle cx="-.7" cy="12.7" r=".4" fill="#fff"/>
+      <!-- Nüstern -->
+      <circle cx="-4" cy="17" r=".7" fill="#3e2723"/>
+      <circle cx="-2" cy="17" r=".7" fill="#3e2723"/>
+      <!-- Lächeln -->
+      <path d="M -5 19 Q -3 20 -1 19" stroke="#3e2723" stroke-width=".8" fill="none"/>
+      <!-- Schwanz mit Quaste -->
+      <path d="M 35 15 Q 40 18 42 22" stroke="#1a1a1a" stroke-width="1.8" fill="none"/>
+      <ellipse cx="42" cy="23" rx="2.5" ry="3" fill="#1a1a1a" stroke="#000" stroke-width=".5"/>
+      <!-- Euter -->
+      <ellipse cx="15" cy="27" rx="3" ry="2" fill="#ffcdd2" stroke="#e57373" stroke-width=".5"/>
     `;
     g.addEventListener('click', () => onTierClick('kuh'));
+    svg.appendChild(g);
+  }
+  // Schweine wenn vorhanden
+  const schweine = GS.tiere.schwein || 0;
+  for (let i = 0; i < schweine; i++) {
+    const tx = 920 + (i%3) * 50;
+    const ty = 430 + Math.floor(i/3) * 40;
+    const g = svgEl('g', {transform:`translate(${tx},${ty}) scale(1.3)`});
+    g.innerHTML = `
+      <ellipse cx="15" cy="26" rx="18" ry="4" fill="#000" opacity=".35"/>
+      <!-- Körper -->
+      <ellipse cx="15" cy="17" rx="16" ry="9" fill="#f8bbd0" stroke="#c2185b" stroke-width="1.5"/>
+      <!-- Beine -->
+      <rect x="5" y="22" width="3" height="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="1"/>
+      <rect x="22" y="22" width="3" height="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="1"/>
+      <!-- Kopf -->
+      <circle cx="2" cy="14" r="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="1.5"/>
+      <!-- Schnauze -->
+      <ellipse cx="-3" cy="15" rx="3.5" ry="3" fill="#ec407a" stroke="#c2185b" stroke-width="1"/>
+      <ellipse cx="-4" cy="15" rx=".7" ry="1" fill="#3e2723"/>
+      <ellipse cx="-2" cy="15" rx=".7" ry="1" fill="#3e2723"/>
+      <!-- Augen -->
+      <circle cx="0" cy="11" r="1" fill="#000"/>
+      <circle cx=".3" cy="10.7" r=".3" fill="#fff"/>
+      <!-- Spitze Ohren -->
+      <polygon points="-3,7 -1,2 1,7" fill="#f8bbd0" stroke="#c2185b" stroke-width="1"/>
+      <polygon points="3,7 5,2 7,7" fill="#f8bbd0" stroke="#c2185b" stroke-width="1"/>
+      <!-- Ringel-Schwanz -->
+      <path d="M 30 14 Q 35 13 33 17 Q 31 19 35 19" stroke="#c2185b" stroke-width="1.8" fill="none"/>
+    `;
     svg.appendChild(g);
   }
 }
