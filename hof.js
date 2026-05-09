@@ -756,193 +756,365 @@ function svgWohnhausFuerEpoche(w, h) {
   }
 }
 
-// Steinzeit – runde Lehmhütte mit Strohdach
+// Steinzeit – runde Lehmhütte mit DICKEM Strohdach
 function svgWohnhausSteinzeit(w, h) {
-  const cx = w/2, baseY = h*0.95, wallTop = h*0.55, peak = h*0.12;
+  const cx = w/2;
+  const baseY = h*0.92;
+  const wallTop = h*0.58;
+  const peak = h*0.08;
+  // Strohbündel-Streifen erzeugen
+  let stroh = '';
+  const reihen = 4;
+  for (let r = 0; r < reihen; r++) {
+    const yT = wallTop - (wallTop - peak) * (r / reihen) * 0.95;
+    const yB = wallTop - (wallTop - peak) * ((r-0.6) / reihen) * 0.95;
+    const inset = (w*0.45) * (1 - r / reihen) * 0.95;
+    // gewellter Strohstreifen
+    stroh += `<path d="M ${cx-inset} ${yB} Q ${cx} ${yB-6} ${cx+inset} ${yB} L ${cx+inset*0.95} ${yT} Q ${cx} ${yT-4} ${cx-inset*0.95} ${yT} Z" fill="${r%2 ? '#d4a04a' : '#bf8b3a'}" stroke="#6d4c20" stroke-width="2"/>`;
+    // einzelne Strohhalme
+    const buendel = 8;
+    for (let b = 0; b < buendel; b++) {
+      const bx = cx - inset + (b+0.5) * (2*inset/buendel);
+      stroh += `<line x1="${bx}" y1="${yT-2}" x2="${bx-2}" y2="${yB+1}" stroke="#8b6420" stroke-width="1.2"/>`;
+    }
+  }
   return `
-    <ellipse cx="${cx}" cy="${baseY+5}" rx="${w*0.45}" ry="11" fill="#000" opacity=".35"/>
+    <ellipse cx="${cx}" cy="${baseY+8}" rx="${w*0.45}" ry="12" fill="#000" opacity=".4"/>
     <!-- Lehmwand rund -->
-    <path d="M ${w*0.1} ${baseY} Q ${w*0.1} ${wallTop} ${cx} ${wallTop} Q ${w*0.9} ${wallTop} ${w*0.9} ${baseY} Z"
+    <ellipse cx="${cx}" cy="${baseY}" rx="${w*0.4}" ry="10" fill="#6d4c41" stroke="#3e2723" stroke-width="2"/>
+    <path d="M ${cx-w*0.4} ${baseY} L ${cx-w*0.4} ${wallTop} Q ${cx} ${wallTop-6} ${cx+w*0.4} ${wallTop} L ${cx+w*0.4} ${baseY} Z"
           fill="#a1887f" stroke="#5d4037" stroke-width="3"/>
-    <!-- Wand-Textur -->
-    <path d="M ${w*0.18} ${wallTop+20} Q ${cx} ${wallTop+10} ${w*0.82} ${wallTop+20}" stroke="#8d6e63" stroke-width="2" fill="none" opacity=".7"/>
-    <path d="M ${w*0.15} ${wallTop+45} Q ${cx} ${wallTop+35} ${w*0.85} ${wallTop+45}" stroke="#8d6e63" stroke-width="2" fill="none" opacity=".7"/>
-    <!-- Strohdach -->
-    <path d="M ${w*0.05} ${wallTop+5} Q ${cx} ${peak} ${w*0.95} ${wallTop+5} L ${w*0.9} ${wallTop} L ${w*0.1} ${wallTop} Z"
-          fill="#bf8b3a" stroke="#5d4037" stroke-width="3"/>
-    <!-- Stroh-Striche -->
-    ${[0.15,0.28,0.4,0.5,0.6,0.72,0.85].map(p => `<line x1="${w*p}" y1="${wallTop}" x2="${w*p + (p<0.5?-6:6)}" y2="${peak + (p-0.5)*(p-0.5)*h*1.2 + h*0.02}" stroke="#8d6e63" stroke-width="1.5"/>`).join('')}
-    <!-- Eingang -->
-    <path d="M ${cx-22} ${baseY} L ${cx-22} ${baseY-h*0.3} Q ${cx-22} ${baseY-h*0.4} ${cx} ${baseY-h*0.4} Q ${cx+22} ${baseY-h*0.4} ${cx+22} ${baseY-h*0.3} L ${cx+22} ${baseY} Z"
-          fill="#3e2723" stroke="#000" stroke-width="2"/>
-    <path d="M ${cx-18} ${baseY-5} L ${cx-18} ${baseY-h*0.28} Q ${cx-18} ${baseY-h*0.36} ${cx} ${baseY-h*0.36} Q ${cx+18} ${baseY-h*0.36} ${cx+18} ${baseY-h*0.28} L ${cx+18} ${baseY-5} Z"
-          fill="#1a0e08"/>
-    <!-- Rauchloch -->
-    <ellipse cx="${cx}" cy="${peak+10}" rx="14" ry="6" fill="#000"/>
-    <g opacity=".7">
-      <circle cx="${cx-3}" cy="${peak-2}" r="6" fill="#cfd8dc"/>
-      <circle cx="${cx+5}" cy="${peak-12}" r="9" fill="#eceff1"/>
-      <circle cx="${cx-2}" cy="${peak-22}" r="11" fill="#fff"/>
+    <!-- Strukturlinien Lehm -->
+    <path d="M ${cx-w*0.36} ${baseY-h*0.08} Q ${cx} ${baseY-h*0.1} ${cx+w*0.36} ${baseY-h*0.08}" stroke="#8d6e63" stroke-width="2" fill="none"/>
+    <path d="M ${cx-w*0.35} ${baseY-h*0.18} Q ${cx} ${baseY-h*0.2} ${cx+w*0.35} ${baseY-h*0.18}" stroke="#8d6e63" stroke-width="2" fill="none"/>
+    <path d="M ${cx-w*0.34} ${baseY-h*0.27} Q ${cx} ${baseY-h*0.29} ${cx+w*0.34} ${baseY-h*0.27}" stroke="#8d6e63" stroke-width="2" fill="none"/>
+    <!-- Strohdach – dicke ueberlappende Buendel -->
+    ${stroh}
+    <!-- Spitze – Strohbuendel zusammengebunden -->
+    <ellipse cx="${cx}" cy="${peak+4}" rx="14" ry="10" fill="#8b6420" stroke="#5d4037" stroke-width="2"/>
+    <line x1="${cx-12}" y1="${peak+4}" x2="${cx-14}" y2="${peak-8}" stroke="#6d4c20" stroke-width="2"/>
+    <line x1="${cx}" y1="${peak+4}" x2="${cx}" y2="${peak-12}" stroke="#6d4c20" stroke-width="2"/>
+    <line x1="${cx+12}" y1="${peak+4}" x2="${cx+14}" y2="${peak-8}" stroke="#6d4c20" stroke-width="2"/>
+    <ellipse cx="${cx}" cy="${peak+8}" rx="6" ry="2" fill="#5d4037"/>
+    <!-- Eingang gewölbt mit Holzbalken -->
+    <path d="M ${cx-26} ${baseY+2} L ${cx-26} ${baseY-h*0.25} Q ${cx-26} ${baseY-h*0.35} ${cx} ${baseY-h*0.35} Q ${cx+26} ${baseY-h*0.35} ${cx+26} ${baseY-h*0.25} L ${cx+26} ${baseY+2} Z"
+          fill="#2d1810" stroke="#000" stroke-width="2.5"/>
+    <rect x="${cx-30}" y="${baseY-h*0.36}" width="60" height="6" fill="#5d4037" stroke="#000" stroke-width="2"/>
+    <!-- Geweih über Tür -->
+    <path d="M ${cx-12} ${baseY-h*0.36} L ${cx-18} ${baseY-h*0.42} M ${cx-12} ${baseY-h*0.36} L ${cx-8} ${baseY-h*0.42} M ${cx+12} ${baseY-h*0.36} L ${cx+18} ${baseY-h*0.42} M ${cx+12} ${baseY-h*0.36} L ${cx+8} ${baseY-h*0.42}"
+          stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Rauch aus Spitze -->
+    <g opacity=".75">
+      <circle cx="${cx-3}" cy="${peak-12}" r="6" fill="#cfd8dc"/>
+      <circle cx="${cx+5}" cy="${peak-22}" r="9" fill="#eceff1"/>
+      <circle cx="${cx-2}" cy="${peak-34}" r="11" fill="#fff"/>
     </g>
-    <!-- Kleiner Stein vorm Eingang -->
-    <ellipse cx="${cx-w*0.32}" cy="${baseY+2}" rx="14" ry="6" fill="#9e9e9e" stroke="#424242" stroke-width="1.5"/>
+    <!-- Steine vor Hütte -->
+    <ellipse cx="${cx-w*0.28}" cy="${baseY+5}" rx="12" ry="5" fill="#9e9e9e" stroke="#424242" stroke-width="1.5"/>
+    <ellipse cx="${cx+w*0.3}" cy="${baseY+3}" rx="9" ry="4" fill="#9e9e9e" stroke="#424242" stroke-width="1.5"/>
+    <ellipse cx="${cx+w*0.32}" cy="${baseY+5}" rx="6" ry="3" fill="#bdbdbd" stroke="#616161" stroke-width="1"/>
   `;
 }
 
-// Antike – römisches Steinhaus mit Säulen + Atrium
+// Antike – römisches Tempelhaus mit kannelierten Säulen
 function svgWohnhausAntike(w, h) {
+  const cx = w/2;
+  const stylobat = h*0.85;     // Stufen-Oberkante
+  const saeuleTop = h*0.42;
+  const saeuleBot = h*0.84;
+  const dachAnsatz = h*0.4;
+  const giebelSpitze = h*0.1;
+  // Drei Stufen
   return `
-    <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
-    <!-- Sockel -->
-    <rect x="10" y="${h*0.85}" width="${w-20}" height="${h*0.1}" fill="#cfd8dc" stroke="#5d4037" stroke-width="3"/>
-    <line x1="10" y1="${h*0.92}" x2="${w-10}" y2="${h*0.92}" stroke="#90a4ae" stroke-width="1.5"/>
-    <!-- Hauptmauer -->
-    <rect x="20" y="${h*0.4}" width="${w-40}" height="${h*0.45}" fill="#fff8e1" stroke="#5d4037" stroke-width="3"/>
-    <!-- Säulen -->
-    ${[0.18,0.36,0.54,0.72].map(p => `
-      <rect x="${w*p-7}" y="${h*0.42}" width="14" height="${h*0.43}" fill="#eceff1" stroke="#5d4037" stroke-width="2"/>
-      <rect x="${w*p-12}" y="${h*0.42}" width="24" height="6" fill="#cfd8dc" stroke="#5d4037" stroke-width="1.5"/>
-      <rect x="${w*p-12}" y="${h*0.79}" width="24" height="6" fill="#cfd8dc" stroke="#5d4037" stroke-width="1.5"/>
-      <line x1="${w*p}" y1="${h*0.48}" x2="${w*p}" y2="${h*0.78}" stroke="#cfd8dc" stroke-width="1"/>
-    `).join('')}
-    <!-- Eingang -->
-    <rect x="${w*0.85-15}" y="${h*0.6}" width="30" height="${h*0.25}" fill="#5d4037" stroke="#000" stroke-width="2.5"/>
-    <!-- Flaches Dach mit Giebel -->
-    <polygon points="0,${h*0.4} ${w/2},${h*0.18} ${w},${h*0.4}" fill="#c62828" stroke="#5d4037" stroke-width="3"/>
-    <polygon points="${w},${h*0.4} ${w+18},${h*0.42} ${w/2+18},${h*0.2} ${w/2},${h*0.18}" fill="#8b1e1e" stroke="#5d4037" stroke-width="2"/>
-    <!-- Tympanon -->
-    <text x="${w/2}" y="${h*0.32}" text-anchor="middle" font-size="20">🏛️</text>
-    <text x="${w/2}" y="${h-2}" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" stroke="#000" stroke-width="3" paint-order="stroke">VILLA</text>
+    <ellipse cx="${cx}" cy="${h-3}" rx="${w/2-5}" ry="11" fill="#000" opacity=".4"/>
+    <!-- Drei Stufen -->
+    <rect x="0" y="${stylobat+h*0.04}" width="${w}" height="${h*0.06}" fill="#bdbdbd" stroke="#5d4037" stroke-width="2.5"/>
+    <rect x="${w*0.04}" y="${stylobat+h*0.02}" width="${w*0.92}" height="${h*0.04}" fill="#cfd8dc" stroke="#5d4037" stroke-width="2.5"/>
+    <rect x="${w*0.08}" y="${stylobat}" width="${w*0.84}" height="${h*0.04}" fill="#eceff1" stroke="#5d4037" stroke-width="2.5"/>
+    <!-- Cella (Innenraum-Wand hinter Säulen) -->
+    <rect x="${w*0.18}" y="${dachAnsatz+h*0.02}" width="${w*0.64}" height="${stylobat-dachAnsatz-h*0.02}" fill="#fff8e1" stroke="#bcaaa4" stroke-width="2"/>
+    <!-- Tür mittig -->
+    <rect x="${cx-22}" y="${h*0.6}" width="44" height="${stylobat-h*0.6}" fill="#5d4037" stroke="#000" stroke-width="2.5"/>
+    <line x1="${cx}" y1="${h*0.6}" x2="${cx}" y2="${stylobat}" stroke="#3e2723" stroke-width="2"/>
+    <circle cx="${cx-8}" cy="${h*0.74}" r="2" fill="#fbc02d"/>
+    <circle cx="${cx+8}" cy="${h*0.74}" r="2" fill="#fbc02d"/>
+    <!-- 4 kannelierte Säulen mit Kapitell + Basis -->
+    ${[0.16,0.38,0.62,0.84].map(p => {
+      const sx = w*p;
+      return `
+      <!-- Basis -->
+      <rect x="${sx-15}" y="${saeuleBot-4}" width="30" height="8" fill="#bdbdbd" stroke="#5d4037" stroke-width="2"/>
+      <rect x="${sx-13}" y="${saeuleBot-8}" width="26" height="6" fill="#cfd8dc" stroke="#5d4037" stroke-width="1.5"/>
+      <!-- Schaft -->
+      <rect x="${sx-10}" y="${saeuleTop+8}" width="20" height="${saeuleBot-saeuleTop-8}" fill="#eceff1" stroke="#5d4037" stroke-width="2"/>
+      <!-- Kannelluren -->
+      <line x1="${sx-6}" y1="${saeuleTop+8}" x2="${sx-6}" y2="${saeuleBot-8}" stroke="#bdbdbd" stroke-width="1.5"/>
+      <line x1="${sx-2}" y1="${saeuleTop+8}" x2="${sx-2}" y2="${saeuleBot-8}" stroke="#bdbdbd" stroke-width="1.5"/>
+      <line x1="${sx+2}" y1="${saeuleTop+8}" x2="${sx+2}" y2="${saeuleBot-8}" stroke="#bdbdbd" stroke-width="1.5"/>
+      <line x1="${sx+6}" y1="${saeuleTop+8}" x2="${sx+6}" y2="${saeuleBot-8}" stroke="#bdbdbd" stroke-width="1.5"/>
+      <!-- Kapitell (ionisches Polster) -->
+      <rect x="${sx-14}" y="${saeuleTop}" width="28" height="8" fill="#eceff1" stroke="#5d4037" stroke-width="2"/>
+      <circle cx="${sx-10}" cy="${saeuleTop+4}" r="3" fill="none" stroke="#5d4037" stroke-width="1.5"/>
+      <circle cx="${sx+10}" cy="${saeuleTop+4}" r="3" fill="none" stroke="#5d4037" stroke-width="1.5"/>
+      `;
+    }).join('')}
+    <!-- Architrav (Balken über Säulen) -->
+    <rect x="${w*0.05}" y="${dachAnsatz+h*0.02}" width="${w*0.9}" height="${h*0.04}" fill="#cfd8dc" stroke="#5d4037" stroke-width="2.5"/>
+    <rect x="${w*0.05}" y="${dachAnsatz+h*0.06}" width="${w*0.9}" height="${h*0.02}" fill="#bdbdbd"/>
+    <!-- Triglyphen (Verzierungen) -->
+    ${[0.16,0.27,0.38,0.5,0.62,0.73,0.84].map(p => `<rect x="${w*p-3}" y="${dachAnsatz+h*0.04}" width="6" height="${h*0.04}" fill="#9e9e9e"/>`).join('')}
+    <!-- Giebeldreieck (Tympanon) -->
+    <polygon points="${w*0.05},${dachAnsatz} ${cx},${giebelSpitze} ${w*0.95},${dachAnsatz}" fill="#fff8e1" stroke="#5d4037" stroke-width="3"/>
+    <!-- Dach rot drüber -->
+    <polygon points="${w*0.02},${dachAnsatz} ${cx},${giebelSpitze-h*0.02} ${w*0.98},${dachAnsatz} ${w*0.95},${dachAnsatz} ${cx},${giebelSpitze} ${w*0.05},${dachAnsatz}" fill="#c62828" stroke="#5d4037" stroke-width="2.5"/>
+    <!-- Antefix (Verzierungen Dachecken) -->
+    <polygon points="${w*0.02},${dachAnsatz-3} ${w*0.05},${dachAnsatz-12} ${w*0.08},${dachAnsatz-3}" fill="#c62828" stroke="#5d4037" stroke-width="1.5"/>
+    <polygon points="${cx-4},${giebelSpitze-3} ${cx},${giebelSpitze-12} ${cx+4},${giebelSpitze-3}" fill="#c62828" stroke="#5d4037" stroke-width="1.5"/>
+    <polygon points="${w*0.92},${dachAnsatz-3} ${w*0.95},${dachAnsatz-12} ${w*0.98},${dachAnsatz-3}" fill="#c62828" stroke="#5d4037" stroke-width="1.5"/>
+    <!-- Adler im Tympanon -->
+    <text x="${cx}" y="${dachAnsatz-h*0.06}" text-anchor="middle" font-size="22">🦅</text>
   `;
 }
 
-// Industriezeit – Backsteinhaus mit hohem Schornstein
+// Industriezeit – Backsteinhaus mit Rundbogenfenstern + qualmendem Schornstein
 function svgWohnhausIndustrie(w, h) {
+  const cx = w/2;
+  const sockel = h*0.87;
+  const wandTop = h*0.3;
   return `
-    <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
-    <rect x="10" y="${h*0.88}" width="${w-20}" height="${h*0.07}" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
-    <!-- Backsteinwand -->
-    <rect x="20" y="${h*0.35}" width="${w-40}" height="${h*0.53}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
-    <!-- Stockwerk-Linie -->
-    <rect x="20" y="${h*0.6}" width="${w-40}" height="4" fill="#3e2723"/>
-    <!-- Fenster oben Reihe -->
-    ${[0.2,0.45,0.7].map(p => `
-      <rect x="${w*p-22}" y="${h*0.42}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
-      <line x1="${w*p}" y1="${h*0.42}" x2="${w*p}" y2="${h*0.42+36}" stroke="#3e2723" stroke-width="1.5"/>
-      <line x1="${w*p-22}" y1="${h*0.42+18}" x2="${w*p+22}" y2="${h*0.42+18}" stroke="#3e2723" stroke-width="1.5"/>
+    <ellipse cx="${cx}" cy="${h-3}" rx="${w/2-5}" ry="12" fill="#000" opacity=".4"/>
+    <rect x="10" y="${sockel}" width="${w-20}" height="${h-sockel-3}" fill="url(#steinSockel)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Backsteinwand mit Mauer-Pattern -->
+    <rect x="20" y="${wandTop}" width="${w-40}" height="${sockel-wandTop}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
+    <!-- Eckverstaerkung -->
+    <rect x="20" y="${wandTop}" width="14" height="${sockel-wandTop}" fill="#a52525" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w-34}" y="${wandTop}" width="14" height="${sockel-wandTop}" fill="#a52525" stroke="#3e2723" stroke-width="2"/>
+    <!-- Stockwerk-Trenngesims -->
+    <rect x="14" y="${h*0.55}" width="${w-28}" height="8" fill="#fff8e1" stroke="#3e2723" stroke-width="2"/>
+    <!-- OG: 3 Rundbogenfenster -->
+    ${[0.25,0.5,0.75].map(p => `
+      <rect x="${w*p-20}" y="${h*0.4}" width="40" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+      <path d="M ${w*p-20} ${h*0.4} Q ${w*p} ${h*0.34} ${w*p+20} ${h*0.4}" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+      <line x1="${w*p}" y1="${h*0.34}" x2="${w*p}" y2="${h*0.4+32}" stroke="#3e2723" stroke-width="1.5"/>
+      <line x1="${w*p-20}" y1="${h*0.4+16}" x2="${w*p+20}" y2="${h*0.4+16}" stroke="#3e2723" stroke-width="1.5"/>
+      <!-- Fenstersims -->
+      <rect x="${w*p-23}" y="${h*0.4+32}" width="46" height="4" fill="#fff8e1" stroke="#3e2723" stroke-width="1.5"/>
     `).join('')}
-    <!-- Tür + Fenster unten -->
-    <rect x="${w*0.2-22}" y="${h*0.66}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
-    <rect x="${w*0.7-22}" y="${h*0.66}" width="44" height="36" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
-    <rect x="${w*0.45-20}" y="${h*0.65}" width="40" height="${h*0.23}" fill="#5d4037" stroke="#3e2723" stroke-width="3"/>
-    <rect x="${w*0.45-16}" y="${h*0.69}" width="32" height="14" fill="#3e2723"/>
-    <circle cx="${w*0.45+10}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
-    <!-- Walmdach -->
-    <polygon points="0,${h*0.35} ${w*0.2},${h*0.13} ${w*0.8},${h*0.13} ${w},${h*0.35}" fill="#37474f" stroke="#000" stroke-width="3"/>
-    <polygon points="${w},${h*0.35} ${w+18},${h*0.37} ${w*0.8+18},${h*0.15} ${w*0.8},${h*0.13}" fill="#263238" stroke="#000" stroke-width="2"/>
-    <!-- Hoher Industrieschornstein -->
-    <rect x="${w*0.85}" y="${h*-0.15}" width="20" height="${h*0.5}" fill="#a1887f" stroke="#3e2723" stroke-width="2"/>
-    <rect x="${w*0.85-3}" y="${h*-0.18}" width="26" height="8" fill="#5d4037" stroke="#000" stroke-width="2"/>
-    <g opacity=".7">
-      <circle cx="${w*0.85+10}" cy="${h*-0.25}" r="9" fill="#90a4ae"/>
-      <circle cx="${w*0.85+18}" cy="${h*-0.35}" r="11" fill="#b0bec5"/>
-      <circle cx="${w*0.85+8}" cy="${h*-0.45}" r="13" fill="#cfd8dc"/>
+    <!-- EG: 2 Rundbogenfenster + grosse Tür -->
+    <rect x="${w*0.18}" y="${h*0.68}" width="44" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <path d="M ${w*0.18} ${h*0.68} Q ${w*0.18+22} ${h*0.62} ${w*0.18+44} ${h*0.68}" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.18+22}" y1="${h*0.62}" x2="${w*0.18+22}" y2="${h*0.68+32}" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.7}" y="${h*0.68}" width="44" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <path d="M ${w*0.7} ${h*0.68} Q ${w*0.7+22} ${h*0.62} ${w*0.7+44} ${h*0.68}" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.7+22}" y1="${h*0.62}" x2="${w*0.7+22}" y2="${h*0.68+32}" stroke="#3e2723" stroke-width="1.5"/>
+    <!-- Tür -->
+    <rect x="${cx-26}" y="${h*0.65}" width="52" height="${sockel-h*0.65}" fill="#5d4037" stroke="#3e2723" stroke-width="3"/>
+    <path d="M ${cx-26} ${h*0.65} Q ${cx} ${h*0.58} ${cx+26} ${h*0.65}" fill="#5d4037" stroke="#3e2723" stroke-width="3"/>
+    <rect x="${cx-22}" y="${h*0.69}" width="44" height="14" fill="#90caf9" stroke="#3e2723" stroke-width="1.5"/>
+    <line x1="${cx}" y1="${h*0.65}" x2="${cx}" y2="${sockel-3}" stroke="#3e2723" stroke-width="2"/>
+    <circle cx="${cx-9}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
+    <circle cx="${cx+9}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
+    <!-- Walmdach (flach) -->
+    <polygon points="0,${wandTop} ${w*0.18},${h*0.18} ${w*0.82},${h*0.18} ${w},${wandTop}" fill="#37474f" stroke="#000" stroke-width="3"/>
+    <polygon points="${w},${wandTop} ${w+18},${wandTop+h*0.02} ${w*0.82+18},${h*0.18+h*0.02} ${w*0.82},${h*0.18}" fill="#263238" stroke="#000" stroke-width="2"/>
+    <!-- Stadt-Schornstein (lang, qualmt) -->
+    <rect x="${w*0.78}" y="${-h*0.05}" width="18" height="${h*0.35}" fill="#a52525" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${w*0.78-3}" y="${-h*0.07}" width="24" height="6" fill="#3e2723"/>
+    <g opacity=".75">
+      <circle cx="${w*0.78+9}" cy="${-h*0.13}" r="10" fill="#90a4ae"/>
+      <circle cx="${w*0.78+20}" cy="${-h*0.22}" r="13" fill="#b0bec5"/>
+      <circle cx="${w*0.78+10}" cy="${-h*0.35}" r="16" fill="#cfd8dc"/>
+      <circle cx="${w*0.78+25}" cy="${-h*0.45}" r="14" fill="#eceff1"/>
     </g>
+    <!-- Fabrik-Uhr im Giebel -->
+    <circle cx="${cx}" cy="${h*0.25}" r="14" fill="#fff8e1" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${cx}" y1="${h*0.25}" x2="${cx}" y2="${h*0.25-9}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${cx}" y1="${h*0.25}" x2="${cx+6}" y2="${h*0.25+3}" stroke="#3e2723" stroke-width="2"/>
+    <circle cx="${cx}" cy="${h*0.25}" r="1.5" fill="#3e2723"/>
   `;
 }
 
-// Moderne – sauberes 2-stöckiges Wohnhaus
+// Moderne – klassischer Bauernhof, weiss verputzt mit braunen Holzdetails
 function svgWohnhausModerne(w, h) {
   const cx = w/2;
+  const sockel = h*0.88;
+  const wandTop = h*0.4;
+  const stockwerk = h*0.64;
+  const peak = h*0.06;
   return `
-    <ellipse cx="${cx}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
-    <!-- Sockel -->
-    <rect x="15" y="${h*0.86}" width="${w-30}" height="${h*0.09}" fill="url(#steinSockel)" stroke="#000" stroke-width="2.5"/>
-    <!-- Wand 2 Stockwerke -->
-    <rect x="20" y="${h*0.38}" width="${w-40}" height="${h*0.48}" fill="#fff8e1" stroke="#3e2723" stroke-width="3"/>
-    <!-- Stockwerk-Trennung -->
-    <rect x="15" y="${h*0.62}" width="${w-30}" height="6" fill="#5d4037"/>
-    <!-- Fenster oben -->
-    <rect x="${w*0.18}" y="${h*0.43}" width="48" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
-    <line x1="${w*0.18+24}" y1="${h*0.43}" x2="${w*0.18+24}" y2="${h*0.43+34}" stroke="#3e2723" stroke-width="2"/>
-    <line x1="${w*0.18}" y1="${h*0.6}" x2="${w*0.18+48}" y2="${h*0.6}" stroke="#3e2723" stroke-width="2"/>
-    <rect x="${w*0.62}" y="${h*0.43}" width="48" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
-    <line x1="${w*0.62+24}" y1="${h*0.43}" x2="${w*0.62+24}" y2="${h*0.43+34}" stroke="#3e2723" stroke-width="2"/>
-    <line x1="${w*0.62}" y1="${h*0.6}" x2="${w*0.62+48}" y2="${h*0.6}" stroke="#3e2723" stroke-width="2"/>
-    <!-- Fenster unten links -->
-    <rect x="${w*0.15}" y="${h*0.7}" width="50" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
-    <line x1="${w*0.15+25}" y1="${h*0.7}" x2="${w*0.15+25}" y2="${h*0.7+32}" stroke="#3e2723" stroke-width="2"/>
-    <!-- Blumenkasten -->
-    <rect x="${w*0.15-3}" y="${h*0.7+32}" width="56" height="6" fill="#5d4037" stroke="#000" stroke-width="1.5"/>
-    <circle cx="${w*0.15+10}" cy="${h*0.7+32}" r="3" fill="#e91e63"/>
-    <circle cx="${w*0.15+25}" cy="${h*0.7+32}" r="3" fill="#fff59d"/>
-    <circle cx="${w*0.15+40}" cy="${h*0.7+32}" r="3" fill="#9c27b0"/>
-    <!-- Tür mittig -->
-    <rect x="${cx-22}" y="${h*0.65}" width="44" height="${h*0.21}" fill="#5d4037" stroke="#3e2723" stroke-width="3" rx="3"/>
-    <rect x="${cx-18}" y="${h*0.69}" width="36" height="18" fill="#90caf9" stroke="#3e2723" stroke-width="1.5"/>
-    <circle cx="${cx+12}" cy="${h*0.78}" r="2.5" fill="#fbc02d"/>
-    <!-- Fenster unten rechts -->
-    <rect x="${w*0.65}" y="${h*0.7}" width="50" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="3"/>
-    <line x1="${w*0.65+25}" y1="${h*0.7}" x2="${w*0.65+25}" y2="${h*0.7+32}" stroke="#3e2723" stroke-width="2"/>
-    <!-- Satteldach -->
-    <polygon points="0,${h*0.38} ${cx},${h*0.08} ${w},${h*0.38}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
-    <polygon points="${w},${h*0.38} ${w+22},${h*0.4} ${cx+22},${h*0.1} ${cx},${h*0.08}" fill="url(#ziegelDachSeite)" stroke="#3e2723" stroke-width="2.5"/>
-    <!-- Schornstein -->
-    <rect x="${cx+w*0.18}" y="${h*0.13}" width="18" height="${h*0.18}" fill="#a52525" stroke="#3e2723" stroke-width="2"/>
-    <rect x="${cx+w*0.18-3}" y="${h*0.11}" width="24" height="6" fill="#3e2723"/>
-    <g opacity=".75">
-      <circle cx="${cx+w*0.18+10}" cy="${h*0.06}" r="6" fill="#eceff1"/>
-      <circle cx="${cx+w*0.18+16}" cy="${h*0}" r="9" fill="#fff"/>
+    <ellipse cx="${cx}" cy="${h-3}" rx="${w/2-5}" ry="12" fill="#000" opacity=".4"/>
+    <!-- Naturstein-Sockel -->
+    <rect x="10" y="${sockel}" width="${w-20}" height="${h-sockel-3}" fill="url(#steinSockel)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Hauptwand weiss verputzt -->
+    <rect x="20" y="${wandTop}" width="${w-40}" height="${sockel-wandTop}" fill="#fafafa" stroke="#3e2723" stroke-width="3"/>
+    <!-- Eckverstaerkung Holz -->
+    <rect x="20" y="${wandTop}" width="14" height="${sockel-wandTop}" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w-34}" y="${wandTop}" width="14" height="${sockel-wandTop}" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+    <!-- Holz-Trennbalken zwischen Stockwerken -->
+    <rect x="14" y="${stockwerk-4}" width="${w-28}" height="10" fill="#8d6e63" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="14" y1="${stockwerk+2}" x2="${w-14}" y2="${stockwerk+2}" stroke="#5d4037" stroke-width="1.5"/>
+    <!-- OG: 3 grosse Sprossenfenster mit gruenen Klappläden -->
+    ${[0.22,0.5,0.78].map(p => `
+      <rect x="${w*p-22}" y="${wandTop+h*0.04}" width="44" height="38" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+      <line x1="${w*p}" y1="${wandTop+h*0.04}" x2="${w*p}" y2="${wandTop+h*0.04+38}" stroke="#3e2723" stroke-width="2"/>
+      <line x1="${w*p-22}" y1="${wandTop+h*0.04+19}" x2="${w*p+22}" y2="${wandTop+h*0.04+19}" stroke="#3e2723" stroke-width="2"/>
+      <rect x="${w*p-34}" y="${wandTop+h*0.04-2}" width="11" height="42" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+      <rect x="${w*p+22}" y="${wandTop+h*0.04-2}" width="11" height="42" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+      <rect x="${w*p-32}" y="${wandTop+h*0.04+2}" width="2" height="34" fill="#0d4014"/>
+      <rect x="${w*p+30}" y="${wandTop+h*0.04+2}" width="2" height="34" fill="#0d4014"/>
+      <!-- Fensterbank mit Geranien -->
+      <rect x="${w*p-26}" y="${wandTop+h*0.04+38}" width="52" height="6" fill="#5d4037" stroke="#3e2723" stroke-width="1.5"/>
+      <circle cx="${w*p-16}" cy="${wandTop+h*0.04+38}" r="3.5" fill="#e53935"/>
+      <circle cx="${w*p-6}" cy="${wandTop+h*0.04+38}" r="3.5" fill="#e53935"/>
+      <circle cx="${w*p+4}" cy="${wandTop+h*0.04+38}" r="3.5" fill="#fbc02d"/>
+      <circle cx="${w*p+14}" cy="${wandTop+h*0.04+38}" r="3.5" fill="#e53935"/>
+    `).join('')}
+    <!-- EG: 2 Fenster + Tür mittig -->
+    <rect x="${w*0.18}" y="${stockwerk+h*0.04}" width="44" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.18+22}" y1="${stockwerk+h*0.04}" x2="${w*0.18+22}" y2="${stockwerk+h*0.04+34}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${w*0.18}" y1="${stockwerk+h*0.04+17}" x2="${w*0.18+44}" y2="${stockwerk+h*0.04+17}" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.18-12}" y="${stockwerk+h*0.04-2}" width="11" height="38" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.18+44}" y="${stockwerk+h*0.04-2}" width="11" height="38" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.18-3}" y="${stockwerk+h*0.04+34}" width="50" height="6" fill="#5d4037"/>
+    <circle cx="${w*0.18+10}" cy="${stockwerk+h*0.04+34}" r="3" fill="#e53935"/>
+    <circle cx="${w*0.18+22}" cy="${stockwerk+h*0.04+34}" r="3" fill="#fbc02d"/>
+    <circle cx="${w*0.18+34}" cy="${stockwerk+h*0.04+34}" r="3" fill="#e53935"/>
+
+    <rect x="${w*0.65}" y="${stockwerk+h*0.04}" width="44" height="34" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.65+22}" y1="${stockwerk+h*0.04}" x2="${w*0.65+22}" y2="${stockwerk+h*0.04+34}" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${w*0.65}" y1="${stockwerk+h*0.04+17}" x2="${w*0.65+44}" y2="${stockwerk+h*0.04+17}" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.65-12}" y="${stockwerk+h*0.04-2}" width="11" height="38" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.65+44}" y="${stockwerk+h*0.04-2}" width="11" height="38" fill="#1b5e20" stroke="#3e2723" stroke-width="2"/>
+    <rect x="${w*0.65-3}" y="${stockwerk+h*0.04+34}" width="50" height="6" fill="#5d4037"/>
+    <!-- Tür mit Vordach -->
+    <rect x="${cx-26}" y="${stockwerk+h*0.04}" width="52" height="${sockel-stockwerk-h*0.04}" fill="#5d4037" stroke="#3e2723" stroke-width="3" rx="4"/>
+    <rect x="${cx-22}" y="${stockwerk+h*0.06}" width="44" height="20" fill="#90caf9" stroke="#3e2723" stroke-width="2"/>
+    <line x1="${cx}" y1="${stockwerk+h*0.06}" x2="${cx}" y2="${sockel-3}" stroke="#3e2723" stroke-width="2"/>
+    <circle cx="${cx-9}" cy="${(stockwerk+sockel)/2+5}" r="2.5" fill="#fbc02d"/>
+    <circle cx="${cx+9}" cy="${(stockwerk+sockel)/2+5}" r="2.5" fill="#fbc02d"/>
+    <!-- Vordach über Tür -->
+    <polygon points="${cx-32},${stockwerk+h*0.04} ${cx+32},${stockwerk+h*0.04} ${cx+22},${stockwerk-2} ${cx-22},${stockwerk-2}" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+    <!-- Steiles Satteldach -->
+    <polygon points="-5,${wandTop} ${cx},${peak} ${w+5},${wandTop}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
+    <polygon points="${w+5},${wandTop} ${w+22},${wandTop+h*0.02} ${cx+22},${peak+h*0.02} ${cx},${peak}" fill="url(#ziegelDachSeite)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Dachfenster (Gaube) -->
+    <rect x="${cx-22}" y="${h*0.22}" width="44" height="22" fill="#fafafa" stroke="#3e2723" stroke-width="2.5"/>
+    <polygon points="${cx-26},${h*0.22} ${cx},${h*0.14} ${cx+26},${h*0.22}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${cx-15}" y="${h*0.25}" width="30" height="14" fill="#90caf9" stroke="#3e2723" stroke-width="1.5"/>
+    <line x1="${cx}" y1="${h*0.25}" x2="${cx}" y2="${h*0.25+14}" stroke="#3e2723" stroke-width="1"/>
+    <!-- Schornstein gemauert -->
+    <rect x="${cx+w*0.2}" y="${h*0.1}" width="20" height="${h*0.2}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${cx+w*0.2-3}" y="${h*0.08}" width="26" height="6" fill="#3e2723"/>
+    <g opacity=".8">
+      <circle cx="${cx+w*0.2+10}" cy="${h*0.04}" r="6" fill="#eceff1"/>
+      <circle cx="${cx+w*0.2+18}" cy="${-h*0.02}" r="9" fill="#fff"/>
     </g>
+    <!-- Wetterhahn -->
+    <line x1="${cx}" y1="${peak}" x2="${cx}" y2="${peak-22}" stroke="#3e2723" stroke-width="2"/>
+    <polygon points="${cx},${peak-22} ${cx+10},${peak-18} ${cx+8},${peak-13} ${cx+12},${peak-10} ${cx},${peak-12}" fill="#5d4037" stroke="#3e2723" stroke-width="1.5"/>
   `;
 }
 
-// Wikinger-Langhaus
+// Wikinger-Langhaus – DEUTLICH erkennbar mit grossen Drachenkoepfen
 function svgLanghaus(w, h) {
-  const cx = w/2, base = h*0.95, dachAnsatz = h*0.55, peak = h*0.18;
+  const cx = w/2, base = h*0.95, dachAnsatz = h*0.55, peak = h*0.15;
+  // Schilde-Reihe mit verschiedenen Mustern
+  const schildFarben = ['#c62828','#1565c0','#fbc02d','#43a047','#5d4037','#c62828','#1565c0','#fbc02d','#43a047'];
+  let schilde = '';
+  const schildAnz = Math.min(Math.floor(w/55), 7);
+  for (let i = 0; i < schildAnz; i++) {
+    const sx = w*0.12 + i * (w*0.76/(schildAnz-1));
+    if (Math.abs(sx - cx) < 40) continue; // mittig nichts
+    schilde += `
+      <circle cx="${sx}" cy="${dachAnsatz+30}" r="16" fill="${schildFarben[i]}" stroke="#3e2723" stroke-width="3"/>
+      <circle cx="${sx}" cy="${dachAnsatz+30}" r="13" fill="${schildFarben[i]}" stroke="#3e2723" stroke-width="1"/>
+      <line x1="${sx-15}" y1="${dachAnsatz+30}" x2="${sx+15}" y2="${dachAnsatz+30}" stroke="#3e2723" stroke-width="2"/>
+      <line x1="${sx}" y1="${dachAnsatz+15}" x2="${sx}" y2="${dachAnsatz+45}" stroke="#3e2723" stroke-width="2"/>
+      <circle cx="${sx}" cy="${dachAnsatz+30}" r="4" fill="#fbc02d" stroke="#3e2723" stroke-width="1.5"/>
+    `;
+  }
   return `
-    <ellipse cx="${cx}" cy="${base+5}" rx="${w/2-5}" ry="11" fill="#000" opacity=".4"/>
-    <!-- niedrige Holzwand -->
-    <rect x="20" y="${dachAnsatz}" width="${w-40}" height="${base-dachAnsatz}" fill="url(#holzWand)" stroke="#3e2723" stroke-width="3"/>
-    ${[0.15,0.28,0.4,0.52,0.65,0.78,0.9].map(p => `<line x1="${w*p}" y1="${dachAnsatz}" x2="${w*p}" y2="${base}" stroke="#5d4037" stroke-width="2"/>`).join('')}
-    <!-- Eingangs-Tor -->
-    <rect x="${cx-30}" y="${dachAnsatz+30}" width="60" height="${base-dachAnsatz-30}" fill="#3e2723" stroke="#000" stroke-width="3"/>
-    <line x1="${cx}" y1="${dachAnsatz+30}" x2="${cx}" y2="${base}" stroke="#5d4037" stroke-width="2"/>
-    <!-- Mini-Fenster -->
-    <rect x="${w*0.2}" y="${dachAnsatz+25}" width="20" height="20" fill="#fbc02d" stroke="#000" stroke-width="2"/>
-    <rect x="${w*0.78}" y="${dachAnsatz+25}" width="20" height="20" fill="#fbc02d" stroke="#000" stroke-width="2"/>
-    <!-- Grasdach – langes Walmdach -->
-    <path d="M -10 ${dachAnsatz+5} L ${w*0.18} ${peak} L ${w*0.82} ${peak} L ${w+10} ${dachAnsatz+5} L ${w-10} ${dachAnsatz} L 10 ${dachAnsatz} Z"
+    <ellipse cx="${cx}" cy="${base+8}" rx="${w/2}" ry="14" fill="#000" opacity=".4"/>
+    <!-- niedrige Bohlenwand -->
+    <rect x="15" y="${dachAnsatz+50}" width="${w-30}" height="${base-dachAnsatz-50}" fill="#8d6e63" stroke="#3e2723" stroke-width="3"/>
+    ${[0.12,0.22,0.32,0.42,0.52,0.62,0.72,0.82,0.92].map(p => `<line x1="${w*p}" y1="${dachAnsatz+50}" x2="${w*p}" y2="${base}" stroke="#3e2723" stroke-width="2.5"/>`).join('')}
+    <line x1="15" y1="${(dachAnsatz+50+base)/2}" x2="${w-15}" y2="${(dachAnsatz+50+base)/2}" stroke="#5d4037" stroke-width="2"/>
+    <!-- Schilde an der Wand -->
+    ${schilde}
+    <!-- grosses Eingangs-Tor mit Runen-Schnitzerei -->
+    <rect x="${cx-36}" y="${dachAnsatz+45}" width="72" height="${base-dachAnsatz-45}" fill="#3e2723" stroke="#000" stroke-width="3"/>
+    <rect x="${cx-30}" y="${dachAnsatz+55}" width="60" height="${base-dachAnsatz-65}" fill="#5d4037"/>
+    <line x1="${cx}" y1="${dachAnsatz+55}" x2="${cx}" y2="${base-10}" stroke="#3e2723" stroke-width="3"/>
+    <!-- Eisenbeschlaege -->
+    <rect x="${cx-32}" y="${dachAnsatz+50}" width="64" height="6" fill="#37474f" stroke="#000" stroke-width="1.5"/>
+    <rect x="${cx-32}" y="${base-15}" width="64" height="6" fill="#37474f" stroke="#000" stroke-width="1.5"/>
+    <circle cx="${cx-26}" cy="${dachAnsatz+53}" r="2" fill="#212121"/>
+    <circle cx="${cx+26}" cy="${dachAnsatz+53}" r="2" fill="#212121"/>
+    <!-- Runen -->
+    <path d="M ${cx-15} ${dachAnsatz+70} L ${cx-15} ${dachAnsatz+90} M ${cx-15} ${dachAnsatz+74} L ${cx-9} ${dachAnsatz+78}" stroke="#fbc02d" stroke-width="2" fill="none"/>
+    <path d="M ${cx+8} ${dachAnsatz+70} L ${cx+8} ${dachAnsatz+90} M ${cx+8} ${dachAnsatz+78} L ${cx+15} ${dachAnsatz+74} M ${cx+8} ${dachAnsatz+78} L ${cx+15} ${dachAnsatz+82}" stroke="#fbc02d" stroke-width="2" fill="none"/>
+    <!-- GRASDACH – steil abfallend -->
+    <path d="M -15 ${dachAnsatz+50} L ${w*0.15} ${peak} L ${w*0.85} ${peak} L ${w+15} ${dachAnsatz+50} L ${w-5} ${dachAnsatz+45} L 5 ${dachAnsatz+45} Z"
           fill="#558b2f" stroke="#33691e" stroke-width="3"/>
-    <!-- Grasflecken auf Dach -->
-    ${[0.12,0.25,0.4,0.55,0.7,0.85].map(p => `<ellipse cx="${w*p}" cy="${peak + (p<0.18 || p>0.82 ? (p<0.18?(0.18-p):(p-0.82))*h*0.6 : 5)}" rx="14" ry="5" fill="#7cb342" opacity=".7"/>`).join('')}
-    ${[0.18,0.32,0.48,0.62,0.78].map(p => `<line x1="${w*p}" y1="${peak+10}" x2="${w*p+3}" y2="${peak+22}" stroke="#33691e" stroke-width="1.5"/>`).join('')}
-    <!-- Drachenköpfe gekreuzt am Giebel -->
-    <g transform="translate(${w*0.18},${peak})">
-      <line x1="0" y1="0" x2="-25" y2="-35" stroke="#5d4037" stroke-width="6" stroke-linecap="round"/>
-      <g transform="translate(-25,-35) rotate(-30)">
-        <path d="M 0 0 L -10 -4 L -16 0 L -22 -3 L -20 4 L -8 8 Z" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
-        <circle cx="-6" cy="-1" r="1.5" fill="#e53935"/>
+    <!-- Grasstruktur -->
+    ${(() => {
+      const rows = 6;
+      let s = '';
+      for (let r = 0; r < rows; r++) {
+        const yT = dachAnsatz+45 - (dachAnsatz+45-peak)*((r+1)/rows);
+        const insetL = -15 + (w*0.15+15)*(r+1)/rows;
+        const insetR = w+15 - (w+15-w*0.85)*(r+1)/rows;
+        s += `<path d="M ${insetL} ${yT} L ${insetR} ${yT}" stroke="#33691e" stroke-width="1.5"/>`;
+        // Grasbüschel
+        for (let c = 0; c < 6; c++) {
+          const x = insetL + (insetR-insetL) * (c+0.5)/6;
+          s += `<path d="M ${x} ${yT-2} l -2 -4 M ${x} ${yT-2} l 2 -4 M ${x} ${yT-2} l 0 -5" stroke="#7cb342" stroke-width="1.2" fill="none"/>`;
+        }
+      }
+      return s;
+    })()}
+    <!-- DICKE Stützbalken am Giebel -->
+    <line x1="${w*0.15}" y1="${peak}" x2="${w*0.05}" y2="${dachAnsatz+45}" stroke="#3e2723" stroke-width="6" stroke-linecap="round"/>
+    <line x1="${w*0.85}" y1="${peak}" x2="${w*0.95}" y2="${dachAnsatz+45}" stroke="#3e2723" stroke-width="6" stroke-linecap="round"/>
+    <!-- DICKE Drachenkoepfe – ueberkreuz an den Giebelspitzen -->
+    <g transform="translate(${w*0.15},${peak})">
+      <line x1="0" y1="0" x2="-30" y2="-30" stroke="#5d4037" stroke-width="9" stroke-linecap="round"/>
+      <g transform="translate(-30,-30) rotate(-35)">
+        <!-- Dragon Head -->
+        <path d="M 0 0 Q -8 -8 -22 -8 Q -36 -8 -40 0 Q -42 6 -32 10 L -20 10 Q -10 10 -8 4 L -2 6 Q 4 4 0 0 Z" fill="#5d4037" stroke="#000" stroke-width="2"/>
+        <!-- offenes Maul -->
+        <path d="M -38 -2 L -32 -2 L -34 4 L -38 4 Z" fill="#c62828" stroke="#000" stroke-width="1.5"/>
+        <!-- Zähne -->
+        <polygon points="-37,-2 -36,2 -35,-2" fill="#fff"/>
+        <polygon points="-34,-2 -33,2 -32,-2" fill="#fff"/>
+        <!-- Auge -->
+        <circle cx="-22" cy="-3" r="2.5" fill="#fbc02d"/>
+        <circle cx="-22" cy="-3" r="1.2" fill="#000"/>
+        <!-- Hörner -->
+        <path d="M -18 -8 Q -16 -16 -10 -18 Q -8 -14 -14 -8" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+        <path d="M -26 -8 Q -28 -16 -22 -18 Q -22 -14 -22 -8" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
       </g>
     </g>
-    <g transform="translate(${w*0.82},${peak})">
-      <line x1="0" y1="0" x2="25" y2="-35" stroke="#5d4037" stroke-width="6" stroke-linecap="round"/>
-      <g transform="translate(25,-35) rotate(30)">
-        <path d="M 0 0 L 10 -4 L 16 0 L 22 -3 L 20 4 L 8 8 Z" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
-        <circle cx="6" cy="-1" r="1.5" fill="#e53935"/>
+    <g transform="translate(${w*0.85},${peak})">
+      <line x1="0" y1="0" x2="30" y2="-30" stroke="#5d4037" stroke-width="9" stroke-linecap="round"/>
+      <g transform="translate(30,-30) rotate(35)">
+        <path d="M 0 0 Q 8 -8 22 -8 Q 36 -8 40 0 Q 42 6 32 10 L 20 10 Q 10 10 8 4 L 2 6 Q -4 4 0 0 Z" fill="#5d4037" stroke="#000" stroke-width="2"/>
+        <path d="M 38 -2 L 32 -2 L 34 4 L 38 4 Z" fill="#c62828" stroke="#000" stroke-width="1.5"/>
+        <polygon points="37,-2 36,2 35,-2" fill="#fff"/>
+        <polygon points="34,-2 33,2 32,-2" fill="#fff"/>
+        <circle cx="22" cy="-3" r="2.5" fill="#fbc02d"/>
+        <circle cx="22" cy="-3" r="1.2" fill="#000"/>
+        <path d="M 18 -8 Q 16 -16 10 -18 Q 8 -14 14 -8" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
+        <path d="M 26 -8 Q 28 -16 22 -18 Q 22 -14 22 -8" fill="#3e2723" stroke="#000" stroke-width="1.5"/>
       </g>
     </g>
-    <!-- Rauch in der Mitte -->
-    <g opacity=".7">
-      <circle cx="${cx-3}" cy="${peak+5}" r="6" fill="#cfd8dc"/>
-      <circle cx="${cx+5}" cy="${peak-8}" r="9" fill="#eceff1"/>
-      <circle cx="${cx-2}" cy="${peak-22}" r="11" fill="#fff"/>
+    <!-- Rauch aus der Mitte -->
+    <ellipse cx="${cx}" cy="${peak+5}" rx="14" ry="4" fill="#000" opacity=".5"/>
+    <g opacity=".75">
+      <circle cx="${cx-3}" cy="${peak-8}" r="7" fill="#cfd8dc"/>
+      <circle cx="${cx+5}" cy="${peak-22}" r="10" fill="#eceff1"/>
+      <circle cx="${cx-2}" cy="${peak-38}" r="12" fill="#fff"/>
     </g>
-    <!-- Wikinger-Schild -->
-    <circle cx="40" cy="${dachAnsatz+25}" r="14" fill="#c62828" stroke="#3e2723" stroke-width="2.5"/>
-    <line x1="40" y1="${dachAnsatz+11}" x2="40" y2="${dachAnsatz+39}" stroke="#3e2723" stroke-width="2"/>
-    <line x1="26" y1="${dachAnsatz+25}" x2="54" y2="${dachAnsatz+25}" stroke="#3e2723" stroke-width="2"/>
-    <circle cx="40" cy="${dachAnsatz+25}" r="3" fill="#fbc02d" stroke="#3e2723" stroke-width="1"/>
   `;
 }
 
@@ -972,25 +1144,92 @@ function svgSchafstall(w, h) {
 }
 
 function svgFachwerkhaus(w, h) {
+  const cx = w/2;
+  const sockel = h*0.85;
+  const wandTop = h*0.38;
+  const peak = h*0.06;
+  const stockwerk = h*0.6;
+  // Erdgeschoss: 4 Felder, jedes mit X-Strebe
+  const eg = [];
+  const felderEG = 4;
+  const fbreiteEG = (w-40) / felderEG;
+  for (let i = 0; i < felderEG; i++) {
+    const fx = 20 + i * fbreiteEG;
+    eg.push(`
+      <rect x="${fx}" y="${stockwerk}" width="${fbreiteEG}" height="${sockel-stockwerk}" fill="#fff8e1"/>
+      <line x1="${fx}" y1="${(stockwerk+sockel)/2}" x2="${fx+fbreiteEG}" y2="${(stockwerk+sockel)/2}" stroke="#3e2723" stroke-width="3"/>
+      <line x1="${fx}" y1="${stockwerk}" x2="${fx+fbreiteEG}" y2="${sockel}" stroke="#3e2723" stroke-width="3"/>
+      <line x1="${fx+fbreiteEG}" y1="${stockwerk}" x2="${fx}" y2="${sockel}" stroke="#3e2723" stroke-width="3"/>
+    `);
+  }
+  // Obergeschoss: 4 Felder
+  const og = [];
+  for (let i = 0; i < felderEG; i++) {
+    const fx = 20 + i * fbreiteEG;
+    og.push(`
+      <rect x="${fx}" y="${wandTop}" width="${fbreiteEG}" height="${stockwerk-wandTop}" fill="#fff8e1"/>
+      <line x1="${fx}" y1="${(wandTop+stockwerk)/2}" x2="${fx+fbreiteEG}" y2="${(wandTop+stockwerk)/2}" stroke="#3e2723" stroke-width="3"/>
+      <line x1="${fx}" y1="${wandTop}" x2="${fx+fbreiteEG}" y2="${stockwerk}" stroke="#3e2723" stroke-width="3"/>
+      <line x1="${fx+fbreiteEG}" y1="${wandTop}" x2="${fx}" y2="${stockwerk}" stroke="#3e2723" stroke-width="3"/>
+    `);
+  }
   return `
-    <ellipse cx="${w/2}" cy="${h-5}" rx="${w/2-10}" ry="12" fill="#000" opacity=".35"/>
-    <rect x="15" y="${h*0.78}" width="${w-30}" height="${h*0.18}" fill="url(#steinSockel)" stroke="#000" stroke-width="2"/>
-    <polygon points="${w-15},${h*0.35} ${w+8},${h*0.37} ${w+8},${h*0.78} ${w-15},${h*0.76}" fill="#8d6e63" stroke="#000" stroke-width="2"/>
-    <rect x="15" y="${h*0.35}" width="${w-30}" height="${h*0.43}" fill="url(#fachwerk)" stroke="#000" stroke-width="3"/>
-    <rect x="40" y="${h*0.42}" width="46" height="32" fill="#8d6e63" stroke="#000" stroke-width="2.5"/>
-    <line x1="63" y1="${h*0.42}" x2="63" y2="${h*0.42+32}" stroke="#3e2723" stroke-width="2"/>
-    <rect x="${w-86}" y="${h*0.42}" width="46" height="32" fill="#8d6e63" stroke="#000" stroke-width="2.5"/>
-    <line x1="${w-63}" y1="${h*0.42}" x2="${w-63}" y2="${h*0.42+32}" stroke="#3e2723" stroke-width="2"/>
-    <rect x="${w/2-22}" y="${h*0.58}" width="44" height="${h*0.2}" fill="#5d4037" stroke="#000" stroke-width="3"/>
-    <polygon points="${w/2-22},${h*0.58} ${w/2},${h*0.5} ${w/2+22},${h*0.58}" fill="#3e2723" stroke="#000" stroke-width="2"/>
-    <polygon points="0,${h*0.35} ${w/2},${h*0.05} ${w},${h*0.35}" fill="url(#ziegelRot)" stroke="#000" stroke-width="3"/>
-    <polygon points="${w},${h*0.35} ${w+22},${h*0.37} ${w/2+22},${h*0.05+5} ${w/2},${h*0.05}" fill="url(#ziegelDachSeite)" stroke="#000" stroke-width="2.5"/>
-    <rect x="${w/2-12}" y="${h*0.27}" width="24" height="18" fill="#fff8e1" stroke="#000" stroke-width="2"/>
-    <rect x="50" y="${h*0.13}" width="16" height="38" fill="#8d6e63" stroke="#000" stroke-width="2.5"/>
+    <ellipse cx="${cx}" cy="${h-3}" rx="${w/2-5}" ry="12" fill="#000" opacity=".4"/>
+    <!-- Sockel Naturstein -->
+    <rect x="10" y="${sockel}" width="${w-20}" height="${h-sockel-3}" fill="url(#steinSockel)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Erdgeschoss-Fachwerk -->
+    <rect x="20" y="${stockwerk}" width="${w-40}" height="${sockel-stockwerk}" fill="#fff8e1" stroke="#3e2723" stroke-width="3"/>
+    ${eg.join('')}
+    <!-- Trennbalken zwischen Stockwerken (Schwellbalken) -->
+    <rect x="10" y="${stockwerk-6}" width="${w-20}" height="12" fill="#5d4037" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Obergeschoss-Fachwerk leicht überkragend -->
+    <rect x="14" y="${wandTop}" width="${w-28}" height="${stockwerk-wandTop}" fill="#fff8e1" stroke="#3e2723" stroke-width="3"/>
+    ${og.join('')}
+    <!-- Türrahmen mittig vorne -->
+    <rect x="${cx-26}" y="${stockwerk+10}" width="52" height="${sockel-stockwerk-10}" fill="#5d4037" stroke="#3e2723" stroke-width="3" rx="3"/>
+    <rect x="${cx-22}" y="${stockwerk+14}" width="44" height="${sockel-stockwerk-16}" fill="#3e2723"/>
+    <line x1="${cx}" y1="${stockwerk+14}" x2="${cx}" y2="${sockel-3}" stroke="#5d4037" stroke-width="2"/>
+    <circle cx="${cx-9}" cy="${(stockwerk+sockel)/2}" r="2.5" fill="#fbc02d"/>
+    <circle cx="${cx+9}" cy="${(stockwerk+sockel)/2}" r="2.5" fill="#fbc02d"/>
+    <!-- Fenster mit Klappläden im OG -->
+    <rect x="${w*0.18}" y="${wandTop+h*0.04}" width="44" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.18+22}" y1="${wandTop+h*0.04}" x2="${w*0.18+22}" y2="${wandTop+h*0.04+32}" stroke="#3e2723" stroke-width="1.5"/>
+    <line x1="${w*0.18}" y1="${wandTop+h*0.04+16}" x2="${w*0.18+44}" y2="${wandTop+h*0.04+16}" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.18-10}" y="${wandTop+h*0.04-2}" width="10" height="36" fill="#1b5e20" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.18+44}" y="${wandTop+h*0.04-2}" width="10" height="36" fill="#1b5e20" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.65}" y="${wandTop+h*0.04}" width="44" height="32" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${w*0.65+22}" y1="${wandTop+h*0.04}" x2="${w*0.65+22}" y2="${wandTop+h*0.04+32}" stroke="#3e2723" stroke-width="1.5"/>
+    <line x1="${w*0.65}" y1="${wandTop+h*0.04+16}" x2="${w*0.65+44}" y2="${wandTop+h*0.04+16}" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.65-10}" y="${wandTop+h*0.04-2}" width="10" height="36" fill="#1b5e20" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${w*0.65+44}" y="${wandTop+h*0.04-2}" width="10" height="36" fill="#1b5e20" stroke="#3e2723" stroke-width="1.5"/>
+    <!-- EG Fenster mit Blumenkasten -->
+    <rect x="${w*0.18}" y="${stockwerk+h*0.05}" width="44" height="28" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${w*0.18-3}" y="${stockwerk+h*0.05+28}" width="50" height="6" fill="#5d4037" stroke="#3e2723" stroke-width="1.5"/>
+    <circle cx="${w*0.18+10}" cy="${stockwerk+h*0.05+28}" r="3" fill="#e91e63"/>
+    <circle cx="${w*0.18+22}" cy="${stockwerk+h*0.05+28}" r="3" fill="#fff59d"/>
+    <circle cx="${w*0.18+34}" cy="${stockwerk+h*0.05+28}" r="3" fill="#9c27b0"/>
+    <rect x="${w*0.65}" y="${stockwerk+h*0.05}" width="44" height="28" fill="#90caf9" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${w*0.65-3}" y="${stockwerk+h*0.05+28}" width="50" height="6" fill="#5d4037" stroke="#3e2723" stroke-width="1.5"/>
+    <!-- Steiles Dach mit Ziegeln -->
+    <polygon points="0,${wandTop} ${cx},${peak} ${w},${wandTop}" fill="url(#ziegelRot)" stroke="#3e2723" stroke-width="3"/>
+    <polygon points="${w},${wandTop} ${w+18},${wandTop+h*0.02} ${cx+18},${peak+h*0.02} ${cx},${peak}" fill="url(#ziegelDachSeite)" stroke="#3e2723" stroke-width="2.5"/>
+    <!-- Dachbalken sichtbar -->
+    <line x1="0" y1="${wandTop}" x2="${cx}" y2="${peak}" stroke="#3e2723" stroke-width="3"/>
+    <line x1="${w}" y1="${wandTop}" x2="${cx}" y2="${peak}" stroke="#3e2723" stroke-width="3"/>
+    <!-- Giebelfenster -->
+    <rect x="${cx-14}" y="${h*0.22}" width="28" height="22" fill="#fff8e1" stroke="#3e2723" stroke-width="2.5"/>
+    <line x1="${cx}" y1="${h*0.22}" x2="${cx}" y2="${h*0.22+22}" stroke="#3e2723" stroke-width="1.5"/>
+    <rect x="${cx-8}" y="${h*0.25}" width="16" height="14" fill="#90caf9" stroke="#3e2723" stroke-width="1.5"/>
+    <!-- Schornstein -->
+    <rect x="${cx+w*0.18}" y="${h*0.08}" width="20" height="${h*0.18}" fill="#a52525" stroke="#3e2723" stroke-width="2.5"/>
+    <rect x="${cx+w*0.18-3}" y="${h*0.06}" width="26" height="6" fill="#3e2723"/>
     <g opacity=".75">
-      <circle cx="58" cy="${h*0.08}" r="7" fill="#eceff1"/>
-      <circle cx="65" cy="${h*0.03}" r="9" fill="#fff"/>
+      <circle cx="${cx+w*0.18+10}" cy="${h*0.02}" r="7" fill="#eceff1"/>
+      <circle cx="${cx+w*0.18+18}" cy="${-h*0.05}" r="10" fill="#fff"/>
     </g>
+    <!-- Wetterhahn -->
+    <line x1="${cx}" y1="${peak}" x2="${cx}" y2="${peak-22}" stroke="#3e2723" stroke-width="2"/>
+    <polygon points="${cx},${peak-22} ${cx+10},${peak-18} ${cx+8},${peak-13} ${cx+12},${peak-10} ${cx},${peak-12}" fill="#5d4037" stroke="#3e2723" stroke-width="1.5"/>
   `;
 }
 
