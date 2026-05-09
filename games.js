@@ -24,13 +24,24 @@ function renderFarmGame() {
     alert('In Einstellungen aktivieren');
     return renderHome();
   }
-  // Genug Tokens?
-  const tokens = getGameTokens('liam');
-  if (tokens < 1) {
-    return showTokenLockScreen('liam', '🚜 Mein Hof', 'Du brauchst mindestens 1 Spielzeit-Token!\nLerne 10 Minuten, dann kannst du spielen.');
+  // Bestehende Session noch aktiv? (z.B. nach Browser-Reload mitten im Spiel)
+  const saved = JSON.parse(localStorage.getItem('herzog_farm_state') || 'null');
+  const now = Date.now();
+  const sessionActive = saved && saved.sessionEnd && saved.sessionEnd > now + 10000; // mind 10 Sek Restzeit
+  if (!sessionActive) {
+    // Neue Session = Token verbrauchen
+    const tokens = getGameTokens('liam');
+    if (tokens < 1) {
+      return showTokenLockScreen('liam', '🚜 Mein Hof', 'Du brauchst mindestens 1 Spielzeit-Token!\nLerne 10 Minuten, dann kannst du spielen.');
+    }
+    consumeGameTime('liam', PLAY_PER_TOKEN_SEC);
+    // Session-Timer NEU setzen (alte Session-Reste löschen)
+    if (saved) {
+      saved.sessionStart = now;
+      saved.sessionEnd = now + PLAY_PER_TOKEN_SEC * 1000;
+      localStorage.setItem('herzog_farm_state', JSON.stringify(saved));
+    }
   }
-  // Token verbrauchen für 5 Min Spielzeit
-  consumeGameTime('liam', PLAY_PER_TOKEN_SEC);
   initFarm();
   drawFarm();
 }
@@ -279,6 +290,7 @@ function renderRunnerGame() {
     alert('In Einstellungen aktivieren');
     return renderHome();
   }
+  // Runner ist single-shot (kein Save), prüfe nur Tokens
   const tokens = getGameTokens('raik');
   if (tokens < 1) {
     return showTokenLockScreen('raik', '🏃 Speed Run', 'Du brauchst 1 Spielzeit-Token!\nLerne 10 Minuten - dann kannst du rennen!');
