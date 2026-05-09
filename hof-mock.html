@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hof-Konzept-Mockup</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#1b5e20;color:#fff;padding:14px}
+h1{font-size:24px;text-align:center;margin-bottom:6px}
+.sub{text-align:center;opacity:.85;margin-bottom:20px;font-size:14px}
+
+.szene{background:#f5f5f5;color:#222;border-radius:18px;padding:20px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.szene h2{color:#1b5e20;margin-bottom:14px;font-size:20px;display:flex;align-items:center;gap:10px}
+.szene h2 .num{background:#1b5e20;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+
+/* === Top-Down Hof === */
+.hof{background:linear-gradient(180deg,#7cb342 0%,#558b2f 100%);border-radius:14px;padding:14px;position:relative;aspect-ratio:1;max-width:560px;margin:0 auto;display:grid;grid-template-columns:1fr 4fr 1fr;grid-template-rows:1fr 4fr 1fr;gap:6px}
+.geb{background:rgba(255,255,255,.85);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;font-size:11px;font-weight:700;color:#3d2817}
+.geb .em{font-size:32px;display:block}
+.felder{background:#5d4037;border-radius:8px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:4px;position:relative}
+.feld{background:#6d4c41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.feld.pfluegt{background:#4e342e}
+.feld.gesaet{background:#a5d6a7}
+.feld.reif{background:#ffeb3b}
+.avatar{position:absolute;width:36px;height:36px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid #1976d2;top:48%;left:48%;z-index:5;box-shadow:0 4px 8px rgba(0,0,0,.4)}
+.traktor{position:absolute;width:34px;height:24px;background:#1b5e20;border-radius:4px;top:35%;left:25%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#ffeb3b;font-weight:900;z-index:4;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+
+/* === Maschinen-Karten === */
+.kartenleiste{display:flex;gap:8px;overflow-x:auto;padding:10px 4px;background:#222;border-radius:10px;margin-top:14px}
+.karte{flex:0 0 80px;height:96px;background:#fff;border-radius:8px;border:3px solid #ffc107;padding:4px;text-align:center;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;color:#222}
+.karte img{width:100%;height:48px;object-fit:contain}
+.karte .em{font-size:32px}
+.karte .name{font-size:9px;font-weight:800;line-height:1.1}
+.karte.aktiv{box-shadow:0 0 0 4px #4caf50}
+
+/* === Mathe-Popup === */
+.popup{background:#fff;color:#222;padding:18px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5);max-width:420px;margin:0 auto;border:3px solid #ff7043;text-align:center}
+.popup h3{color:#ff7043;font-size:18px;margin-bottom:10px}
+.popup .frage{font-size:22px;font-weight:900;margin:14px 0;line-height:1.3}
+.popup .visual{font-size:36px;margin:10px 0;letter-spacing:4px}
+.popup .opt{display:flex;gap:8px;justify-content:center}
+.popup .opt button{padding:14px 22px;font-size:18px;font-weight:900;border:none;border-radius:10px;background:#4caf50;color:#fff;cursor:pointer}
+
+/* === Tier-Bereich === */
+.stall-zoom{background:#bcaaa4;padding:14px;border-radius:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.tier{background:#fff;color:#222;padding:8px;border-radius:8px}
+.tier .em{font-size:32px;display:block;margin-bottom:4px}
+.tier .stat{font-size:10px;color:#666;font-weight:700}
+
+/* === Sprite-Liste === */
+.sprite-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:14px}
+.sprite{background:#f5f5f5;border-radius:8px;padding:8px;text-align:center;color:#222}
+.sprite img{width:100%;height:60px;object-fit:contain;background:#fff;border-radius:4px}
+.sprite .name{font-size:11px;font-weight:700;margin-top:4px}
+.sprite .src{font-size:9px;color:#666;margin-top:2px}
+
+.legende{background:#e3f2fd;color:#0d47a1;padding:14px;border-radius:10px;margin-top:14px;font-size:13px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<h1>🚜 Bauernhof-Konzept (Mock-Up)</h1>
+<p class="sub">So wird Liams Spiel ungefähr aussehen – kein echtes Spiel, nur Vorschau</p>
+
+<!-- SZENE 1: TOP-DOWN HOF -->
+<div class="szene">
+  <h2><span class="num">1</span>Vogelperspektive auf den Hof</h2>
+  <div class="hof">
+    <div class="geb"><span class="em">🏠</span><span>Wohnhaus</span></div>
+    <div class="geb"><span class="em">🏚️</span><span>Scheune</span></div>
+    <div class="geb"><span class="em">🏗️</span><span>Silo</span></div>
+
+    <div class="geb"><span class="em">🐮</span><span>Kuhstall</span></div>
+    <div class="felder">
+      <div class="feld">🌱</div><div class="feld reif">🌾</div><div class="feld pfluegt"></div><div class="feld">🌱</div>
+      <div class="feld gesaet">🌱</div><div class="feld reif">🌾</div><div class="feld pfluegt"></div><div class="feld"></div>
+      <div class="feld"></div><div class="feld pfluegt"></div><div class="feld gesaet">🌱</div><div class="feld reif">🌾</div>
+      <div class="feld"></div><div class="feld">🌱</div><div class="feld pfluegt"></div><div class="feld gesaet">🌱</div>
+      <div class="traktor">🚜</div>
+      <div class="avatar">👨‍🌾</div>
+    </div>
+    <div class="geb"><span class="em">🔧</span><span>Werkstatt</span></div>
+
+    <div class="geb"><span class="em">🐔</span><span>Hühner</span></div>
+    <div class="geb"><span class="em">⛽</span><span>Tankstelle</span></div>
+    <div class="geb"><span class="em">🏪</span><span>Hofladen</span></div>
+  </div>
+  <div class="legende">
+    🏠 Gebäude am Rand · 🌾 16 Felder in 4×4 in der Mitte · 👨‍🌾 Liams Avatar · 🚜 Traktor (mit Finger ziehbar) · gelbe Felder = reif zum ernten
+  </div>
+</div>
+
+<!-- SZENE 2: MASCHINEN-AUSWAHL -->
+<div class="szene">
+  <h2><span class="num">2</span>Maschinen unten als Karten – wischbar</h2>
+  <p style="margin-bottom:8px">Liam tippt Maschine an → Avatar steigt drauf → fährt damit</p>
+  <div class="kartenleiste">
+    <div class="karte aktiv"><img src="img/machines/fendt1050.jpg" alt=""><div class="name">Fendt 1050</div></div>
+    <div class="karte"><img src="img/machines/jd8r.jpg" alt=""><div class="name">JD 8R</div></div>
+    <div class="karte"><img src="img/machines/claas_axion.jpg" alt=""><div class="name">Claas Axion</div></div>
+    <div class="karte"><img src="img/machines/lexion.jpg" alt=""><div class="name">Lexion</div></div>
+    <div class="karte"><img src="img/machines/kronebigx.jpg" alt=""><div class="name">Krone Big X</div></div>
+    <div class="karte"><img src="img/machines/mb_trac.jpg" alt=""><div class="name">MB-trac</div></div>
+    <div class="karte"><img src="img/machines/cat_d11.jpg" alt=""><div class="name">Cat D11</div></div>
+    <div class="karte"><span class="em">⛏️</span><div class="name">Pflug</div></div>
+    <div class="karte"><span class="em">🛞</span><div class="name">Kreiselegge</div></div>
+    <div class="karte"><span class="em">🌱</span><div class="name">Sämaschine</div></div>
+    <div class="karte"><span class="em">💨</span><div class="name">Düngerstreuer</div></div>
+    <div class="karte"><span class="em">📦</span><div class="name">Ballenpresse</div></div>
+  </div>
+  <div class="legende">Aktive Karte (grünes Glühen) = aktuell gewählte Maschine. Liam kann zwischen seinen 14 freigeschalteten Maschinen wischen.</div>
+</div>
+
+<!-- SZENE 3: MATHE-VERKAUF (Liams Idee!) -->
+<div class="szene">
+  <h2><span class="num">3</span>Verkauf mit Mathe-Aufgabe ⭐ (Liams Idee)</h2>
+  <p style="margin-bottom:14px">Beim Verkauf der Ernte/Milch poppt eine Rechen-Aufgabe auf. Richtig = voller Preis. Falsch = halber Preis.</p>
+  <div class="popup">
+    <h3>🥛 Verkauf an die Molkerei</h3>
+    <div class="visual">🥛 × 4 = ?</div>
+    <div class="frage">Du hast 4 Liter Milch.<br>Jeder Liter kostet 50 Cent.<br>Wie viel bekommst du gesamt?</div>
+    <div class="opt">
+      <button>50 ct</button>
+      <button>200 ct</button>
+      <button>2000 ct</button>
+      <button>20 ct</button>
+    </div>
+  </div>
+  <div class="legende">
+    💡 <b>Klassen-3-Mathe wird automatisch geübt:</b> Mal-Rechnen mit Geld („8 Eier × 12 ct"), Mal mit Stoffmenge („3 Felder × 16 Säcke Weizen × 5 €"), Geteilt („48 € Erlös auf 6 Tage = pro Tag?"), Sachaufgaben mit echten Hof-Daten.
+  </div>
+</div>
+
+<!-- SZENE 4: STALL-ZOOM -->
+<div class="szene">
+  <h2><span class="num">4</span>Stall-Zoom: Tiere füttern + melken</h2>
+  <p style="margin-bottom:14px">Liam tippt auf Stall-Gebäude → Zoom auf Innenraum:</p>
+  <div class="stall-zoom">
+    <div class="tier"><span class="em">🐮</span><span class="stat">Kuh 1<br>satt · 8L Milch</span></div>
+    <div class="tier"><span class="em">🐮</span><span class="stat">Kuh 2<br>hungrig 🌾</span></div>
+    <div class="tier"><span class="em">🐮</span><span class="stat">Kuh 3<br>satt · 6L Milch</span></div>
+    <div class="tier"><span class="em">🐔</span><span class="stat">Huhn 1<br>3 Eier</span></div>
+    <div class="tier"><span class="em">🐔</span><span class="stat">Huhn 2<br>5 Eier</span></div>
+    <div class="tier"><span class="em">🐷</span><span class="stat">Schwein<br>satt</span></div>
+    <div class="tier"><span class="em">🐑</span><span class="stat">Schaf<br>Wolle reif</span></div>
+    <div class="tier"><span class="em">🐝</span><span class="stat">Bienen<br>2 Glas Honig</span></div>
+  </div>
+  <div class="legende">
+    Tippe auf Tier → Aktion (Füttern, Melken, Eier sammeln, Wolle scheren, Honig ernten). Jede Aktion = neue Mathe-Aufgabe beim Verkauf.
+  </div>
+</div>
+
+<!-- SZENE 5: AVATAR-STEUERUNG -->
+<div class="szene">
+  <h2><span class="num">5</span>Touch-Steuerung (Liams Wahl: Ziehen)</h2>
+  <p style="margin-bottom:10px">Liam zieht den Traktor mit dem Finger über die Felder:</p>
+  <div style="background:#5d4037;padding:14px;border-radius:10px;text-align:center;color:#ffe082">
+    <div style="font-size:48px;margin-bottom:8px">👆 → 🚜 → → →</div>
+    <div style="font-size:14px">Halten + Ziehen = Traktor bewegt sich + dreht sich automatisch in Fahrtrichtung. Verfolgt Reifenspuren auf dem Acker.</div>
+  </div>
+  <div class="legende">Andere Optionen die Liam getestet hat: Joystick / Tippen / Pfeile. Er hat sich für „Ziehen" entschieden – das fühlt sich am natürlichsten an, hat er bei der Demo gesehen.</div>
+</div>
+
+<!-- SPRITE-QUELLEN -->
+<div class="szene">
+  <h2><span class="num">6</span>Was wir an Bildern brauchen</h2>
+  <p style="margin-bottom:14px">Für „gute Grafik" – realistische Bilder statt Emojis:</p>
+
+  <h3 style="color:#1b5e20;margin-top:14px;margin-bottom:8px">✅ Schon vorhanden (Wikimedia)</h3>
+  <div class="sprite-grid">
+    <div class="sprite"><img src="img/machines/fendt1050.jpg"><div class="name">Fendt 1050</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/jd8r.jpg"><div class="name">JD 8R</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/lexion.jpg"><div class="name">Claas Lexion</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/kronebigx.jpg"><div class="name">Krone Big X</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/cat_d11.jpg"><div class="name">Cat D11</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/mb_trac.jpg"><div class="name">MB-trac</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/claas_axion.jpg"><div class="name">Claas Axion</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/jcb_fastrac.jpg"><div class="name">JCB Fastrac</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/fendt312.jpg"><div class="name">Fendt 312</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/fendt724.jpg"><div class="name">Fendt 724</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/jd6r.jpg"><div class="name">JD 6R</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/jd_x9.jpg"><div class="name">JD X9</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/bigpack.jpg"><div class="name">BiG Pack</div><div class="src">✓ habe</div></div>
+    <div class="sprite"><img src="img/machines/deutz_9.jpg"><div class="name">Deutz 9</div><div class="src">✓ habe</div></div>
+  </div>
+
+  <h3 style="color:#d84315;margin-top:18px;margin-bottom:8px">❌ Brauche noch (Top-Down-Sprites + Tiere + Gebäude)</h3>
+  <div class="legende" style="background:#fff3e0;color:#e65100">
+    <b>Was fehlt:</b><br>
+    • <b>Top-Down-Maschinen-Sprites</b> (von oben fotografiert, klein, transparent) – aktuelle Bilder sind seitlich und zu groß für 2D-Top-Down<br>
+    • <b>Tier-Sprites:</b> Kuh, Schwein, Huhn, Schaf, Pferd, Hund, Katze, Bienenstock (8 Stück)<br>
+    • <b>Gebäude-Sprites:</b> Wohnhaus, Stall, Scheune, Silo, Werkstatt, Tankstelle, Hofladen, Biogas (8 Stück)<br>
+    • <b>Crop-Sprites:</b> Weizen/Mais/Kartoffeln/Raps in 4 Wachstumsstufen (28 Stück)<br>
+    • <b>Avatar:</b> Liam-Charakter Top-Down 4 Richtungen<br>
+    • <b>Boden-Texturen:</b> Acker, Wiese, Weg, Beton<br><br>
+    <b>Wo holen?</b><br>
+    1. <b>Kenney.nl</b> – riesige gratis Pixel-Art-Bibliothek mit Bauernhof-Sets (CC0, kommerziell nutzbar)<br>
+    2. <b>OpenGameArt.org</b> – kostenlose CC-Sprites<br>
+    3. <b>itch.io</b> Free Asset Packs (oft „Farm Tileset" gratis)<br>
+    4. <b>Wikimedia Commons</b> für Pressefotos der Maschinen (von schräg oben fotografiert)<br>
+    5. <b>Selber rendern:</b> Stable Diffusion / Midjourney mit Prompt „top-down pixel art tractor isometric" – sehr individuell, kostet ~5 €<br><br>
+    <b>Realistisch:</b> Mix aus Kenney-Sprites (Standard-Sachen) + Wikimedia für Maschinen + selber rendern für Spezial-Sachen.
+  </div>
+</div>
+
+<!-- SZENE 7: GESAMT-FLOW -->
+<div class="szene">
+  <h2><span class="num">7</span>Spielablauf-Beispiel (1 Tag)</h2>
+  <ol style="line-height:2;font-size:15px">
+    <li>🌅 <b>Morgen:</b> Liam loggt sich ein, sieht den Hof. „Heute solltest du Feld 3+4 ernten und Kühe melken."</li>
+    <li>🐮 <b>Stall:</b> 3 Kühe geben je 8 Liter Milch → <b>Mathe-Aufgabe:</b> „3 × 8 = ?" → richtig → 24 Liter</li>
+    <li>🚜 <b>Mähdrescher Lexion auf Karte tippen</b> → Avatar steigt rein → Touch-Steuerung über Felder</li>
+    <li>🌾 <b>2 Felder ernten</b> → 24 Säcke Weizen</li>
+    <li>🏪 <b>Hofladen-Verkauf:</b> „24 Liter Milch × 50 ct = ?" → richtig → 1200 ct = 12 €</li>
+    <li>🛒 <b>Geld nutzen:</b> Diesel kaufen, neue Maschine sparen, Hof ausbauen</li>
+    <li>🌙 <b>Abend:</b> Tag-Statistik + 2× Lern-Münzen für die Haupt-App</li>
+  </ol>
+</div>
+
+<div style="text-align:center;background:#fff;color:#222;padding:24px;border-radius:14px;font-size:18px;font-weight:700">
+  ✅ So sieht das fertige Spiel aus.<br>
+  <span style="color:#666;font-size:14px;font-weight:400">Sag Papa wenn du loslegen willst, dann fängt er an zu bauen!</span>
+</div>
+
+</body>
+</html>
