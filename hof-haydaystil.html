@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hof im Hay Day Stil</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#7ec8e3 0%,#90c779 80%);min-height:100vh;padding:14px;color:#222}
+h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bottom:8px;font-size:24px}
+.sub{text-align:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);margin-bottom:20px;font-size:14px}
+
+.szene{background:#fff;border-radius:18px;padding:20px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.szene h2{color:#1b5e20;margin-bottom:12px;font-size:20px}
+.note{background:#fff9c4;color:#5d4037;padding:12px;border-radius:10px;margin-top:12px;font-size:14px;border-left:4px solid #fbc02d}
+
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.comparison .col{background:#fff;border-radius:12px;padding:14px;text-align:center}
+.comparison .col img{width:100%;border-radius:8px}
+.comparison .col h3{margin-bottom:8px;color:#1b5e20}
+
+/* === ISO HOF SVG === */
+.hof-svg{width:100%;max-width:700px;display:block;margin:0 auto;background:linear-gradient(180deg,#87ceeb,#7cb342);border-radius:14px}
+
+/* === Element-Zellen === */
+.elem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.elem{background:#f5f5f5;border-radius:10px;padding:12px;text-align:center}
+.elem svg{width:60px;height:60px}
+.elem .name{font-size:12px;font-weight:700;margin-top:6px}
+</style>
+</head>
+<body>
+
+<h1>🚜 Hof im Hay Day-Stil</h1>
+<p class="sub">So würde Liams Bauernhof aussehen – isometrische 2D-Perspektive (wirkt wie 3D)</p>
+
+<!-- HAUPTBILD -->
+<div class="szene">
+  <h2>🏞️ So sieht der Hof aus (Beispiel-Szene)</h2>
+  <svg class="hof-svg" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
+    <!-- Wiese / Boden -->
+    <defs>
+      <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a5d6a7"/>
+        <stop offset="100%" stop-color="#7cb342"/>
+      </linearGradient>
+      <pattern id="acker" x="0" y="0" width="20" height="10" patternUnits="userSpaceOnUse">
+        <rect width="20" height="10" fill="#6d4c41"/>
+        <line x1="0" y1="5" x2="20" y2="5" stroke="#5d4037" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect x="0" y="0" width="700" height="500" fill="url(#grass)"/>
+
+    <!-- Acker (isometrisch) -->
+    <polygon points="150,200 450,200 480,260 180,260" fill="url(#acker)"/>
+    <polygon points="180,265 480,265 510,325 210,325" fill="url(#acker)"/>
+    <polygon points="210,330 510,330 540,390 240,390" fill="#9ccc65"/>
+
+    <!-- Weizenähren auf reifem Feld -->
+    <text x="240" y="370" font-size="20" fill="#fbc02d">🌾🌾🌾🌾🌾🌾🌾🌾🌾</text>
+
+    <!-- Weg -->
+    <polygon points="50,400 100,250 150,200 200,250 50,500" fill="#bcaaa4" opacity=".7"/>
+
+    <!-- Wohnhaus (vorne links) -->
+    <g transform="translate(50,280)">
+      <!-- Body -->
+      <polygon points="0,40 60,40 60,90 0,90" fill="#fff8e1"/>
+      <polygon points="60,40 80,30 80,80 60,90" fill="#ffe082"/>
+      <!-- Dach -->
+      <polygon points="-5,40 30,10 65,40" fill="#d84315"/>
+      <polygon points="65,40 85,25 80,30" fill="#bf360c"/>
+      <!-- Tür -->
+      <rect x="20" y="60" width="14" height="30" fill="#5d4037"/>
+      <!-- Fenster -->
+      <rect x="40" y="50" width="14" height="14" fill="#42a5f5" stroke="#fff" stroke-width="2"/>
+      <!-- Schornstein mit Rauch -->
+      <rect x="10" y="0" width="8" height="20" fill="#bf360c"/>
+      <circle cx="14" cy="-5" r="6" fill="#eceff1" opacity=".8"/>
+      <circle cx="20" cy="-12" r="8" fill="#eceff1" opacity=".7"/>
+    </g>
+
+    <!-- Stall (mitte rechts) -->
+    <g transform="translate(490,250)">
+      <polygon points="0,40 80,40 80,100 0,100" fill="#d84315"/>
+      <polygon points="80,40 100,30 100,90 80,100" fill="#bf360c"/>
+      <polygon points="-5,40 40,5 85,40" fill="#37474f"/>
+      <polygon points="85,40 105,25 100,30" fill="#263238"/>
+      <!-- Großes Tor -->
+      <rect x="25" y="55" width="30" height="45" fill="#3e2723"/>
+      <line x1="40" y1="55" x2="40" y2="100" stroke="#5d4037" stroke-width="1"/>
+      <!-- Heuballen daneben -->
+      <ellipse cx="115" cy="100" rx="14" ry="10" fill="#fbc02d"/>
+      <ellipse cx="115" cy="92" rx="14" ry="10" fill="#fdd835"/>
+      <line x1="105" y1="92" x2="125" y2="92" stroke="#f57f17" stroke-width="1"/>
+    </g>
+
+    <!-- Silo (hinten rechts) -->
+    <g transform="translate(580,180)">
+      <ellipse cx="20" cy="0" rx="18" ry="6" fill="#90a4ae"/>
+      <rect x="2" y="0" width="36" height="60" fill="#b0bec5"/>
+      <ellipse cx="20" cy="60" rx="18" ry="6" fill="#78909c"/>
+      <polygon points="2,0 20,-15 38,0" fill="#cfd8dc"/>
+      <line x1="2" y1="20" x2="38" y2="20" stroke="#78909c" stroke-width="1"/>
+      <line x1="2" y1="40" x2="38" y2="40" stroke="#78909c" stroke-width="1"/>
+    </g>
+
+    <!-- Scheune (hinten mitte) -->
+    <g transform="translate(330,150)">
+      <polygon points="0,30 70,30 70,80 0,80" fill="#a1887f"/>
+      <polygon points="70,30 90,20 90,70 70,80" fill="#8d6e63"/>
+      <polygon points="-5,30 35,5 75,30" fill="#5d4037"/>
+      <polygon points="75,30 95,15 90,20" fill="#4e342e"/>
+      <!-- Fachwerk-Linien -->
+      <line x1="35" y1="30" x2="35" y2="80" stroke="#3e2723" stroke-width="1.5"/>
+      <line x1="0" y1="50" x2="70" y2="50" stroke="#3e2723" stroke-width="1.5"/>
+      <!-- Tor -->
+      <rect x="20" y="50" width="30" height="30" fill="#3e2723"/>
+    </g>
+
+    <!-- Traktor (auf dem Feld) -->
+    <g transform="translate(280,340)">
+      <!-- Schatten -->
+      <ellipse cx="30" cy="32" rx="32" ry="6" fill="#000" opacity=".25"/>
+      <!-- Body -->
+      <rect x="5" y="10" width="40" height="22" fill="#1b5e20" rx="3"/>
+      <!-- Kabine -->
+      <polygon points="20,-2 40,-2 45,10 15,10" fill="#37474f"/>
+      <polygon points="22,2 38,2 41,9 19,9" fill="#90caf9"/>
+      <!-- Schnauze (vorne) -->
+      <rect x="40" y="15" width="15" height="14" fill="#43a047" rx="2"/>
+      <!-- Auspuff -->
+      <rect x="18" y="-12" width="4" height="14" fill="#263238"/>
+      <circle cx="20" cy="-15" r="3" fill="#cfd8dc" opacity=".7"/>
+      <!-- Räder -->
+      <ellipse cx="12" cy="34" rx="8" ry="9" fill="#212121"/>
+      <ellipse cx="12" cy="34" rx="3" ry="3" fill="#9e9e9e"/>
+      <ellipse cx="48" cy="32" rx="6" ry="7" fill="#212121"/>
+      <ellipse cx="48" cy="32" rx="2" ry="2" fill="#9e9e9e"/>
+      <!-- Lichter vorne -->
+      <circle cx="55" cy="20" r="2" fill="#ffeb3b"/>
+    </g>
+
+    <!-- Avatar (Liam) -->
+    <g transform="translate(220,290)">
+      <!-- Schatten -->
+      <ellipse cx="10" cy="36" rx="12" ry="4" fill="#000" opacity=".3"/>
+      <!-- Körper -->
+      <rect x="3" y="14" width="14" height="20" fill="#d84315" rx="2"/>
+      <!-- Arme -->
+      <rect x="0" y="15" width="4" height="10" fill="#ffcc80"/>
+      <rect x="16" y="15" width="4" height="10" fill="#ffcc80"/>
+      <!-- Beine -->
+      <rect x="4" y="32" width="5" height="8" fill="#1565c0"/>
+      <rect x="11" y="32" width="5" height="8" fill="#1565c0"/>
+      <!-- Kopf -->
+      <circle cx="10" cy="8" r="7" fill="#ffcc80"/>
+      <!-- Strohhut -->
+      <ellipse cx="10" cy="3" rx="11" ry="3" fill="#fbc02d"/>
+      <ellipse cx="10" cy="2" rx="6" ry="3" fill="#f9a825"/>
+      <!-- Augen -->
+      <circle cx="8" cy="8" r="1" fill="#222"/>
+      <circle cx="12" cy="8" r="1" fill="#222"/>
+      <!-- Lächeln -->
+      <path d="M 7 11 Q 10 13 13 11" stroke="#222" stroke-width="1" fill="none"/>
+    </g>
+
+    <!-- Tiere -->
+    <!-- Kuh -->
+    <g transform="translate(440,420)">
+      <ellipse cx="15" cy="22" rx="18" ry="4" fill="#000" opacity=".3"/>
+      <ellipse cx="15" cy="15" rx="16" ry="10" fill="#fff"/>
+      <ellipse cx="8" cy="13" rx="4" ry="3" fill="#3e2723"/>
+      <ellipse cx="20" cy="10" rx="3" ry="2" fill="#3e2723"/>
+      <circle cx="3" cy="13" r="5" fill="#fff"/>
+      <circle cx="3" cy="13" r="3" fill="#ffcdd2"/>
+      <circle cx="0" cy="11" r="1" fill="#222"/>
+      <circle cx="2" cy="14" r="0.5" fill="#222"/>
+    </g>
+    <!-- Huhn -->
+    <g transform="translate(560,440)">
+      <ellipse cx="10" cy="20" rx="8" ry="3" fill="#000" opacity=".3"/>
+      <ellipse cx="10" cy="12" rx="8" ry="7" fill="#fff"/>
+      <circle cx="15" cy="8" r="4" fill="#fff"/>
+      <polygon points="18,7 22,8 18,9" fill="#ffa726"/>
+      <polygon points="13,3 14,7 16,4" fill="#e53935"/>
+      <circle cx="16" cy="7" r="0.8" fill="#222"/>
+      <line x1="8" y1="18" x2="8" y2="22" stroke="#ffa726" stroke-width="1"/>
+      <line x1="12" y1="18" x2="12" y2="22" stroke="#ffa726" stroke-width="1"/>
+    </g>
+    <!-- Schwein -->
+    <g transform="translate(60,440)">
+      <ellipse cx="15" cy="22" rx="16" ry="4" fill="#000" opacity=".3"/>
+      <ellipse cx="15" cy="15" rx="14" ry="9" fill="#f8bbd0"/>
+      <circle cx="2" cy="13" r="5" fill="#f8bbd0"/>
+      <ellipse cx="-1" cy="14" rx="2" ry="1.5" fill="#ec407a"/>
+      <circle cx="0" cy="11" r="0.7" fill="#222"/>
+    </g>
+
+    <!-- Sonne -->
+    <circle cx="620" cy="60" r="25" fill="#fff176"/>
+    <circle cx="620" cy="60" r="20" fill="#ffeb3b"/>
+
+    <!-- Wolken -->
+    <g fill="#fff" opacity=".9">
+      <ellipse cx="120" cy="50" rx="25" ry="10"/>
+      <ellipse cx="135" cy="45" rx="18" ry="10"/>
+      <ellipse cx="105" cy="48" rx="15" ry="9"/>
+    </g>
+    <g fill="#fff" opacity=".9">
+      <ellipse cx="400" cy="80" rx="22" ry="8"/>
+      <ellipse cx="415" cy="76" rx="15" ry="9"/>
+    </g>
+
+    <!-- Bäume -->
+    <g transform="translate(20,180)">
+      <rect x="8" y="20" width="6" height="16" fill="#5d4037"/>
+      <circle cx="11" cy="15" r="14" fill="#388e3c"/>
+      <circle cx="6" cy="12" r="9" fill="#43a047"/>
+      <circle cx="16" cy="12" r="9" fill="#43a047"/>
+    </g>
+    <g transform="translate(640,300)">
+      <rect x="8" y="20" width="6" height="16" fill="#5d4037"/>
+      <circle cx="11" cy="15" r="12" fill="#2e7d32"/>
+      <circle cx="6" cy="12" r="8" fill="#388e3c"/>
+    </g>
+
+    <!-- Blumen (Detail) -->
+    <g>
+      <circle cx="80" cy="380" r="3" fill="#e91e63"/>
+      <circle cx="85" cy="385" r="3" fill="#fff59d"/>
+      <circle cx="600" cy="420" r="3" fill="#9c27b0"/>
+      <circle cx="610" cy="425" r="3" fill="#ff9800"/>
+    </g>
+
+    <!-- Münzen-UI oben links -->
+    <g transform="translate(15,20)">
+      <rect x="0" y="0" width="80" height="30" rx="15" fill="rgba(0,0,0,.6)"/>
+      <circle cx="18" cy="15" r="9" fill="#ffd700"/>
+      <text x="30" y="20" fill="#fff" font-size="14" font-weight="900">€ 1.250</text>
+    </g>
+
+    <!-- Tipp-Aktion-Knopf rechts -->
+    <g transform="translate(560,420)">
+      <rect x="0" y="0" width="120" height="60" rx="15" fill="#4caf50" stroke="#fff" stroke-width="3"/>
+      <text x="60" y="25" fill="#fff" font-size="14" font-weight="900" text-anchor="middle">🌾 ERNTEN</text>
+      <text x="60" y="45" fill="#fff" font-size="11" text-anchor="middle">+ 24 Säcke</text>
+    </g>
+  </svg>
+  <div class="note">
+    Das ist eine <b>SVG-Skizze</b>. Im echten Spiel wären das hochauflösende Sprites (wie Hay Day) – noch detaillierter, mit Animationen (Trecker fährt, Rauch kommt aus Schornstein, Kuh schwänzelt mit Schwanz). Aber Stilrichtung = genau das.
+  </div>
+</div>
+
+<!-- VERGLEICH MIT HAY DAY -->
+<div class="szene">
+  <h2>🎮 Wie Hay Day vs. unser Hof aussehen würde</h2>
+  <p style="margin-bottom:14px">Hay Day ist 2D-isometrisch (NICHT echtes 3D – wirkt nur so durch Perspektive). Genau das könnten wir nachbauen:</p>
+  <div class="comparison">
+    <div class="col">
+      <h3>🌽 Hay Day (Original)</h3>
+      <div style="background:#aed581;padding:20px;border-radius:8px;font-size:48px">🚜🌾🐮🏠</div>
+      <p style="font-size:12px;margin-top:8px;opacity:.7">2D-Sprites in isometrischer Sicht. Cartoon-Look, sehr detailliert.</p>
+    </div>
+    <div class="col">
+      <h3>🚜 Liams Hof (geplant)</h3>
+      <div style="background:#aed581;padding:20px;border-radius:8px;font-size:48px">🚜🌾🐮🏠</div>
+      <p style="font-size:12px;margin-top:8px;opacity:.7">Gleiche Technik. Gleicher Look-Stil. Plus: Mathe-Lern-Mechaniken integriert.</p>
+    </div>
+  </div>
+</div>
+
+<!-- WAS WIR BRAUCHEN -->
+<div class="szene">
+  <h2>📦 Was wir an Sprites brauchen (Hay Day-Stil)</h2>
+  <p style="margin-bottom:14px">Für hübsche Cartoon-2D-Iso-Grafik brauchen wir spezifische Sprites. Quellen:</p>
+
+  <h3 style="color:#1b5e20;margin-bottom:8px">🎨 Beste gratis-Quellen</h3>
+  <ol style="line-height:2;font-size:14px;margin-bottom:14px">
+    <li><b>Kenney.nl</b> → Asset-Pack <b>„Isometric Buildings"</b> + <b>„Toon Characters"</b> – CC0, sofort einsetzbar</li>
+    <li><b>itch.io</b> → such <b>„farm isometric free"</b> – 50+ kostenlose Asset-Packs</li>
+    <li><b>Game-icons.net</b> – schöne Cartoon-Icons für UI</li>
+    <li><b>OpenGameArt.org</b> – CC-BY-SA-Sprites</li>
+  </ol>
+
+  <h3 style="color:#1b5e20;margin-bottom:8px;margin-top:14px">💰 Premium-Asset (~30-50 €, einmalig)</h3>
+  <ul style="line-height:2;font-size:14px">
+    <li><b>Synty Studios POLYGON Farm</b> – professionelles Asset-Pack mit allem (Maschinen, Tiere, Gebäude in Hay-Day-Stil) ~25 €</li>
+    <li><b>Unity Asset Store: „Farm Builder Pack"</b> – komplettes Asset-Set ~30 €</li>
+    <li><b>Synty Cartoon Vehicles + Animals</b> – Trecker + Tiere in einem Pack</li>
+  </ul>
+
+  <div class="note">
+    <b>Mit Premium-Assets sähe das Spiel aus wie ein professionelles Mobile-Spiel.</b><br>
+    Kosten: einmalig 30-50 € für Asset-Lizenz, dann unbegrenzt nutzbar.
+  </div>
+</div>
+
+<!-- ZEIT/AUFWAND -->
+<div class="szene">
+  <h2>⏱ Realistische Zeit für so ein Spiel</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:14px">
+    <tr style="background:#1b5e20;color:#fff">
+      <th style="padding:8px;text-align:left">Phase</th>
+      <th style="padding:8px">Was</th>
+      <th style="padding:8px">Zeit</th>
+    </tr>
+    <tr style="background:#f5f5f5">
+      <td style="padding:8px"><b>1</b></td>
+      <td style="padding:8px">Sprite-Pack besorgen + Hof-Layout aufbauen</td>
+      <td style="padding:8px">3-5 Tage</td>
+    </tr>
+    <tr>
+      <td style="padding:8px"><b>2</b></td>
+      <td style="padding:8px">Avatar-Steuerung + Maschinen-Auswahl + 1 Crop-Zyklus</td>
+      <td style="padding:8px">5-7 Tage</td>
+    </tr>
+    <tr style="background:#f5f5f5">
+      <td style="padding:8px"><b>3</b></td>
+      <td style="padding:8px">Alle 14 Maschinen, 7 Crops, 8 Tiere, 8 Gebäude</td>
+      <td style="padding:8px">10-15 Tage</td>
+    </tr>
+    <tr>
+      <td style="padding:8px"><b>4</b></td>
+      <td style="padding:8px">Mathe-Verkauf-Integration + Wirtschaft</td>
+      <td style="padding:8px">3-5 Tage</td>
+    </tr>
+    <tr style="background:#f5f5f5">
+      <td style="padding:8px"><b>5</b></td>
+      <td style="padding:8px">Polishing (Animationen, Sounds, Effekte)</td>
+      <td style="padding:8px">5-10 Tage</td>
+    </tr>
+    <tr style="background:#1b5e20;color:#fff">
+      <td style="padding:8px" colspan="2"><b>TOTAL</b></td>
+      <td style="padding:8px"><b>3-5 Wochen Vollzeit</b></td>
+    </tr>
+  </table>
+
+  <div class="note">
+    Realistisch wenn ich 1-2 Std pro Tag dran bauen kann (parallel zu deinen anderen Projekten): <b>2-3 Monate</b> bis fertig.<br>
+    MVP (Phase 1+2 spielbar): <b>2 Wochen</b>.
+  </div>
+</div>
+
+<div style="background:#fff;color:#222;padding:20px;border-radius:14px;text-align:center">
+  <b>Was sagst du?</b><br>
+  Sieht das nach dem aus was du dir vorstellst?<br><br>
+  <span style="font-size:14px;color:#666">Wenn ja → ich starte mit MVP nächste Woche.</span>
+</div>
+
+</body>
+</html>
