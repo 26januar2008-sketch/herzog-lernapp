@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hof – detailliert</title>
+<title>Hof – v2 sauber</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#7ec8e3 0%,#90c779 80%);min-height:100vh;padding:14px;color:#222}
@@ -13,52 +13,531 @@ h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bott
 .szene h2{color:#1b5e20;margin-bottom:12px;font-size:20px}
 .note{background:#fff9c4;color:#5d4037;padding:12px;border-radius:10px;margin-top:12px;font-size:14px;border-left:4px solid #fbc02d}
 .hof-svg{width:100%;display:block;background:linear-gradient(180deg,#87ceeb,#7cb342);border-radius:14px}
-.zoom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.zoom-grid svg{background:#aed581;border-radius:10px;width:100%}
+.zoom{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.zoom .karte{background:#aed581;border-radius:10px;padding:10px;text-align:center}
+.zoom .karte svg{width:100%;background:#90c779;border-radius:8px}
+.zoom .karte h4{color:#1b5e20;margin-top:8px;font-size:14px}
 </style>
 </head>
 <body>
 
-<h1>🚜 Hof – DETAILLIERTE Version</h1>
-<p class="sub">Individuelle Pflanzen, detaillierte Gebäude, echter Trecker-Look</p>
+<h1>🚜 Hof – Version 2 (saubere Geometrie)</h1>
+<p class="sub">Trecker komplett neu, Gebäude proportional korrekt</p>
+
+<!-- ZOOM-EINZEL-ANSICHTEN -->
+<div class="szene">
+  <h2>🔍 Einzeln in groß</h2>
+  <div class="zoom">
+
+    <!-- TRAKTOR EINZELN -->
+    <div class="karte">
+      <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="trkGreen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#43a047"/>
+            <stop offset="100%" stop-color="#1b5e20"/>
+          </linearGradient>
+          <radialGradient id="reifen">
+            <stop offset="60%" stop-color="#212121"/>
+            <stop offset="100%" stop-color="#000"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Schatten -->
+        <ellipse cx="110" cy="125" rx="95" ry="6" fill="#000" opacity=".3"/>
+
+        <!-- Auspuff (HINTER Motor) -->
+        <rect x="64" y="20" width="8" height="40" fill="#37474f"/>
+        <rect x="62" y="18" width="12" height="5" fill="#212121"/>
+        <g opacity=".6">
+          <circle cx="68" cy="12" r="6" fill="#cfd8dc"/>
+          <circle cx="74" cy="3" r="8" fill="#eceff1"/>
+          <circle cx="62" cy="-2" r="7" fill="#fff"/>
+        </g>
+
+        <!-- HAUPTKÖRPER (1 zusammenhängende Form) -->
+        <!-- Motorhaube -->
+        <rect x="20" y="55" width="65" height="35" rx="4" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
+        <!-- Kabine -->
+        <rect x="80" y="35" width="55" height="55" rx="5" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
+        <!-- Heck/Anbau -->
+        <rect x="135" y="60" width="35" height="30" rx="3" fill="url(#trkGreen)" stroke="#0d3010" stroke-width="2"/>
+
+        <!-- Verbindungslinien für solide Look -->
+        <line x1="80" y1="55" x2="80" y2="90" stroke="#0d3010" stroke-width="0.5"/>
+        <line x1="135" y1="60" x2="135" y2="90" stroke="#0d3010" stroke-width="0.5"/>
+
+        <!-- Kabinen-Fenster -->
+        <rect x="85" y="42" width="45" height="22" rx="2" fill="#90caf9" stroke="#0d3010" stroke-width="1.5"/>
+        <line x1="100" y1="42" x2="100" y2="64" stroke="#37474f" stroke-width="0.8"/>
+        <line x1="115" y1="42" x2="115" y2="64" stroke="#37474f" stroke-width="0.8"/>
+
+        <!-- Dach Kabine -->
+        <rect x="78" y="32" width="59" height="6" rx="2" fill="#212121"/>
+
+        <!-- Lichtbalken auf Dach -->
+        <rect x="85" y="28" width="45" height="5" rx="1" fill="#37474f"/>
+        <circle cx="92" cy="30.5" r="1.5" fill="#fff59d"/>
+        <circle cx="100" cy="30.5" r="1.5" fill="#fff59d"/>
+        <circle cx="108" cy="30.5" r="1.5" fill="#fff59d"/>
+        <circle cx="116" cy="30.5" r="1.5" fill="#fff59d"/>
+        <circle cx="124" cy="30.5" r="1.5" fill="#fff59d"/>
+
+        <!-- Front-Detail: Kühlergrill -->
+        <rect x="22" y="62" width="8" height="22" fill="#000"/>
+        <line x1="22" y1="66" x2="30" y2="66" stroke="#fbc02d" stroke-width="0.8"/>
+        <line x1="22" y1="71" x2="30" y2="71" stroke="#fbc02d" stroke-width="0.8"/>
+        <line x1="22" y1="76" x2="30" y2="76" stroke="#fbc02d" stroke-width="0.8"/>
+        <line x1="22" y1="81" x2="30" y2="81" stroke="#fbc02d" stroke-width="0.8"/>
+
+        <!-- Logo unter Lichtbalken -->
+        <rect x="35" y="60" width="42" height="6" fill="#fbc02d"/>
+        <text x="56" y="65" text-anchor="middle" font-size="5" font-weight="900" fill="#1b5e20">JOHN DEERE</text>
+
+        <!-- Frontscheinwerfer -->
+        <ellipse cx="22" cy="58" rx="4" ry="3" fill="#fff59d" stroke="#0d3010" stroke-width="1"/>
+        <ellipse cx="22" cy="58" rx="2" ry="1.5" fill="#fffde7"/>
+
+        <!-- Heck-Anbau Detail -->
+        <rect x="150" y="65" width="15" height="20" fill="#fbc02d" stroke="#0d3010" stroke-width="1.5"/>
+        <circle cx="157" cy="75" r="3" fill="#1b5e20"/>
+        <line x1="170" y1="75" x2="178" y2="75" stroke="#212121" stroke-width="3"/>
+        <!-- Heck-Lampen -->
+        <circle cx="138" cy="85" r="2" fill="#e53935"/>
+
+        <!-- VORDER-RAD (klein) -->
+        <circle cx="40" cy="100" r="14" fill="url(#reifen)"/>
+        <circle cx="40" cy="100" r="9" fill="#fbc02d" stroke="#212121" stroke-width="1"/>
+        <circle cx="40" cy="100" r="3" fill="#212121"/>
+        <!-- Speichen -->
+        <line x1="40" y1="91" x2="40" y2="109" stroke="#212121" stroke-width="1.5"/>
+        <line x1="31" y1="100" x2="49" y2="100" stroke="#212121" stroke-width="1.5"/>
+        <line x1="34" y1="94" x2="46" y2="106" stroke="#212121" stroke-width="1.2"/>
+        <line x1="34" y1="106" x2="46" y2="94" stroke="#212121" stroke-width="1.2"/>
+        <!-- Reifenprofil -->
+        <line x1="40" y1="86" x2="40" y2="89" stroke="#fff" stroke-width="1.5" opacity=".4"/>
+        <path d="M 28 95 L 30 92 M 28 100 L 30 100 M 28 105 L 30 108 M 50 95 L 52 92 M 50 105 L 52 108" stroke="#000" stroke-width="0.8"/>
+
+        <!-- HINTER-RAD (groß) -->
+        <circle cx="135" cy="100" r="22" fill="url(#reifen)"/>
+        <circle cx="135" cy="100" r="13" fill="#fbc02d" stroke="#212121" stroke-width="1.5"/>
+        <circle cx="135" cy="100" r="4" fill="#212121"/>
+        <!-- Speichen -->
+        <line x1="135" y1="87" x2="135" y2="113" stroke="#212121" stroke-width="2"/>
+        <line x1="122" y1="100" x2="148" y2="100" stroke="#212121" stroke-width="2"/>
+        <line x1="126" y1="91" x2="144" y2="109" stroke="#212121" stroke-width="1.5"/>
+        <line x1="126" y1="109" x2="144" y2="91" stroke="#212121" stroke-width="1.5"/>
+        <!-- Reifenprofil Zickzack -->
+        <path d="M 113 95 L 116 92 L 119 95 L 122 92 M 113 100 L 116 100 L 119 100 L 122 100 M 113 105 L 116 108 L 119 105 L 122 108" stroke="#000" stroke-width="0.8" fill="none"/>
+        <path d="M 148 95 L 151 92 L 154 95 L 157 92 M 148 100 L 151 100 L 154 100 L 157 100 M 148 105 L 151 108 L 154 105 L 157 108" stroke="#000" stroke-width="0.8" fill="none"/>
+
+        <!-- Spiegel -->
+        <line x1="80" y1="40" x2="73" y2="35" stroke="#212121" stroke-width="1.5"/>
+        <ellipse cx="71" cy="34" rx="3" ry="2" fill="#90caf9" stroke="#212121" stroke-width="1"/>
+      </svg>
+      <h4>🚜 Trecker (John Deere Stil)</h4>
+    </div>
+
+    <!-- WOHNHAUS EINZELN -->
+    <div class="karte">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="zhRot" x="0" y="0" width="14" height="10" patternUnits="userSpaceOnUse">
+            <rect width="14" height="10" fill="#c62828"/>
+            <path d="M 0 5 Q 3.5 0 7 5 Q 10.5 10 14 5" fill="#d84315"/>
+            <path d="M 0 0 Q 3.5 5 7 0" fill="#b71c1c" opacity=".5"/>
+          </pattern>
+          <pattern id="steinKl" x="0" y="0" width="16" height="14" patternUnits="userSpaceOnUse">
+            <rect width="16" height="14" fill="#bcaaa4"/>
+            <ellipse cx="4" cy="4" rx="3" ry="2" fill="#a1887f"/>
+            <ellipse cx="12" cy="9" rx="3" ry="2" fill="#a1887f"/>
+          </pattern>
+        </defs>
+
+        <!-- Schatten -->
+        <ellipse cx="100" cy="186" rx="80" ry="6" fill="#000" opacity=".3"/>
+
+        <!-- Stein-Sockel -->
+        <rect x="30" y="170" width="140" height="16" fill="url(#steinKl)" stroke="#5d4037" stroke-width="1"/>
+
+        <!-- HAUPTKÖRPER (eine klare Form) -->
+        <rect x="30" y="100" width="140" height="70" fill="#fff8e1" stroke="#5d4037" stroke-width="2"/>
+
+        <!-- Holz-Akzent horizontal Mitte -->
+        <rect x="30" y="135" width="140" height="3" fill="#5d4037"/>
+
+        <!-- Holz-Akzent vertikal -->
+        <rect x="98" y="100" width="4" height="70" fill="#5d4037"/>
+
+        <!-- Fenster oben links -->
+        <rect x="42" y="110" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
+        <line x1="59" y1="110" x2="59" y2="132" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="42" y1="121" x2="76" y2="121" stroke="#5d4037" stroke-width="1.5"/>
+        <!-- Blumenkasten unter Fenster links -->
+        <rect x="38" y="132" width="42" height="6" fill="#5d4037"/>
+        <circle cx="46" cy="132" r="2.5" fill="#e91e63"/>
+        <circle cx="54" cy="132" r="2.5" fill="#fff59d"/>
+        <circle cx="62" cy="132" r="2.5" fill="#9c27b0"/>
+        <circle cx="70" cy="132" r="2.5" fill="#ff9800"/>
+
+        <!-- Fenster oben rechts -->
+        <rect x="124" y="110" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
+        <line x1="141" y1="110" x2="141" y2="132" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="124" y1="121" x2="158" y2="121" stroke="#5d4037" stroke-width="1.5"/>
+
+        <!-- Tür mittig -->
+        <rect x="86" y="140" width="28" height="30" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+        <rect x="89" y="143" width="22" height="14" fill="#3e2723"/>
+        <line x1="100" y1="143" x2="100" y2="157" stroke="#5d4037" stroke-width="0.5"/>
+        <circle cx="108" cy="157" r="1.5" fill="#fbc02d"/>
+        <!-- Stufe -->
+        <rect x="83" y="170" width="34" height="4" fill="#bcaaa4"/>
+
+        <!-- DACH (eine klare Form, sauber zentriert) -->
+        <polygon points="20,100 100,40 180,100" fill="url(#zhRot)" stroke="#3e2723" stroke-width="2.5"/>
+        <!-- Dachgaube mittig -->
+        <rect x="88" y="78" width="24" height="22" fill="#fff8e1" stroke="#5d4037" stroke-width="1.5"/>
+        <polygon points="84,78 100,62 116,78" fill="#c62828" stroke="#3e2723" stroke-width="1.5"/>
+        <rect x="93" y="84" width="14" height="14" fill="#42a5f5" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="100" y1="84" x2="100" y2="98" stroke="#5d4037" stroke-width="0.8"/>
+
+        <!-- Schornstein -->
+        <rect x="50" y="55" width="14" height="30" fill="#a1887f" stroke="#3e2723" stroke-width="1"/>
+        <rect x="48" y="52" width="18" height="5" fill="#5d4037"/>
+        <!-- Rauch -->
+        <g opacity=".7">
+          <circle cx="57" cy="44" r="6" fill="#eceff1"/>
+          <circle cx="62" cy="34" r="8" fill="#eceff1"/>
+          <circle cx="55" cy="24" r="9" fill="#eceff1"/>
+        </g>
+      </svg>
+      <h4>🏠 Wohnhaus</h4>
+    </div>
+
+    <!-- KUHSTALL EINZELN -->
+    <div class="karte">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="zhRot2" x="0" y="0" width="14" height="10" patternUnits="userSpaceOnUse">
+            <rect width="14" height="10" fill="#c62828"/>
+            <path d="M 0 5 Q 3.5 0 7 5 Q 10.5 10 14 5" fill="#d84315"/>
+          </pattern>
+          <pattern id="holz" x="0" y="0" width="20" height="6" patternUnits="userSpaceOnUse">
+            <rect width="20" height="6" fill="#a1887f"/>
+            <line x1="0" y1="3" x2="20" y2="3" stroke="#5d4037" stroke-width="0.6"/>
+          </pattern>
+          <pattern id="stein2" x="0" y="0" width="16" height="14" patternUnits="userSpaceOnUse">
+            <rect width="16" height="14" fill="#bcaaa4"/>
+            <ellipse cx="4" cy="4" rx="3" ry="2" fill="#a1887f"/>
+            <ellipse cx="12" cy="9" rx="3" ry="2" fill="#a1887f"/>
+          </pattern>
+        </defs>
+
+        <ellipse cx="100" cy="186" rx="85" ry="6" fill="#000" opacity=".3"/>
+
+        <!-- Stein-Sockel -->
+        <rect x="20" y="170" width="160" height="16" fill="url(#stein2)" stroke="#5d4037" stroke-width="1"/>
+
+        <!-- HAUPTKÖRPER (Holzwand, große rote Scheune) -->
+        <rect x="20" y="100" width="160" height="70" fill="url(#holz)" stroke="#3e2723" stroke-width="2"/>
+
+        <!-- Fachwerk (sauber im Raster, nicht chaotisch) -->
+        <line x1="20" y1="100" x2="180" y2="100" stroke="#3e2723" stroke-width="3"/>
+        <line x1="20" y1="135" x2="180" y2="135" stroke="#3e2723" stroke-width="3"/>
+        <line x1="20" y1="170" x2="180" y2="170" stroke="#3e2723" stroke-width="3"/>
+        <line x1="20" y1="100" x2="20" y2="170" stroke="#3e2723" stroke-width="3"/>
+        <line x1="100" y1="100" x2="100" y2="170" stroke="#3e2723" stroke-width="2.5"/>
+        <line x1="180" y1="100" x2="180" y2="170" stroke="#3e2723" stroke-width="3"/>
+
+        <!-- Andreas-Kreuze in jedem Quadrant (typisches Fachwerk) -->
+        <line x1="20" y1="100" x2="100" y2="135" stroke="#3e2723" stroke-width="1.8"/>
+        <line x1="20" y1="135" x2="100" y2="100" stroke="#3e2723" stroke-width="1.8"/>
+        <line x1="100" y1="100" x2="180" y2="135" stroke="#3e2723" stroke-width="1.8"/>
+        <line x1="100" y1="135" x2="180" y2="100" stroke="#3e2723" stroke-width="1.8"/>
+
+        <!-- Fenster links -->
+        <rect x="35" y="142" width="20" height="20" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
+        <line x1="45" y1="142" x2="45" y2="162" stroke="#3e2723" stroke-width="1"/>
+        <line x1="35" y1="152" x2="55" y2="152" stroke="#3e2723" stroke-width="1"/>
+
+        <!-- Fenster rechts -->
+        <rect x="145" y="142" width="20" height="20" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
+        <line x1="155" y1="142" x2="155" y2="162" stroke="#3e2723" stroke-width="1"/>
+        <line x1="145" y1="152" x2="165" y2="152" stroke="#3e2723" stroke-width="1"/>
+
+        <!-- Großes Stalltor mittig -->
+        <rect x="80" y="135" width="40" height="35" fill="#3e2723" stroke="#1b1b1b" stroke-width="2"/>
+        <line x1="100" y1="135" x2="100" y2="170" stroke="#5d4037" stroke-width="2"/>
+        <line x1="80" y1="153" x2="120" y2="153" stroke="#5d4037" stroke-width="1.5"/>
+        <circle cx="96" cy="153" r="1.5" fill="#fbc02d"/>
+        <circle cx="104" cy="153" r="1.5" fill="#fbc02d"/>
+
+        <!-- DACH groß -->
+        <polygon points="10,100 100,30 190,100" fill="url(#zhRot2)" stroke="#3e2723" stroke-width="2.5"/>
+
+        <!-- Heuluken-Tür im Dach mittig -->
+        <rect x="92" y="65" width="16" height="22" fill="#3e2723" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="100" y1="65" x2="100" y2="87" stroke="#5d4037" stroke-width="1"/>
+        <!-- Seil-Winde -->
+        <line x1="100" y1="63" x2="100" y2="50" stroke="#3e2723" stroke-width="1.5"/>
+        <circle cx="100" cy="48" r="3" fill="#3e2723"/>
+
+        <!-- Wetterhahn auf Dachspitze -->
+        <line x1="100" y1="30" x2="100" y2="15" stroke="#3e2723" stroke-width="2"/>
+        <polygon points="92,15 100,8 108,15 100,18" fill="#fbc02d" stroke="#3e2723" stroke-width="1"/>
+        <text x="100" y="6" font-size="10" text-anchor="middle">🐔</text>
+
+        <!-- Heuhaufen daneben -->
+        <ellipse cx="190" cy="170" rx="14" ry="6" fill="#fbc02d"/>
+        <ellipse cx="190" cy="162" rx="14" ry="9" fill="#fdd835"/>
+        <ellipse cx="188" cy="153" rx="11" ry="7" fill="#fff176"/>
+        <line x1="178" y1="162" x2="202" y2="162" stroke="#f57f17" stroke-width="0.8"/>
+        <line x1="178" y1="156" x2="200" y2="156" stroke="#f57f17" stroke-width="0.8"/>
+      </svg>
+      <h4>🏚️ Kuhstall (Fachwerk)</h4>
+    </div>
+
+    <!-- SILO EINZELN -->
+    <div class="karte">
+      <svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="186" rx="35" ry="6" fill="#000" opacity=".3"/>
+        <!-- Stein-Sockel -->
+        <ellipse cx="50" cy="178" rx="32" ry="8" fill="#5d4037"/>
+        <ellipse cx="50" cy="172" rx="30" ry="8" fill="#78909c"/>
+        <!-- Hauptzylinder -->
+        <rect x="20" y="50" width="60" height="125" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/>
+        <!-- Highlight links -->
+        <rect x="25" y="50" width="6" height="125" fill="#fff" opacity=".4"/>
+        <rect x="69" y="50" width="6" height="125" fill="#90a4ae"/>
+        <!-- Bänder -->
+        <ellipse cx="50" cy="50" rx="30" ry="6" fill="#90a4ae" stroke="#37474f" stroke-width="1"/>
+        <ellipse cx="50" cy="90" rx="30" ry="3" fill="#90a4ae" opacity=".6"/>
+        <ellipse cx="50" cy="130" rx="30" ry="3" fill="#90a4ae" opacity=".6"/>
+        <ellipse cx="50" cy="170" rx="30" ry="6" fill="#90a4ae"/>
+        <!-- Kuppel oben -->
+        <path d="M 20 50 Q 50 5 80 50 Z" fill="#b0bec5" stroke="#78909c" stroke-width="2"/>
+        <path d="M 28 30 Q 50 18 72 30" stroke="#fff" stroke-width="2" opacity=".5" fill="none"/>
+        <!-- Spitze -->
+        <line x1="50" y1="10" x2="50" y2="22" stroke="#3e2723" stroke-width="2"/>
+        <circle cx="50" cy="8" r="3" fill="#fbc02d"/>
+        <!-- Leiter rechts -->
+        <line x1="80" y1="60" x2="80" y2="170" stroke="#3e2723" stroke-width="2"/>
+        <line x1="86" y1="60" x2="86" y2="170" stroke="#3e2723" stroke-width="2"/>
+        <line x1="80" y1="75" x2="86" y2="75" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="90" x2="86" y2="90" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="105" x2="86" y2="105" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="120" x2="86" y2="120" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="135" x2="86" y2="135" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="150" x2="86" y2="150" stroke="#3e2723" stroke-width="1.5"/>
+        <line x1="80" y1="165" x2="86" y2="165" stroke="#3e2723" stroke-width="1.5"/>
+        <!-- Schriftzug -->
+        <text x="50" y="115" text-anchor="middle" font-size="11" font-weight="900" fill="#3e2723">FUTTER</text>
+        <text x="50" y="130" text-anchor="middle" font-size="9" fill="#5d4037">SILO</text>
+      </svg>
+      <h4>🏗️ Silo</h4>
+    </div>
+
+    <!-- SCHEUNE EINZELN -->
+    <div class="karte">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="zhRot3" x="0" y="0" width="14" height="10" patternUnits="userSpaceOnUse">
+            <rect width="14" height="10" fill="#c62828"/>
+            <path d="M 0 5 Q 3.5 0 7 5 Q 10.5 10 14 5" fill="#d84315"/>
+          </pattern>
+          <pattern id="holz2" x="0" y="0" width="20" height="6" patternUnits="userSpaceOnUse">
+            <rect width="20" height="6" fill="#8d6e63"/>
+            <line x1="0" y1="3" x2="20" y2="3" stroke="#5d4037" stroke-width="0.6"/>
+          </pattern>
+        </defs>
+        <ellipse cx="100" cy="186" rx="80" ry="6" fill="#000" opacity=".3"/>
+        <!-- Sockel -->
+        <rect x="25" y="170" width="150" height="16" fill="#bcaaa4" stroke="#5d4037" stroke-width="1"/>
+        <!-- Hauptkörper Holz -->
+        <rect x="25" y="105" width="150" height="65" fill="url(#holz2)" stroke="#3e2723" stroke-width="2"/>
+        <!-- Türrahmen -->
+        <rect x="80" y="125" width="40" height="45" fill="#3e2723" stroke="#1b1b1b" stroke-width="2"/>
+        <line x1="100" y1="125" x2="100" y2="170" stroke="#5d4037" stroke-width="2"/>
+        <line x1="80" y1="148" x2="120" y2="148" stroke="#5d4037" stroke-width="1.5"/>
+        <!-- Rundes Heuluken-Fenster -->
+        <circle cx="100" cy="120" r="10" fill="#3e2723" stroke="#5d4037" stroke-width="2"/>
+        <line x1="90" y1="120" x2="110" y2="120" stroke="#5d4037" stroke-width="2"/>
+        <line x1="100" y1="110" x2="100" y2="130" stroke="#5d4037" stroke-width="2"/>
+        <!-- Heugabel rechts -->
+        <line x1="160" y1="125" x2="160" y2="170" stroke="#5d4037" stroke-width="2.5"/>
+        <line x1="156" y1="125" x2="160" y2="130" stroke="#5d4037" stroke-width="2"/>
+        <line x1="160" y1="124" x2="160" y2="128" stroke="#5d4037" stroke-width="2"/>
+        <line x1="164" y1="125" x2="160" y2="130" stroke="#5d4037" stroke-width="2"/>
+        <!-- DACH -->
+        <polygon points="15,105 100,40 185,105" fill="url(#zhRot3)" stroke="#3e2723" stroke-width="2.5"/>
+        <!-- Dach-Tor -->
+        <rect x="92" y="60" width="16" height="22" fill="#3e2723" stroke="#5d4037" stroke-width="1.5"/>
+        <line x1="100" y1="60" x2="100" y2="82" stroke="#5d4037" stroke-width="1"/>
+        <!-- Seil oben -->
+        <line x1="100" y1="58" x2="100" y2="45" stroke="#3e2723" stroke-width="1.5"/>
+        <circle cx="100" cy="43" r="3" fill="#3e2723"/>
+      </svg>
+      <h4>🏚️ Scheune</h4>
+    </div>
+
+  </div>
+</div>
 
 <!-- HAUPTSZENE -->
 <div class="szene">
-  <h2>🏞️ Großansicht: alles im Detail</h2>
-  <svg class="hof-svg" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg">
-    <!-- ===== DEFINITIONEN ===== -->
+  <h2>🏞️ Großansicht – alles zusammen</h2>
+  <svg class="hof-svg" viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg">
+    <!-- Berge Hintergrund -->
+    <g opacity=".4">
+      <polygon points="0,200 130,80 260,200" fill="#7986cb"/>
+      <polygon points="180,200 320,70 470,200" fill="#9fa8da"/>
+      <polygon points="400,200 540,90 680,200" fill="#7986cb"/>
+      <polygon points="600,200 740,80 880,200" fill="#9fa8da"/>
+    </g>
+
+    <!-- Sonne -->
+    <g transform="translate(960,90)">
+      <circle r="32" fill="#fff176"/>
+      <circle r="26" fill="#ffeb3b"/>
+      <circle cx="-6" cy="-3" r="3" fill="#222"/>
+      <circle cx="8" cy="-3" r="3" fill="#222"/>
+      <path d="M -8 6 Q 0 13 8 6" stroke="#222" stroke-width="2" fill="none"/>
+    </g>
+
+    <!-- Wolken -->
+    <g fill="#fff" opacity=".95">
+      <ellipse cx="200" cy="80" rx="30" ry="13"/>
+      <ellipse cx="225" cy="72" rx="22" ry="12"/>
+      <ellipse cx="180" cy="76" rx="18" ry="11"/>
+    </g>
+
+    <!-- Bäume -->
+    <g transform="translate(50,250)">
+      <ellipse cx="0" cy="60" rx="22" ry="6" fill="#000" opacity=".3"/>
+      <rect x="-4" y="35" width="8" height="25" fill="#5d4037"/>
+      <circle cx="0" cy="20" r="22" fill="#2e7d32"/>
+      <circle cx="-12" cy="25" r="14" fill="#388e3c"/>
+      <circle cx="12" cy="25" r="14" fill="#388e3c"/>
+      <circle cx="-5" cy="22" r="3" fill="#e53935"/>
+      <circle cx="6" cy="18" r="3" fill="#e53935"/>
+    </g>
+    <g transform="translate(1040,330)">
+      <ellipse cx="0" cy="60" rx="20" ry="6" fill="#000" opacity=".3"/>
+      <rect x="-4" y="38" width="8" height="22" fill="#5d4037"/>
+      <circle cx="0" cy="20" r="20" fill="#2e7d32"/>
+      <circle cx="-10" cy="22" r="13" fill="#388e3c"/>
+    </g>
+
+    <!-- ===== GEBÄUDE-REIHE (alle gleiche Grundlinie) ===== -->
+
+    <!-- Wohnhaus -->
+    <g transform="translate(120,200)">
+      <ellipse cx="100" cy="186" rx="80" ry="6" fill="#000" opacity=".3"/>
+      <rect x="30" y="170" width="140" height="16" fill="#bcaaa4" stroke="#5d4037" stroke-width="1"/>
+      <rect x="30" y="100" width="140" height="70" fill="#fff8e1" stroke="#5d4037" stroke-width="2"/>
+      <rect x="30" y="135" width="140" height="3" fill="#5d4037"/>
+      <rect x="98" y="100" width="4" height="70" fill="#5d4037"/>
+      <rect x="42" y="110" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
+      <line x1="59" y1="110" x2="59" y2="132" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="42" y1="121" x2="76" y2="121" stroke="#5d4037" stroke-width="1.5"/>
+      <rect x="38" y="132" width="42" height="6" fill="#5d4037"/>
+      <circle cx="46" cy="132" r="2.5" fill="#e91e63"/>
+      <circle cx="54" cy="132" r="2.5" fill="#fff59d"/>
+      <circle cx="62" cy="132" r="2.5" fill="#9c27b0"/>
+      <circle cx="70" cy="132" r="2.5" fill="#ff9800"/>
+      <rect x="124" y="110" width="34" height="22" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
+      <line x1="141" y1="110" x2="141" y2="132" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="124" y1="121" x2="158" y2="121" stroke="#5d4037" stroke-width="1.5"/>
+      <rect x="86" y="140" width="28" height="30" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+      <rect x="89" y="143" width="22" height="14" fill="#3e2723"/>
+      <circle cx="108" cy="157" r="1.5" fill="#fbc02d"/>
+      <polygon points="20,100 100,40 180,100" fill="#c62828" stroke="#3e2723" stroke-width="2.5"/>
+      <rect x="88" y="78" width="24" height="22" fill="#fff8e1" stroke="#5d4037" stroke-width="1.5"/>
+      <polygon points="84,78 100,62 116,78" fill="#c62828" stroke="#3e2723" stroke-width="1.5"/>
+      <rect x="93" y="84" width="14" height="14" fill="#42a5f5" stroke="#5d4037" stroke-width="1.5"/>
+      <rect x="50" y="55" width="14" height="30" fill="#a1887f" stroke="#3e2723" stroke-width="1"/>
+      <rect x="48" y="52" width="18" height="5" fill="#5d4037"/>
+      <g opacity=".7">
+        <circle cx="57" cy="44" r="6" fill="#eceff1"/>
+        <circle cx="62" cy="34" r="8" fill="#eceff1"/>
+      </g>
+    </g>
+
+    <!-- Scheune mitte -->
+    <g transform="translate(420,200)">
+      <ellipse cx="100" cy="186" rx="80" ry="6" fill="#000" opacity=".3"/>
+      <rect x="25" y="170" width="150" height="16" fill="#bcaaa4" stroke="#5d4037" stroke-width="1"/>
+      <rect x="25" y="105" width="150" height="65" fill="#8d6e63" stroke="#3e2723" stroke-width="2"/>
+      <line x1="25" y1="135" x2="175" y2="135" stroke="#5d4037" stroke-width="1.5"/>
+      <rect x="80" y="125" width="40" height="45" fill="#3e2723" stroke="#1b1b1b" stroke-width="2"/>
+      <line x1="100" y1="125" x2="100" y2="170" stroke="#5d4037" stroke-width="2"/>
+      <line x1="80" y1="148" x2="120" y2="148" stroke="#5d4037" stroke-width="1.5"/>
+      <circle cx="100" cy="120" r="10" fill="#3e2723" stroke="#5d4037" stroke-width="2"/>
+      <line x1="90" y1="120" x2="110" y2="120" stroke="#5d4037" stroke-width="2"/>
+      <line x1="100" y1="110" x2="100" y2="130" stroke="#5d4037" stroke-width="2"/>
+      <polygon points="15,105 100,40 185,105" fill="#c62828" stroke="#3e2723" stroke-width="2.5"/>
+      <rect x="92" y="60" width="16" height="22" fill="#3e2723" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="100" y1="60" x2="100" y2="82" stroke="#5d4037" stroke-width="1"/>
+      <line x1="100" y1="58" x2="100" y2="45" stroke="#3e2723" stroke-width="1.5"/>
+      <circle cx="100" cy="43" r="3" fill="#3e2723"/>
+    </g>
+
+    <!-- Silo zwischen Scheune und Stall -->
+    <g transform="translate(660,180)">
+      <ellipse cx="50" cy="206" rx="30" ry="6" fill="#000" opacity=".3"/>
+      <ellipse cx="50" cy="198" rx="32" ry="8" fill="#5d4037"/>
+      <ellipse cx="50" cy="192" rx="30" ry="8" fill="#78909c"/>
+      <rect x="20" y="70" width="60" height="125" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/>
+      <rect x="25" y="70" width="6" height="125" fill="#fff" opacity=".4"/>
+      <rect x="69" y="70" width="6" height="125" fill="#90a4ae"/>
+      <ellipse cx="50" cy="70" rx="30" ry="6" fill="#90a4ae" stroke="#37474f" stroke-width="1"/>
+      <ellipse cx="50" cy="110" rx="30" ry="3" fill="#90a4ae" opacity=".6"/>
+      <ellipse cx="50" cy="150" rx="30" ry="3" fill="#90a4ae" opacity=".6"/>
+      <ellipse cx="50" cy="190" rx="30" ry="6" fill="#90a4ae"/>
+      <path d="M 20 70 Q 50 25 80 70 Z" fill="#b0bec5" stroke="#78909c" stroke-width="2"/>
+      <line x1="50" y1="30" x2="50" y2="42" stroke="#3e2723" stroke-width="2"/>
+      <circle cx="50" cy="28" r="3" fill="#fbc02d"/>
+      <text x="50" y="135" text-anchor="middle" font-size="10" font-weight="900" fill="#3e2723">FUTTER</text>
+    </g>
+
+    <!-- Stall rechts -->
+    <g transform="translate(820,200)">
+      <ellipse cx="100" cy="186" rx="85" ry="6" fill="#000" opacity=".3"/>
+      <rect x="20" y="170" width="160" height="16" fill="#bcaaa4" stroke="#5d4037" stroke-width="1"/>
+      <rect x="20" y="100" width="160" height="70" fill="#a1887f" stroke="#3e2723" stroke-width="2"/>
+      <line x1="20" y1="100" x2="180" y2="100" stroke="#3e2723" stroke-width="3"/>
+      <line x1="20" y1="135" x2="180" y2="135" stroke="#3e2723" stroke-width="3"/>
+      <line x1="20" y1="170" x2="180" y2="170" stroke="#3e2723" stroke-width="3"/>
+      <line x1="20" y1="100" x2="20" y2="170" stroke="#3e2723" stroke-width="3"/>
+      <line x1="100" y1="100" x2="100" y2="170" stroke="#3e2723" stroke-width="2.5"/>
+      <line x1="180" y1="100" x2="180" y2="170" stroke="#3e2723" stroke-width="3"/>
+      <line x1="20" y1="100" x2="100" y2="135" stroke="#3e2723" stroke-width="1.8"/>
+      <line x1="20" y1="135" x2="100" y2="100" stroke="#3e2723" stroke-width="1.8"/>
+      <line x1="100" y1="100" x2="180" y2="135" stroke="#3e2723" stroke-width="1.8"/>
+      <line x1="100" y1="135" x2="180" y2="100" stroke="#3e2723" stroke-width="1.8"/>
+      <rect x="35" y="142" width="20" height="20" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
+      <rect x="145" y="142" width="20" height="20" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
+      <rect x="80" y="135" width="40" height="35" fill="#3e2723" stroke="#1b1b1b" stroke-width="2"/>
+      <line x1="100" y1="135" x2="100" y2="170" stroke="#5d4037" stroke-width="2"/>
+      <polygon points="10,100 100,30 190,100" fill="#c62828" stroke="#3e2723" stroke-width="2.5"/>
+      <rect x="92" y="65" width="16" height="22" fill="#3e2723" stroke="#5d4037" stroke-width="1.5"/>
+      <line x1="100" y1="63" x2="100" y2="50" stroke="#3e2723" stroke-width="1.5"/>
+      <circle cx="100" cy="48" r="3" fill="#3e2723"/>
+      <line x1="100" y1="30" x2="100" y2="15" stroke="#3e2723" stroke-width="2"/>
+      <polygon points="92,15 100,8 108,15 100,18" fill="#fbc02d" stroke="#3e2723" stroke-width="1"/>
+      <ellipse cx="190" cy="170" rx="14" ry="6" fill="#fbc02d"/>
+      <ellipse cx="190" cy="162" rx="14" ry="9" fill="#fdd835"/>
+      <ellipse cx="188" cy="153" rx="11" ry="7" fill="#fff176"/>
+    </g>
+
+    <!-- ===== FELDER ===== -->
     <defs>
-      <!-- Gras-Textur -->
-      <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#a5d6a7"/>
-        <stop offset="100%" stop-color="#558b2f"/>
-      </linearGradient>
-      <!-- Acker-Furchen -->
-      <pattern id="acker-furchen" x="0" y="0" width="14" height="8" patternUnits="userSpaceOnUse">
+      <pattern id="ackerHorz" x="0" y="0" width="14" height="8" patternUnits="userSpaceOnUse">
         <rect width="14" height="8" fill="#5d4037"/>
         <ellipse cx="7" cy="4" rx="6" ry="2" fill="#6d4c41"/>
         <line x1="0" y1="4" x2="14" y2="4" stroke="#3e2723" stroke-width="0.5"/>
       </pattern>
-      <!-- Dachziegel rot -->
-      <pattern id="ziegel-rot" x="0" y="0" width="14" height="10" patternUnits="userSpaceOnUse">
-        <rect width="14" height="10" fill="#c62828"/>
-        <path d="M 0 5 Q 3.5 0 7 5 Q 10.5 10 14 5" fill="#d84315"/>
-        <path d="M 0 0 Q 3.5 5 7 0" fill="#b71c1c" opacity=".5"/>
-      </pattern>
-      <!-- Holz-Textur Wand -->
-      <pattern id="holz-wand" x="0" y="0" width="20" height="6" patternUnits="userSpaceOnUse">
-        <rect width="20" height="6" fill="#a1887f"/>
-        <line x1="0" y1="3" x2="20" y2="3" stroke="#5d4037" stroke-width="0.6"/>
-      </pattern>
-      <!-- Stein-Textur -->
-      <pattern id="stein" x="0" y="0" width="16" height="14" patternUnits="userSpaceOnUse">
-        <rect width="16" height="14" fill="#bcaaa4"/>
-        <ellipse cx="4" cy="4" rx="3" ry="2" fill="#a1887f"/>
-        <ellipse cx="12" cy="9" rx="3" ry="2" fill="#a1887f"/>
-        <ellipse cx="6" cy="11" rx="2" ry="1.5" fill="#9e9e9e"/>
-      </pattern>
-      <!-- Weizen-Halm -->
-      <symbol id="weizen-halm" viewBox="0 0 10 30">
+      <symbol id="weizen2" viewBox="0 0 10 30">
         <line x1="5" y1="30" x2="5" y2="10" stroke="#558b2f" stroke-width="1.2"/>
         <ellipse cx="5" cy="6" rx="3" ry="6" fill="#fdd835"/>
         <ellipse cx="3" cy="8" rx="1.5" ry="3" fill="#fbc02d"/>
@@ -66,11 +545,8 @@ h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bott
         <ellipse cx="3" cy="4" rx="1.5" ry="3" fill="#fbc02d"/>
         <ellipse cx="7" cy="4" rx="1.5" ry="3" fill="#fbc02d"/>
         <line x1="5" y1="0" x2="5" y2="3" stroke="#fbc02d" stroke-width="0.8"/>
-        <line x1="3" y1="0" x2="2" y2="2" stroke="#fbc02d" stroke-width="0.6"/>
-        <line x1="7" y1="0" x2="8" y2="2" stroke="#fbc02d" stroke-width="0.6"/>
       </symbol>
-      <!-- Mais-Pflanze -->
-      <symbol id="mais-pflanze" viewBox="0 0 16 40">
+      <symbol id="mais2" viewBox="0 0 16 40">
         <line x1="8" y1="40" x2="8" y2="20" stroke="#33691e" stroke-width="2"/>
         <path d="M 8 35 Q 0 30 2 25" stroke="#558b2f" stroke-width="2" fill="none"/>
         <path d="M 8 30 Q 16 25 14 20" stroke="#558b2f" stroke-width="2" fill="none"/>
@@ -79,10 +555,8 @@ h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bott
         <line x1="8" y1="10" x2="8" y2="20" stroke="#f57f17" stroke-width="0.5"/>
         <line x1="10" y1="10" x2="10" y2="20" stroke="#f57f17" stroke-width="0.5"/>
         <path d="M 5 5 Q 8 0 11 5" stroke="#aed581" stroke-width="1.5" fill="none"/>
-        <path d="M 4 7 Q 8 2 12 7" stroke="#9ccc65" stroke-width="1" fill="none"/>
       </symbol>
-      <!-- Kartoffel-Pflanze -->
-      <symbol id="kartoffel-pflanze" viewBox="0 0 20 30">
+      <symbol id="kartoffel2" viewBox="0 0 20 30">
         <ellipse cx="10" cy="28" rx="9" ry="3" fill="#3e2723" opacity=".4"/>
         <circle cx="6" cy="20" r="4" fill="#558b2f"/>
         <circle cx="14" cy="20" r="4" fill="#558b2f"/>
@@ -90,16 +564,13 @@ h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bott
         <circle cx="6" cy="22" r="3" fill="#9ccc65"/>
         <circle cx="14" cy="22" r="3" fill="#9ccc65"/>
         <circle cx="10" cy="13" r="3" fill="#aed581"/>
-        <!-- Blüte -->
         <circle cx="10" cy="9" r="2" fill="#fff"/>
         <circle cx="10" cy="9" r="1" fill="#ffeb3b"/>
       </symbol>
-      <!-- Raps-Pflanze (gelbe Blüte) -->
-      <symbol id="raps" viewBox="0 0 14 35">
+      <symbol id="raps2" viewBox="0 0 14 35">
         <line x1="7" y1="35" x2="7" y2="15" stroke="#558b2f" stroke-width="1.5"/>
         <ellipse cx="3" cy="22" rx="3" ry="2" fill="#7cb342"/>
         <ellipse cx="11" cy="20" rx="3" ry="2" fill="#7cb342"/>
-        <!-- Gelbe Blüten -->
         <circle cx="7" cy="10" r="3" fill="#fdd835"/>
         <circle cx="4" cy="8" r="2" fill="#fbc02d"/>
         <circle cx="10" cy="8" r="2" fill="#fbc02d"/>
@@ -107,598 +578,242 @@ h1{text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);margin-bott
         <circle cx="6" cy="3" r="1.5" fill="#fff59d"/>
         <circle cx="9" cy="3" r="1.5" fill="#fff59d"/>
       </symbol>
-      <!-- Dreckspur Schatten -->
-      <radialGradient id="schatten" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0%" stop-color="#000" stop-opacity=".4"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0"/>
-      </radialGradient>
     </defs>
 
-    <!-- ===== HIMMEL UND BODEN ===== -->
-    <rect x="0" y="0" width="900" height="180" fill="url(#grass)" opacity="0"/>
-    <rect x="0" y="0" width="900" height="650" fill="url(#grass)"/>
+    <!-- Weizenfeld -->
+    <g>
+      <rect x="80" y="430" width="280" height="80" fill="#9ccc65" stroke="#3e2723" stroke-width="2"/>
+      <use href="#weizen2" x="95" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="115" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="135" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="155" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="175" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="195" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="215" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="235" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="255" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="275" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="295" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="315" y="448" width="10" height="30"/>
+      <use href="#weizen2" x="335" y="445" width="10" height="30"/>
+      <use href="#weizen2" x="105" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="125" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="145" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="165" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="185" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="205" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="225" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="245" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="265" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="285" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="305" y="475" width="10" height="30"/>
+      <use href="#weizen2" x="325" y="478" width="10" height="30"/>
+      <use href="#weizen2" x="345" y="475" width="10" height="30"/>
+    </g>
 
-    <!-- Sonne mit Strahlen -->
-    <g transform="translate(810,70)">
+    <!-- Maisfeld -->
+    <g>
+      <rect x="400" y="430" width="280" height="80" fill="#7cb342" stroke="#3e2723" stroke-width="2"/>
+      <use href="#mais2" x="415" y="445" width="16" height="40"/>
+      <use href="#mais2" x="445" y="442" width="16" height="40"/>
+      <use href="#mais2" x="475" y="445" width="16" height="40"/>
+      <use href="#mais2" x="505" y="442" width="16" height="40"/>
+      <use href="#mais2" x="535" y="445" width="16" height="40"/>
+      <use href="#mais2" x="565" y="442" width="16" height="40"/>
+      <use href="#mais2" x="595" y="445" width="16" height="40"/>
+      <use href="#mais2" x="625" y="442" width="16" height="40"/>
+      <use href="#mais2" x="655" y="445" width="16" height="40"/>
+      <use href="#mais2" x="430" y="475" width="16" height="40"/>
+      <use href="#mais2" x="460" y="472" width="16" height="40"/>
+      <use href="#mais2" x="490" y="475" width="16" height="40"/>
+      <use href="#mais2" x="520" y="472" width="16" height="40"/>
+      <use href="#mais2" x="550" y="475" width="16" height="40"/>
+      <use href="#mais2" x="580" y="472" width="16" height="40"/>
+      <use href="#mais2" x="610" y="475" width="16" height="40"/>
+      <use href="#mais2" x="640" y="472" width="16" height="40"/>
+      <use href="#mais2" x="670" y="475" width="16" height="40"/>
+    </g>
+
+    <!-- Kartoffelfeld -->
+    <g>
+      <rect x="80" y="540" width="280" height="80" fill="#8d6e63" stroke="#3e2723" stroke-width="2"/>
+      <rect x="80" y="540" width="280" height="80" fill="url(#ackerHorz)" opacity=".3"/>
+      <use href="#kartoffel2" x="100" y="555" width="20" height="30"/>
+      <use href="#kartoffel2" x="135" y="552" width="20" height="30"/>
+      <use href="#kartoffel2" x="170" y="555" width="20" height="30"/>
+      <use href="#kartoffel2" x="205" y="552" width="20" height="30"/>
+      <use href="#kartoffel2" x="240" y="555" width="20" height="30"/>
+      <use href="#kartoffel2" x="275" y="552" width="20" height="30"/>
+      <use href="#kartoffel2" x="310" y="555" width="20" height="30"/>
+      <use href="#kartoffel2" x="115" y="585" width="20" height="30"/>
+      <use href="#kartoffel2" x="150" y="582" width="20" height="30"/>
+      <use href="#kartoffel2" x="185" y="585" width="20" height="30"/>
+      <use href="#kartoffel2" x="220" y="582" width="20" height="30"/>
+      <use href="#kartoffel2" x="255" y="585" width="20" height="30"/>
+      <use href="#kartoffel2" x="290" y="582" width="20" height="30"/>
+      <use href="#kartoffel2" x="325" y="585" width="20" height="30"/>
+    </g>
+
+    <!-- Rapsfeld -->
+    <g>
+      <rect x="400" y="540" width="280" height="80" fill="#9ccc65" stroke="#3e2723" stroke-width="2"/>
+      <use href="#raps2" x="415" y="548" width="14" height="35"/>
+      <use href="#raps2" x="440" y="545" width="14" height="35"/>
+      <use href="#raps2" x="465" y="548" width="14" height="35"/>
+      <use href="#raps2" x="490" y="545" width="14" height="35"/>
+      <use href="#raps2" x="515" y="548" width="14" height="35"/>
+      <use href="#raps2" x="540" y="545" width="14" height="35"/>
+      <use href="#raps2" x="565" y="548" width="14" height="35"/>
+      <use href="#raps2" x="590" y="545" width="14" height="35"/>
+      <use href="#raps2" x="615" y="548" width="14" height="35"/>
+      <use href="#raps2" x="640" y="545" width="14" height="35"/>
+      <use href="#raps2" x="665" y="548" width="14" height="35"/>
+      <use href="#raps2" x="425" y="580" width="14" height="35"/>
+      <use href="#raps2" x="450" y="577" width="14" height="35"/>
+      <use href="#raps2" x="475" y="580" width="14" height="35"/>
+      <use href="#raps2" x="500" y="577" width="14" height="35"/>
+      <use href="#raps2" x="525" y="580" width="14" height="35"/>
+      <use href="#raps2" x="550" y="577" width="14" height="35"/>
+      <use href="#raps2" x="575" y="580" width="14" height="35"/>
+      <use href="#raps2" x="600" y="577" width="14" height="35"/>
+      <use href="#raps2" x="625" y="580" width="14" height="35"/>
+      <use href="#raps2" x="650" y="577" width="14" height="35"/>
+    </g>
+
+    <!-- Brachfeld -->
+    <g>
+      <rect x="730" y="540" width="280" height="80" fill="#8d6e63" stroke="#3e2723" stroke-width="2"/>
+      <ellipse cx="800" cy="580" rx="3" ry="2" fill="#a1887f"/>
+      <ellipse cx="900" cy="600" rx="4" ry="2" fill="#a1887f"/>
+      <ellipse cx="950" cy="565" rx="3" ry="2" fill="#a1887f"/>
+    </g>
+
+    <!-- Frisch gepflügtes Feld -->
+    <g>
+      <rect x="730" y="430" width="280" height="80" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+      <rect x="730" y="430" width="280" height="80" fill="url(#ackerHorz)"/>
+    </g>
+
+    <!-- ===== TRAKTOR (sauber, neu, in Position) ===== -->
+    <g transform="translate(450,395) scale(0.65)">
+      <defs>
+        <linearGradient id="trkGreen2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#43a047"/>
+          <stop offset="100%" stop-color="#1b5e20"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="110" cy="125" rx="95" ry="6" fill="#000" opacity=".35"/>
+      <rect x="64" y="20" width="8" height="40" fill="#37474f"/>
+      <rect x="62" y="18" width="12" height="5" fill="#212121"/>
       <g opacity=".6">
-        <line x1="0" y1="-40" x2="0" y2="-50" stroke="#fff176" stroke-width="3"/>
-        <line x1="40" y1="0" x2="50" y2="0" stroke="#fff176" stroke-width="3"/>
-        <line x1="-40" y1="0" x2="-50" y2="0" stroke="#fff176" stroke-width="3"/>
-        <line x1="28" y1="-28" x2="35" y2="-35" stroke="#fff176" stroke-width="3"/>
-        <line x1="-28" y1="-28" x2="-35" y2="-35" stroke="#fff176" stroke-width="3"/>
+        <circle cx="68" cy="12" r="6" fill="#cfd8dc"/>
+        <circle cx="74" cy="3" r="8" fill="#eceff1"/>
       </g>
-      <circle r="32" fill="#fff176"/>
-      <circle r="26" fill="#ffeb3b"/>
-      <circle cx="-6" cy="-4" r="4" fill="#222"/>
-      <circle cx="8" cy="-4" r="4" fill="#222"/>
-      <path d="M -8 6 Q 0 14 8 6" stroke="#222" stroke-width="2" fill="none"/>
+      <rect x="20" y="55" width="65" height="35" rx="4" fill="url(#trkGreen2)" stroke="#0d3010" stroke-width="2"/>
+      <rect x="80" y="35" width="55" height="55" rx="5" fill="url(#trkGreen2)" stroke="#0d3010" stroke-width="2"/>
+      <rect x="135" y="60" width="35" height="30" rx="3" fill="url(#trkGreen2)" stroke="#0d3010" stroke-width="2"/>
+      <rect x="85" y="42" width="45" height="22" rx="2" fill="#90caf9" stroke="#0d3010" stroke-width="1.5"/>
+      <line x1="100" y1="42" x2="100" y2="64" stroke="#37474f" stroke-width="0.8"/>
+      <line x1="115" y1="42" x2="115" y2="64" stroke="#37474f" stroke-width="0.8"/>
+      <rect x="78" y="32" width="59" height="6" rx="2" fill="#212121"/>
+      <rect x="85" y="28" width="45" height="5" rx="1" fill="#37474f"/>
+      <circle cx="92" cy="30.5" r="1.5" fill="#fff59d"/>
+      <circle cx="100" cy="30.5" r="1.5" fill="#fff59d"/>
+      <circle cx="108" cy="30.5" r="1.5" fill="#fff59d"/>
+      <circle cx="116" cy="30.5" r="1.5" fill="#fff59d"/>
+      <circle cx="124" cy="30.5" r="1.5" fill="#fff59d"/>
+      <rect x="22" y="62" width="8" height="22" fill="#000"/>
+      <line x1="22" y1="66" x2="30" y2="66" stroke="#fbc02d" stroke-width="0.8"/>
+      <line x1="22" y1="71" x2="30" y2="71" stroke="#fbc02d" stroke-width="0.8"/>
+      <line x1="22" y1="76" x2="30" y2="76" stroke="#fbc02d" stroke-width="0.8"/>
+      <rect x="35" y="60" width="42" height="6" fill="#fbc02d"/>
+      <text x="56" y="65" text-anchor="middle" font-size="5" font-weight="900" fill="#1b5e20">JOHN DEERE</text>
+      <ellipse cx="22" cy="58" rx="4" ry="3" fill="#fff59d" stroke="#0d3010" stroke-width="1"/>
+      <rect x="150" y="65" width="15" height="20" fill="#fbc02d" stroke="#0d3010" stroke-width="1.5"/>
+      <circle cx="40" cy="100" r="14" fill="#212121"/>
+      <circle cx="40" cy="100" r="9" fill="#fbc02d" stroke="#212121" stroke-width="1"/>
+      <circle cx="40" cy="100" r="3" fill="#212121"/>
+      <line x1="40" y1="91" x2="40" y2="109" stroke="#212121" stroke-width="1.5"/>
+      <line x1="31" y1="100" x2="49" y2="100" stroke="#212121" stroke-width="1.5"/>
+      <circle cx="135" cy="100" r="22" fill="#212121"/>
+      <circle cx="135" cy="100" r="13" fill="#fbc02d" stroke="#212121" stroke-width="1.5"/>
+      <circle cx="135" cy="100" r="4" fill="#212121"/>
+      <line x1="135" y1="87" x2="135" y2="113" stroke="#212121" stroke-width="2"/>
+      <line x1="122" y1="100" x2="148" y2="100" stroke="#212121" stroke-width="2"/>
+      <line x1="126" y1="91" x2="144" y2="109" stroke="#212121" stroke-width="1.5"/>
+      <line x1="126" y1="109" x2="144" y2="91" stroke="#212121" stroke-width="1.5"/>
+      <line x1="80" y1="40" x2="73" y2="35" stroke="#212121" stroke-width="1.5"/>
+      <ellipse cx="71" cy="34" rx="3" ry="2" fill="#90caf9" stroke="#212121" stroke-width="1"/>
     </g>
 
-    <!-- Wolken -->
-    <g fill="#fff" opacity=".95">
-      <ellipse cx="180" cy="60" rx="35" ry="14"/>
-      <ellipse cx="200" cy="50" rx="25" ry="13"/>
-      <ellipse cx="160" cy="55" rx="20" ry="12"/>
-      <ellipse cx="220" cy="58" rx="15" ry="10"/>
-    </g>
-    <g fill="#fff" opacity=".95">
-      <ellipse cx="500" cy="90" rx="30" ry="12"/>
-      <ellipse cx="520" cy="83" rx="20" ry="13"/>
-      <ellipse cx="485" cy="86" rx="15" ry="10"/>
-    </g>
-
-    <!-- Berge im Hintergrund -->
-    <g opacity=".4">
-      <polygon points="0,180 100,90 200,180" fill="#7986cb"/>
-      <polygon points="150,180 280,80 400,180" fill="#9fa8da"/>
-      <polygon points="350,180 470,100 600,180" fill="#7986cb"/>
-    </g>
-
-    <!-- Bäume Hintergrund -->
-    <g transform="translate(50,200)">
-      <ellipse cx="0" cy="60" rx="25" ry="6" fill="#000" opacity=".3"/>
-      <rect x="-4" y="35" width="8" height="25" fill="#5d4037"/>
-      <line x1="0" y1="40" x2="0" y2="60" stroke="#3e2723" stroke-width="1.5"/>
-      <circle cx="0" cy="20" r="22" fill="#2e7d32"/>
-      <circle cx="-12" cy="25" r="14" fill="#388e3c"/>
-      <circle cx="12" cy="25" r="14" fill="#388e3c"/>
-      <circle cx="0" cy="10" r="14" fill="#43a047"/>
-      <circle cx="-5" cy="22" r="3" fill="#e53935"/>
-      <circle cx="6" cy="18" r="3" fill="#e53935"/>
-      <circle cx="3" cy="28" r="3" fill="#e53935"/>
-    </g>
-    <g transform="translate(850,260)">
-      <ellipse cx="0" cy="60" rx="22" ry="6" fill="#000" opacity=".3"/>
-      <rect x="-4" y="38" width="8" height="22" fill="#5d4037"/>
-      <circle cx="0" cy="20" r="20" fill="#2e7d32"/>
-      <circle cx="-10" cy="22" r="13" fill="#388e3c"/>
-      <circle cx="10" cy="22" r="13" fill="#388e3c"/>
-    </g>
-
-    <!-- ===== ACKER MIT INDIVIDUELLEN PFLANZEN ===== -->
-
-    <!-- Weizenfeld (vorne links, fast reif) -->
-    <g>
-      <polygon points="100,400 380,400 420,470 130,470" fill="#9ccc65"/>
-      <polygon points="100,400 380,400 420,470 130,470" fill="url(#acker-furchen)" opacity=".25"/>
-      <!-- Rand -->
-      <polygon points="100,400 380,400 420,470 130,470" fill="none" stroke="#3e2723" stroke-width="2"/>
-      <!-- Einzelne Weizen-Halme -->
-      <use href="#weizen-halm" x="115" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="135" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="155" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="175" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="195" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="215" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="235" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="255" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="275" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="295" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="315" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="335" y="408" width="10" height="30"/>
-      <use href="#weizen-halm" x="355" y="412" width="10" height="30"/>
-      <use href="#weizen-halm" x="125" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="145" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="165" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="185" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="205" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="225" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="245" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="265" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="285" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="305" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="325" y="432" width="10" height="30"/>
-      <use href="#weizen-halm" x="345" y="430" width="10" height="30"/>
-      <use href="#weizen-halm" x="365" y="432" width="10" height="30"/>
-    </g>
-
-    <!-- Maisfeld (vorne rechts) -->
-    <g>
-      <polygon points="440,400 720,400 760,470 470,470" fill="#7cb342"/>
-      <polygon points="440,400 720,400 760,470 470,470" fill="url(#acker-furchen)" opacity=".2"/>
-      <polygon points="440,400 720,400 760,470 470,470" fill="none" stroke="#3e2723" stroke-width="2"/>
-      <!-- Mais-Pflanzen mit Kolben -->
-      <use href="#mais-pflanze" x="455" y="408" width="16" height="40"/>
-      <use href="#mais-pflanze" x="485" y="404" width="16" height="40"/>
-      <use href="#mais-pflanze" x="515" y="408" width="16" height="40"/>
-      <use href="#mais-pflanze" x="545" y="404" width="16" height="40"/>
-      <use href="#mais-pflanze" x="575" y="408" width="16" height="40"/>
-      <use href="#mais-pflanze" x="605" y="404" width="16" height="40"/>
-      <use href="#mais-pflanze" x="635" y="408" width="16" height="40"/>
-      <use href="#mais-pflanze" x="665" y="404" width="16" height="40"/>
-      <use href="#mais-pflanze" x="695" y="408" width="16" height="40"/>
-      <use href="#mais-pflanze" x="470" y="430" width="16" height="40"/>
-      <use href="#mais-pflanze" x="500" y="428" width="16" height="40"/>
-      <use href="#mais-pflanze" x="530" y="430" width="16" height="40"/>
-      <use href="#mais-pflanze" x="560" y="428" width="16" height="40"/>
-      <use href="#mais-pflanze" x="590" y="430" width="16" height="40"/>
-      <use href="#mais-pflanze" x="620" y="428" width="16" height="40"/>
-      <use href="#mais-pflanze" x="650" y="430" width="16" height="40"/>
-      <use href="#mais-pflanze" x="680" y="428" width="16" height="40"/>
-      <use href="#mais-pflanze" x="710" y="430" width="16" height="40"/>
-    </g>
-
-    <!-- Kartoffelfeld (mittlere Reihe links) -->
-    <g>
-      <polygon points="100,490 380,490 410,550 125,550" fill="#8d6e63"/>
-      <polygon points="100,490 380,490 410,550 125,550" fill="url(#acker-furchen)" opacity=".4"/>
-      <polygon points="100,490 380,490 410,550 125,550" fill="none" stroke="#3e2723" stroke-width="2"/>
-      <use href="#kartoffel-pflanze" x="120" y="500" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="155" y="498" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="190" y="500" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="225" y="498" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="260" y="500" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="295" y="498" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="330" y="500" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="365" y="498" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="135" y="525" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="170" y="523" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="205" y="525" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="240" y="523" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="275" y="525" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="310" y="523" width="20" height="30"/>
-      <use href="#kartoffel-pflanze" x="345" y="525" width="20" height="30"/>
-    </g>
-
-    <!-- Rapsfeld (mittlere Reihe rechts, gelb) -->
-    <g>
-      <polygon points="440,490 720,490 750,550 470,550" fill="#9ccc65"/>
-      <polygon points="440,490 720,490 750,550 470,550" fill="none" stroke="#3e2723" stroke-width="2"/>
-      <use href="#raps" x="455" y="495" width="14" height="35"/>
-      <use href="#raps" x="480" y="492" width="14" height="35"/>
-      <use href="#raps" x="505" y="495" width="14" height="35"/>
-      <use href="#raps" x="530" y="492" width="14" height="35"/>
-      <use href="#raps" x="555" y="495" width="14" height="35"/>
-      <use href="#raps" x="580" y="492" width="14" height="35"/>
-      <use href="#raps" x="605" y="495" width="14" height="35"/>
-      <use href="#raps" x="630" y="492" width="14" height="35"/>
-      <use href="#raps" x="655" y="495" width="14" height="35"/>
-      <use href="#raps" x="680" y="492" width="14" height="35"/>
-      <use href="#raps" x="705" y="495" width="14" height="35"/>
-      <use href="#raps" x="465" y="520" width="14" height="35"/>
-      <use href="#raps" x="490" y="518" width="14" height="35"/>
-      <use href="#raps" x="515" y="520" width="14" height="35"/>
-      <use href="#raps" x="540" y="518" width="14" height="35"/>
-      <use href="#raps" x="565" y="520" width="14" height="35"/>
-      <use href="#raps" x="590" y="518" width="14" height="35"/>
-      <use href="#raps" x="615" y="520" width="14" height="35"/>
-      <use href="#raps" x="640" y="518" width="14" height="35"/>
-      <use href="#raps" x="665" y="520" width="14" height="35"/>
-      <use href="#raps" x="690" y="518" width="14" height="35"/>
-    </g>
-
-    <!-- Frisch gepflügtes Feld (vorne ganz unten links) -->
-    <g>
-      <polygon points="125,570 410,570 445,635 155,635" fill="url(#acker-furchen)"/>
-      <polygon points="125,570 410,570 445,635 155,635" fill="none" stroke="#3e2723" stroke-width="2"/>
-    </g>
-    <!-- Brachfeld (vorne ganz unten rechts, ungepflügt) -->
-    <g>
-      <polygon points="470,570 750,570 785,635 500,635" fill="#8d6e63"/>
-      <polygon points="470,570 750,570 785,635 500,635" fill="none" stroke="#3e2723" stroke-width="2"/>
-      <!-- Steinchen -->
-      <ellipse cx="540" cy="600" rx="3" ry="2" fill="#a1887f"/>
-      <ellipse cx="650" cy="610" rx="4" ry="2" fill="#a1887f"/>
-      <ellipse cx="700" cy="595" rx="3" ry="2" fill="#a1887f"/>
-    </g>
-
-    <!-- ===== GEBÄUDE - sehr detailliert ===== -->
-
-    <!-- WOHNHAUS (links oben) -->
-    <g transform="translate(80,200)">
-      <!-- Schatten -->
-      <ellipse cx="60" cy="160" rx="80" ry="8" fill="#000" opacity=".25"/>
-      <!-- Stein-Sockel -->
-      <polygon points="0,140 110,140 110,160 0,160" fill="url(#stein)"/>
-      <!-- Hauptkörper -->
-      <polygon points="0,70 110,70 110,140 0,140" fill="#fff8e1"/>
-      <polygon points="110,70 145,55 145,130 110,140" fill="#ffe082"/>
-      <!-- Holz-Akzente -->
-      <line x1="0" y1="100" x2="110" y2="100" stroke="#5d4037" stroke-width="2"/>
-      <line x1="55" y1="100" x2="55" y2="140" stroke="#5d4037" stroke-width="2"/>
-      <!-- Fenster oben links -->
-      <rect x="10" y="80" width="20" height="18" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
-      <line x1="20" y1="80" x2="20" y2="98" stroke="#5d4037" stroke-width="1"/>
-      <line x1="10" y1="89" x2="30" y2="89" stroke="#5d4037" stroke-width="1"/>
-      <!-- Blumenkasten -->
-      <rect x="6" y="98" width="28" height="6" fill="#5d4037"/>
-      <circle cx="12" cy="98" r="2" fill="#e91e63"/>
-      <circle cx="18" cy="98" r="2" fill="#fff59d"/>
-      <circle cx="24" cy="98" r="2" fill="#9c27b0"/>
-      <circle cx="30" cy="98" r="2" fill="#ff9800"/>
-      <!-- Fenster oben rechts -->
-      <rect x="80" y="80" width="20" height="18" fill="#42a5f5" stroke="#5d4037" stroke-width="2.5"/>
-      <line x1="90" y1="80" x2="90" y2="98" stroke="#5d4037" stroke-width="1"/>
-      <line x1="80" y1="89" x2="100" y2="89" stroke="#5d4037" stroke-width="1"/>
-      <!-- Tür mit Klinke und Stufen -->
-      <rect x="40" y="105" width="30" height="35" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
-      <rect x="44" y="110" width="22" height="12" fill="#3e2723"/>
-      <circle cx="62" cy="125" r="1.5" fill="#fbc02d"/>
-      <polygon points="38,140 72,140 72,148 38,148" fill="#bcaaa4"/>
-      <!-- DACH mit Ziegeln -->
-      <polygon points="-8,70 55,15 118,70" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <polygon points="118,70 148,55 148,55" fill="none"/>
-      <polygon points="118,70 148,57 88,15" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <!-- Dachgaube -->
-      <rect x="48" y="38" width="20" height="18" fill="#fff8e1"/>
-      <polygon points="44,38 58,28 72,38" fill="#c62828" stroke="#3e2723" stroke-width="1.5"/>
-      <rect x="52" y="42" width="12" height="12" fill="#42a5f5" stroke="#5d4037" stroke-width="1.5"/>
-      <line x1="58" y1="42" x2="58" y2="54" stroke="#5d4037" stroke-width="0.8"/>
-      <!-- Schornstein -->
-      <rect x="10" y="20" width="14" height="26" fill="#a1887f"/>
-      <rect x="8" y="20" width="18" height="4" fill="#5d4037"/>
-      <!-- Rauch -->
-      <g opacity=".7">
-        <circle cx="17" cy="12" r="6" fill="#eceff1"/>
-        <circle cx="22" cy="3" r="8" fill="#eceff1"/>
-        <circle cx="13" cy="-3" r="9" fill="#eceff1"/>
-      </g>
-      <!-- Briefkasten am Zaun -->
-      <rect x="-15" y="130" width="3" height="15" fill="#5d4037"/>
-      <rect x="-22" y="125" width="14" height="9" fill="#1976d2"/>
-      <rect x="-19" y="128" width="2" height="3" fill="#fff"/>
-    </g>
-
-    <!-- KUHSTALL (rechts) -->
-    <g transform="translate(680,180)">
-      <!-- Schatten -->
-      <ellipse cx="80" cy="180" rx="100" ry="9" fill="#000" opacity=".25"/>
-      <!-- Stein-Sockel -->
-      <polygon points="0,160 145,160 145,180 0,180" fill="url(#stein)"/>
-      <!-- Hauptkörper rotbraun -->
-      <polygon points="0,80 145,80 145,160 0,160" fill="#a1887f"/>
-      <polygon points="145,80 180,65 180,150 145,160" fill="#8d6e63"/>
-      <!-- Fachwerk-Linien -->
-      <line x1="0" y1="80" x2="0" y2="160" stroke="#3e2723" stroke-width="3"/>
-      <line x1="145" y1="80" x2="145" y2="160" stroke="#3e2723" stroke-width="3"/>
-      <line x1="48" y1="80" x2="48" y2="160" stroke="#3e2723" stroke-width="2.5"/>
-      <line x1="95" y1="80" x2="95" y2="160" stroke="#3e2723" stroke-width="2.5"/>
-      <line x1="0" y1="115" x2="145" y2="115" stroke="#3e2723" stroke-width="2.5"/>
-      <line x1="0" y1="80" x2="48" y2="115" stroke="#3e2723" stroke-width="2"/>
-      <line x1="48" y1="80" x2="95" y2="115" stroke="#3e2723" stroke-width="2"/>
-      <line x1="95" y1="80" x2="145" y2="115" stroke="#3e2723" stroke-width="2"/>
-      <!-- Großes Stalltor -->
-      <rect x="55" y="120" width="40" height="40" fill="#3e2723"/>
-      <line x1="75" y1="120" x2="75" y2="160" stroke="#5d4037" stroke-width="2"/>
-      <line x1="55" y1="140" x2="95" y2="140" stroke="#5d4037" stroke-width="1.5"/>
-      <circle cx="71" cy="140" r="2" fill="#fbc02d"/>
-      <circle cx="78" cy="140" r="2" fill="#fbc02d"/>
-      <!-- Heuhaufen vor dem Tor -->
-      <ellipse cx="120" cy="155" rx="18" ry="6" fill="#fbc02d"/>
-      <ellipse cx="120" cy="148" rx="18" ry="9" fill="#fdd835"/>
-      <ellipse cx="118" cy="138" rx="14" ry="8" fill="#fff176"/>
-      <!-- Strohlinien -->
-      <line x1="105" y1="148" x2="135" y2="148" stroke="#f57f17" stroke-width="0.8"/>
-      <line x1="106" y1="142" x2="134" y2="142" stroke="#f57f17" stroke-width="0.8"/>
-      <!-- Fenster oben -->
-      <rect x="10" y="92" width="14" height="14" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
-      <line x1="10" y1="99" x2="24" y2="99" stroke="#3e2723" stroke-width="0.8"/>
-      <line x1="17" y1="92" x2="17" y2="106" stroke="#3e2723" stroke-width="0.8"/>
-      <rect x="115" y="92" width="14" height="14" fill="#42a5f5" stroke="#3e2723" stroke-width="2"/>
-      <!-- DACH mit Ziegeln -->
-      <polygon points="-10,80 72,15 155,80" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <polygon points="155,80 185,65 102,15" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <!-- Wetterhahn -->
-      <line x1="72" y1="0" x2="72" y2="20" stroke="#3e2723" stroke-width="2"/>
-      <polygon points="65,0 72,-8 79,0 72,5" fill="#fbc02d"/>
-      <text x="72" y="-10" font-size="14" text-anchor="middle">🐔</text>
-    </g>
-
-    <!-- SILO (rechts oben) -->
-    <g transform="translate(580,140)">
-      <ellipse cx="22" cy="155" rx="35" ry="6" fill="#000" opacity=".25"/>
-      <!-- Sockel -->
-      <ellipse cx="22" cy="148" rx="26" ry="7" fill="#5d4037"/>
-      <ellipse cx="22" cy="142" rx="25" ry="7" fill="#78909c"/>
-      <!-- Hauptkörper Zylinder -->
-      <rect x="-3" y="50" width="50" height="92" fill="#cfd8dc"/>
-      <!-- Vertikale Highlights -->
-      <line x1="2" y1="50" x2="2" y2="142" stroke="#fff" stroke-width="2" opacity=".6"/>
-      <line x1="42" y1="50" x2="42" y2="142" stroke="#90a4ae" stroke-width="2"/>
-      <!-- Horizontale Bänder -->
-      <ellipse cx="22" cy="50" rx="25" ry="6" fill="#90a4ae"/>
-      <ellipse cx="22" cy="80" rx="25" ry="2" fill="#90a4ae"/>
-      <ellipse cx="22" cy="110" rx="25" ry="2" fill="#90a4ae"/>
-      <!-- Kuppel -->
-      <path d="M -3 50 Q 22 10 47 50" fill="#b0bec5" stroke="#78909c" stroke-width="1.5"/>
-      <path d="M 5 30 Q 22 20 39 30" stroke="#fff" stroke-width="2" opacity=".5" fill="none"/>
-      <!-- Spitze + Leiter -->
-      <line x1="22" y1="10" x2="22" y2="22" stroke="#3e2723" stroke-width="2"/>
-      <circle cx="22" cy="8" r="3" fill="#fbc02d"/>
-      <!-- Leiter seitlich -->
-      <line x1="50" y1="60" x2="50" y2="140" stroke="#3e2723" stroke-width="2"/>
-      <line x1="55" y1="60" x2="55" y2="140" stroke="#3e2723" stroke-width="2"/>
-      <line x1="50" y1="70" x2="55" y2="70" stroke="#3e2723" stroke-width="1.5"/>
-      <line x1="50" y1="85" x2="55" y2="85" stroke="#3e2723" stroke-width="1.5"/>
-      <line x1="50" y1="100" x2="55" y2="100" stroke="#3e2723" stroke-width="1.5"/>
-      <line x1="50" y1="115" x2="55" y2="115" stroke="#3e2723" stroke-width="1.5"/>
-      <line x1="50" y1="130" x2="55" y2="130" stroke="#3e2723" stroke-width="1.5"/>
-      <!-- Schriftzug -->
-      <text x="22" y="100" text-anchor="middle" font-size="9" font-weight="900" fill="#3e2723">HOF</text>
-    </g>
-
-    <!-- SCHEUNE (mittig hinten) -->
-    <g transform="translate(370,170)">
-      <ellipse cx="55" cy="180" rx="78" ry="8" fill="#000" opacity=".25"/>
-      <polygon points="0,160 110,160 110,180 0,180" fill="url(#stein)"/>
-      <polygon points="0,80 110,80 110,160 0,160" fill="url(#holz-wand)"/>
-      <polygon points="110,80 145,65 145,150 110,160" fill="#8d6e63"/>
-      <!-- Tor -->
-      <rect x="35" y="115" width="40" height="45" fill="#3e2723" stroke="#1b1b1b" stroke-width="2"/>
-      <line x1="55" y1="115" x2="55" y2="160" stroke="#5d4037" stroke-width="2"/>
-      <line x1="35" y1="138" x2="75" y2="138" stroke="#5d4037" stroke-width="1.5"/>
-      <!-- Heugabel daneben -->
-      <line x1="20" y1="115" x2="20" y2="160" stroke="#5d4037" stroke-width="2"/>
-      <line x1="16" y1="115" x2="20" y2="120" stroke="#5d4037" stroke-width="2"/>
-      <line x1="20" y1="115" x2="20" y2="118" stroke="#5d4037" stroke-width="2"/>
-      <line x1="24" y1="115" x2="20" y2="120" stroke="#5d4037" stroke-width="2"/>
-      <!-- Großes rundes Heuluken-Fenster oben -->
-      <circle cx="55" cy="100" r="12" fill="#3e2723"/>
-      <line x1="43" y1="100" x2="67" y2="100" stroke="#5d4037" stroke-width="2"/>
-      <line x1="55" y1="88" x2="55" y2="112" stroke="#5d4037" stroke-width="2"/>
-      <!-- DACH -->
-      <polygon points="-8,80 55,20 118,80" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <polygon points="118,80 148,65 88,20" fill="url(#ziegel-rot)" stroke="#3e2723" stroke-width="2"/>
-      <!-- Heuluken-Tür im Dach -->
-      <rect x="48" y="40" width="14" height="20" fill="#3e2723"/>
-      <line x1="55" y1="40" x2="55" y2="60" stroke="#5d4037" stroke-width="1"/>
-      <!-- Seil-Winde -->
-      <line x1="55" y1="38" x2="55" y2="20" stroke="#3e2723" stroke-width="1.5"/>
-      <circle cx="55" cy="18" r="3" fill="#3e2723"/>
-    </g>
-
-    <!-- ===== TRAKTOR (sehr detailliert, John Deere Stil) ===== -->
-    <g transform="translate(225,360) scale(1.5)">
-      <!-- Schatten -->
-      <ellipse cx="40" cy="48" rx="42" ry="6" fill="#000" opacity=".35"/>
-      <!-- Front-Gewichte -->
-      <rect x="0" y="22" width="6" height="20" fill="#212121"/>
-      <rect x="-1" y="20" width="8" height="3" fill="#fbc02d"/>
-      <!-- Hauptkörper / Motor -->
-      <rect x="6" y="15" width="32" height="28" fill="#1b5e20" stroke="#0d3010" stroke-width="1"/>
-      <!-- Kühlergrill -->
-      <rect x="6" y="25" width="6" height="14" fill="#000"/>
-      <line x1="6" y1="28" x2="12" y2="28" stroke="#fbc02d" stroke-width="0.5"/>
-      <line x1="6" y1="32" x2="12" y2="32" stroke="#fbc02d" stroke-width="0.5"/>
-      <line x1="6" y1="36" x2="12" y2="36" stroke="#fbc02d" stroke-width="0.5"/>
-      <!-- Logo "JD" gelb -->
-      <rect x="14" y="20" width="14" height="4" fill="#fbc02d"/>
-      <text x="21" y="23.5" text-anchor="middle" font-size="3.5" font-weight="900" fill="#1b5e20">JOHN DEERE</text>
-      <!-- Frontscheinwerfer -->
-      <ellipse cx="8" cy="20" rx="3" ry="3" fill="#fff59d" stroke="#212121" stroke-width="1"/>
-      <ellipse cx="8" cy="20" rx="1.5" ry="1.5" fill="#fffde7"/>
-      <!-- KABINE -->
-      <polygon points="22,2 50,2 56,15 22,15" fill="#37474f" stroke="#212121" stroke-width="1"/>
-      <!-- Frontscheibe -->
-      <polygon points="24,5 50,5 53,13 24,13" fill="#90caf9" opacity=".8"/>
-      <line x1="34" y1="5" x2="36" y2="13" stroke="#37474f" stroke-width="0.8"/>
-      <line x1="44" y1="5" x2="46" y2="13" stroke="#37474f" stroke-width="0.8"/>
-      <!-- Lichtbalken auf Kabine -->
-      <rect x="26" y="0" width="22" height="3" fill="#212121"/>
-      <circle cx="29" cy="1.5" r="1" fill="#fff59d"/>
-      <circle cx="35" cy="1.5" r="1" fill="#fff59d"/>
-      <circle cx="41" cy="1.5" r="1" fill="#fff59d"/>
-      <circle cx="46" cy="1.5" r="1" fill="#fff59d"/>
-      <!-- Auspuff mit Rauch -->
-      <rect x="22" y="-15" width="5" height="18" fill="#263238"/>
-      <ellipse cx="24" cy="-15" rx="3" ry="1.5" fill="#37474f"/>
-      <g opacity=".6">
-        <circle cx="24" cy="-22" r="4" fill="#90a4ae"/>
-        <circle cx="20" cy="-29" r="5" fill="#cfd8dc"/>
-        <circle cx="27" cy="-32" r="6" fill="#eceff1"/>
-      </g>
-      <!-- Anhänge-Hinten -->
-      <rect x="50" y="25" width="10" height="12" fill="#1b5e20"/>
-      <rect x="58" y="28" width="6" height="6" fill="#fbc02d"/>
-      <line x1="60" y1="34" x2="60" y2="42" stroke="#212121" stroke-width="2"/>
-      <!-- Heck-Lampen rot -->
-      <circle cx="52" cy="40" r="1.5" fill="#e53935"/>
-      <!-- RÄDER -->
-      <!-- Vorne klein -->
-      <ellipse cx="14" cy="46" rx="6" ry="7" fill="#212121"/>
-      <ellipse cx="14" cy="46" rx="3" ry="4" fill="#fbc02d"/>
-      <ellipse cx="14" cy="46" rx="1.5" ry="2" fill="#212121"/>
-      <line x1="14" y1="40" x2="14" y2="52" stroke="#fff" stroke-width="0.5" opacity=".4"/>
-      <line x1="8" y1="46" x2="20" y2="46" stroke="#fff" stroke-width="0.5" opacity=".4"/>
-      <!-- Hinten groß -->
-      <ellipse cx="46" cy="44" rx="13" ry="14" fill="#212121"/>
-      <ellipse cx="46" cy="44" rx="7" ry="8" fill="#fbc02d"/>
-      <ellipse cx="46" cy="44" rx="3" ry="4" fill="#212121"/>
-      <!-- Reifenprofil hinten -->
-      <line x1="46" y1="30" x2="46" y2="58" stroke="#000" stroke-width="0.6"/>
-      <line x1="33" y1="44" x2="59" y2="44" stroke="#000" stroke-width="0.6"/>
-      <line x1="36" y1="35" x2="56" y2="53" stroke="#000" stroke-width="0.6"/>
-      <line x1="36" y1="53" x2="56" y2="35" stroke="#000" stroke-width="0.6"/>
-      <!-- Profile zigzag -->
-      <path d="M 36 38 L 39 35 L 42 38 L 45 35 L 48 38 L 51 35 L 54 38 L 57 35" stroke="#000" stroke-width="0.7" fill="none"/>
-      <path d="M 36 50 L 39 53 L 42 50 L 45 53 L 48 50 L 51 53 L 54 50 L 57 53" stroke="#000" stroke-width="0.7" fill="none"/>
-    </g>
-
-    <!-- ===== AVATAR Liam ===== -->
-    <g transform="translate(155,360) scale(1.4)">
+    <!-- Avatar -->
+    <g transform="translate(390,420) scale(1.6)">
       <ellipse cx="10" cy="42" rx="12" ry="3" fill="#000" opacity=".35"/>
-      <!-- Beine -->
       <rect x="4" y="32" width="5" height="10" fill="#1565c0"/>
       <rect x="11" y="32" width="5" height="10" fill="#1565c0"/>
-      <!-- Schuhe -->
       <ellipse cx="6" cy="42" rx="3" ry="1.5" fill="#3e2723"/>
       <ellipse cx="14" cy="42" rx="3" ry="1.5" fill="#3e2723"/>
-      <!-- Körper -->
       <rect x="3" y="14" width="14" height="20" fill="#d84315" stroke="#bf360c" stroke-width="0.8"/>
-      <!-- Latzhose -->
       <rect x="6" y="20" width="8" height="14" fill="#1565c0"/>
       <line x1="6" y1="20" x2="3" y2="14" stroke="#1565c0" stroke-width="2"/>
       <line x1="14" y1="20" x2="17" y2="14" stroke="#1565c0" stroke-width="2"/>
-      <circle cx="8" cy="22" r="0.8" fill="#fbc02d"/>
-      <circle cx="12" cy="22" r="0.8" fill="#fbc02d"/>
-      <!-- Arme -->
       <rect x="0" y="15" width="3.5" height="11" fill="#ffcc80"/>
       <rect x="16.5" y="15" width="3.5" height="11" fill="#ffcc80"/>
-      <!-- Hände -->
       <circle cx="2" cy="27" r="2" fill="#ffcc80"/>
       <circle cx="18" cy="27" r="2" fill="#ffcc80"/>
-      <!-- Kopf -->
       <circle cx="10" cy="8" r="7" fill="#ffcc80"/>
-      <!-- Haar unter Hut -->
-      <path d="M 4 8 Q 4 12 6 13" stroke="#5d4037" stroke-width="2" fill="none"/>
-      <path d="M 16 8 Q 16 12 14 13" stroke="#5d4037" stroke-width="2" fill="none"/>
-      <!-- STROHHUT detailliert -->
       <ellipse cx="10" cy="3" rx="13" ry="3" fill="#fdd835"/>
       <ellipse cx="10" cy="2" rx="7" ry="3" fill="#fbc02d"/>
-      <ellipse cx="10" cy="0" rx="6" ry="2" fill="#f9a825"/>
-      <!-- Hutband -->
       <rect x="4" y="2" width="12" height="2" fill="#5d4037"/>
-      <!-- Augen -->
       <circle cx="7.5" cy="8" r="1.2" fill="#fff"/>
       <circle cx="7.5" cy="8" r="0.7" fill="#1976d2"/>
-      <circle cx="7.3" cy="7.8" r="0.3" fill="#fff"/>
       <circle cx="12.5" cy="8" r="1.2" fill="#fff"/>
       <circle cx="12.5" cy="8" r="0.7" fill="#1976d2"/>
-      <circle cx="12.3" cy="7.8" r="0.3" fill="#fff"/>
-      <!-- Lächeln -->
       <path d="M 7 11 Q 10 13.5 13 11" stroke="#3e2723" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-      <!-- Nase -->
-      <circle cx="10" cy="10" r="0.6" fill="#ffab91"/>
     </g>
 
-    <!-- ===== TIERE detailliert ===== -->
-
-    <!-- Kuh -->
-    <g transform="translate(810,440) scale(1.3)">
+    <!-- Tiere am Rand -->
+    <g transform="translate(960,460) scale(1.4)">
       <ellipse cx="15" cy="28" rx="22" ry="4" fill="#000" opacity=".3"/>
-      <!-- Körper -->
       <ellipse cx="15" cy="18" rx="20" ry="11" fill="#fff" stroke="#3e2723" stroke-width="1"/>
-      <!-- Flecken schwarz -->
       <ellipse cx="8" cy="15" rx="6" ry="4" fill="#3e2723"/>
       <ellipse cx="22" cy="13" rx="5" ry="3" fill="#3e2723"/>
-      <ellipse cx="18" cy="22" rx="4" ry="2" fill="#3e2723"/>
-      <!-- Beine -->
       <rect x="3" y="25" width="3" height="6" fill="#fff" stroke="#3e2723" stroke-width="0.8"/>
       <rect x="24" y="25" width="3" height="6" fill="#fff" stroke="#3e2723" stroke-width="0.8"/>
-      <rect x="10" y="26" width="3" height="5" fill="#3e2723"/>
-      <!-- Hufe -->
-      <rect x="3" y="30" width="3" height="2" fill="#3e2723"/>
-      <rect x="24" y="30" width="3" height="2" fill="#3e2723"/>
-      <!-- Kopf -->
       <ellipse cx="-3" cy="14" rx="6" ry="5" fill="#fff" stroke="#3e2723" stroke-width="1"/>
       <ellipse cx="-3" cy="16" rx="3" ry="2" fill="#ffcdd2"/>
-      <!-- Hörner -->
-      <path d="M -7 10 Q -8 7 -7 5" stroke="#fbc02d" stroke-width="1.5" fill="none"/>
-      <path d="M 1 10 Q 2 7 1 5" stroke="#fbc02d" stroke-width="1.5" fill="none"/>
-      <!-- Ohren -->
-      <ellipse cx="-7" cy="11" rx="2" ry="3" fill="#fff" stroke="#3e2723" stroke-width="0.8"/>
-      <ellipse cx="1" cy="11" rx="2" ry="3" fill="#3e2723"/>
-      <!-- Augen -->
       <circle cx="-5" cy="13" r="0.8" fill="#000"/>
       <circle cx="-1" cy="13" r="0.8" fill="#000"/>
-      <!-- Nüstern -->
-      <circle cx="-4" cy="16.5" r="0.5" fill="#3e2723"/>
-      <circle cx="-2" cy="16.5" r="0.5" fill="#3e2723"/>
-      <!-- Schwanz -->
-      <line x1="35" y1="15" x2="40" y2="22" stroke="#3e2723" stroke-width="1.2"/>
-      <circle cx="40" cy="22" r="2" fill="#3e2723"/>
     </g>
 
-    <!-- Huhn -->
-    <g transform="translate(880,560) scale(1.2)">
-      <ellipse cx="10" cy="22" rx="10" ry="3" fill="#000" opacity=".3"/>
-      <!-- Körper -->
-      <ellipse cx="10" cy="13" rx="9" ry="8" fill="#fff" stroke="#3e2723" stroke-width="0.8"/>
-      <!-- Flügel -->
-      <ellipse cx="8" cy="14" rx="4" ry="6" fill="#eceff1" stroke="#bdbdbd" stroke-width="0.5"/>
-      <line x1="6" y1="11" x2="10" y2="18" stroke="#bdbdbd" stroke-width="0.4"/>
-      <line x1="7" y1="10" x2="11" y2="18" stroke="#bdbdbd" stroke-width="0.4"/>
-      <!-- Kopf -->
-      <circle cx="16" cy="8" r="5" fill="#fff" stroke="#3e2723" stroke-width="0.8"/>
-      <!-- Schnabel -->
-      <polygon points="20,7 24,8 20,9" fill="#fbc02d" stroke="#f57f17" stroke-width="0.5"/>
-      <!-- Kamm -->
-      <path d="M 13 4 L 14 1 L 15 4 L 16 0 L 17 4 L 18 1 L 19 4 Z" fill="#e53935" stroke="#c62828" stroke-width="0.5"/>
-      <!-- Kehllappen -->
-      <ellipse cx="17" cy="11" rx="1.5" ry="2" fill="#e53935"/>
-      <!-- Auge -->
-      <circle cx="17" cy="7" r="0.8" fill="#000"/>
-      <circle cx="17.2" cy="6.7" r="0.3" fill="#fff"/>
-      <!-- Beine -->
-      <line x1="7" y1="20" x2="7" y2="23" stroke="#fbc02d" stroke-width="1.5"/>
-      <line x1="12" y1="20" x2="12" y2="23" stroke="#fbc02d" stroke-width="1.5"/>
-      <!-- Krallen -->
-      <line x1="6" y1="23" x2="5" y2="24" stroke="#f57f17" stroke-width="0.6"/>
-      <line x1="7" y1="23" x2="7" y2="24.5" stroke="#f57f17" stroke-width="0.6"/>
-      <line x1="8" y1="23" x2="9" y2="24" stroke="#f57f17" stroke-width="0.6"/>
-    </g>
-
-    <!-- Schwein -->
-    <g transform="translate(75,580) scale(1.3)">
-      <ellipse cx="15" cy="22" rx="18" ry="4" fill="#000" opacity=".3"/>
-      <!-- Körper -->
-      <ellipse cx="15" cy="15" rx="16" ry="9" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.8"/>
-      <!-- Beine -->
-      <rect x="5" y="20" width="3" height="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.6"/>
-      <rect x="22" y="20" width="3" height="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.6"/>
-      <!-- Kopf -->
-      <circle cx="2" cy="13" r="6" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.8"/>
-      <!-- Schnauze -->
-      <ellipse cx="-2" cy="14" rx="3" ry="2.5" fill="#ec407a" stroke="#c2185b" stroke-width="0.6"/>
-      <ellipse cx="-3" cy="14" rx="0.6" ry="0.8" fill="#3e2723"/>
-      <ellipse cx="-1" cy="14" rx="0.6" ry="0.8" fill="#3e2723"/>
-      <!-- Augen -->
-      <circle cx="0" cy="11" r="0.8" fill="#000"/>
-      <circle cx="0.2" cy="10.8" r="0.3" fill="#fff"/>
-      <!-- Ohren spitz -->
-      <polygon points="-2,8 0,3 2,8" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.6"/>
-      <polygon points="3,8 5,3 7,8" fill="#f8bbd0" stroke="#c2185b" stroke-width="0.6"/>
-      <!-- Schwanz Ringel -->
-      <path d="M 30 13 Q 35 12 33 16 Q 31 18 35 18" stroke="#c2185b" stroke-width="1.5" fill="none"/>
-    </g>
-
-    <!-- ===== UI: Münzen oben links ===== -->
+    <!-- UI -->
     <g transform="translate(20,20)">
-      <rect x="0" y="0" width="120" height="42" rx="21" fill="rgba(0,0,0,.7)"/>
-      <circle cx="22" cy="21" r="14" fill="#fff59d" stroke="#fbc02d" stroke-width="2"/>
-      <circle cx="22" cy="21" r="11" fill="#ffd700"/>
-      <text x="22" y="25" text-anchor="middle" font-size="11" font-weight="900" fill="#5d4037">€</text>
-      <text x="44" y="22" font-size="14" font-weight="900" fill="#fff">€</text>
-      <text x="52" y="22" font-size="16" font-weight="900" fill="#fff">12.450</text>
+      <rect x="0" y="0" width="140" height="46" rx="23" fill="rgba(0,0,0,.7)"/>
+      <circle cx="25" cy="23" r="15" fill="#fff59d" stroke="#fbc02d" stroke-width="2"/>
+      <circle cx="25" cy="23" r="12" fill="#ffd700"/>
+      <text x="25" y="28" text-anchor="middle" font-size="13" font-weight="900" fill="#5d4037">€</text>
+      <text x="58" y="28" font-size="18" font-weight="900" fill="#fff">€ 12.450</text>
     </g>
-
-    <!-- Aktion-Button rechts unten -->
-    <g transform="translate(750,580)">
-      <rect x="0" y="0" width="130" height="55" rx="14" fill="#4caf50" stroke="#2e7d32" stroke-width="3"/>
-      <rect x="0" y="0" width="130" height="20" rx="14" fill="#66bb6a"/>
-      <text x="65" y="26" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">🌾 ERNTEN</text>
-      <text x="65" y="44" font-size="11" fill="#fff" text-anchor="middle">+ 24 Säcke Mais</text>
+    <g transform="translate(880,640)">
+      <rect x="0" y="0" width="150" height="55" rx="14" fill="#4caf50" stroke="#2e7d32" stroke-width="3"/>
+      <text x="75" y="22" font-size="14" font-weight="900" fill="#fff" text-anchor="middle">🌾 ERNTEN</text>
+      <text x="75" y="42" font-size="11" fill="#fff" text-anchor="middle">+ 24 Säcke Mais</text>
     </g>
   </svg>
+
   <div class="note">
-    Vergleich zu vorher: <b>jede einzelne Pflanze</b> ist gezeichnet (Weizen-Halme mit Körnern, Mais mit Kolben + Blättern, Kartoffel mit Knollen + Blüte, Raps mit gelben Blüten). <b>Gebäude</b> haben Dachziegel-Pattern, Holzwand-Textur, Stein-Sockel, Fenster mit Rahmen + Kreuzen, Türen mit Klinken, Dachgauben, Schornstein mit Rauch. <b>Traktor</b> ist John Deere mit Logo, Lichtbalken, Rauch aus Auspuff, detailliertes Reifenprofil, Anbaugerät hinten.
+    <b>Was geändert:</b><br>
+    🚜 <b>Trecker:</b> komplett neu gezeichnet als <b>3 zusammenhängende Blöcke</b> (Motor + Kabine + Heck) statt einzelner Teile, einheitlicher Farbverlauf, alle Räder klar an den richtigen Stellen, Auspuff geht durch das Dach raus.<br>
+    🏠 <b>Wohnhaus:</b> Front-Sicht (nicht mehr seitlich versetzt), Dach klar zentriert, Türmittig.<br>
+    🏚️ <b>Stall:</b> Fachwerk in <b>klarem Raster</b> (3×2 Quadrate mit Andreas-Kreuzen) – nicht mehr chaotisch.<br>
+    🏚️ <b>Scheune:</b> klares Holz-Pattern, mittig zentriert.<br>
+    🏗️ <b>Silo:</b> klare Zylinder-Form, Bänder horizontal sauber.
   </div>
 </div>
 
 <div style="background:#fff;color:#222;padding:20px;border-radius:14px;text-align:center;font-size:16px">
-  <b>Detailliert genug?</b><br>
-  Im echten Spiel kommt noch dazu: Animationen (Trecker-Räder drehen sich, Rauch steigt, Tiere bewegen Schwänze, Pflanzen wackeln im Wind), Sounds, Tag/Nacht-Wechsel.<br><br>
-  <span style="color:#666;font-size:14px">Nächster Schritt: <b>Premium Asset-Pack kaufen (~30 €)</b> für noch professionelleren Look – sieht dann aus wie Hay Day im Store. Sonst kann ich auch mit diesem Detail-Niveau (SVG selber gezeichnet) weiter machen.</span>
+  <b>Besser?</b><br>
+  Falls Trecker/Gebäude immer noch nicht passt: sag genau was nicht stimmt → ich ändere gezielt.
 </div>
 
 </body>
