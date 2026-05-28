@@ -1,0 +1,37 @@
+{
+  "name": "Herzog Sanitär & Heizung GmbH",
+  "short_name": "Herzog KI",
+  "description": "Firmen-KI der Herzog Sanitär & Heizung GmbH, Lörrach",
+  "start_url": "/herzog-lernapp/herzog-app/",
+  "scope": "/herzog-lernapp/herzog-app/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#e30b5d",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Chat",
+      "url": "./?view=chat",
+      "icons": [{"src": "icon.svg", "sizes": "192x192"}]
+    },
+    {
+      "name": "WhatsApp",
+      "url": "./?view=whatsapp",
+      "icons": [{"src": "icon.svg", "sizes": "192x192"}]
+    },
+    {
+      "name": "Briefing",
+      "url": "./?view=briefing",
+      "icons": [{"src": "icon.svg", "sizes": "192x192"}]
+    }
+  ]
+}
