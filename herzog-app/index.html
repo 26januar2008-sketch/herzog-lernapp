@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#e30b5d">
-<title>Herzog SanitÃÂÃÂ¤r & Heizung GmbH ÃÂÃÂ· KI</title>
+<title>Herzog Sanitär & Heizung GmbH · KI</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -148,14 +148,14 @@
 <div id="login" class="login-box">
   <div class="login-hero">
     <div class="logo-big">H</div>
-    <div class="firmenname">Herzog SanitÃÂÃÂ¤r &amp; Heizung GmbH</div>
-    <div class="firmensub">Seit 1890 ÃÂÃÂ· LÃÂÃÂ¶rrach-Stetten</div>
+    <div class="firmenname">Herzog Sanitär &amp; Heizung GmbH</div>
+    <div class="firmensub">Seit 1890 · Lörrach-Stetten</div>
   </div>
   <div class="login-body">
     <h2>Anmeldung</h2>
     <label>Wer bist du?</label>
     <select id="userSelect">
-      <option value="">-- bitte wÃÂÃÂ¤hlen --</option>
+      <option value="">-- bitte wählen --</option>
       <option value="Michael">Michael (Admin)</option>
       <option value="Ervin">Ervin</option>
       <option value="Uwe">Uwe</option>
@@ -177,8 +177,8 @@
     <button class="send" onclick="doLogin()" style="width:100%; padding:12px;">Anmelden</button>
   </div>
   <div class="login-footer">
-    Hauptstr. 13 ÃÂÃÂ· 79540 LÃÂÃÂ¶rrach ÃÂÃÂ· Tel. 07621 2297<br>
-    SanitÃÂÃÂ¤r ÃÂÃÂ· Heizung ÃÂÃÂ· Klima ÃÂÃÂ· Blechnerei ÃÂÃÂ· Dachdeckerei ÃÂÃÂ· Kanal-TV
+    Hauptstr. 13 · 79540 Lörrach · Tel. 07621 2297<br>
+    Sanitär · Heizung · Klima · Blechnerei · Dachdeckerei · Kanal-TV
   </div>
 </div>
 
@@ -186,30 +186,30 @@
   <div class="herzog-brand">
     <div class="herzog-logo">H</div>
     <div class="herzog-brand-text">
-      <div class="herzog-brand-name">Herzog SanitÃÂÃÂ¤r &amp; Heizung</div>
-      <div class="herzog-brand-sub">Firmen-KI ÃÂÃÂ· LÃÂÃÂ¶rrach</div>
+      <div class="herzog-brand-name">Herzog Sanitär &amp; Heizung</div>
+      <div class="herzog-brand-sub">Firmen-KI · Lörrach</div>
     </div>
   </div>
   <div class="nav">
-    <button id="navDashboard" class="active" onclick="switchView('dashboard')">ÃÂ°ÃÂÃÂÃÂ  Start</button>
-    <button id="navChat" onclick="switchView('chat')">ÃÂ°ÃÂÃÂÃÂ¬ Chat</button>
+    <button id="navDashboard" class="active" onclick="switchView('dashboard')">🏠 Start</button>
+    <button id="navChat" onclick="switchView('chat')">💬 Chat</button>
     <button id="navLager" onclick="switchView('lager')">Lager</button>
     <button id="navReview" onclick="switchView('review')">Review <span id="reviewBadge" class="badge review hidden">0</span></button>
-    <button id="navMails" class="hidden" onclick="switchView('mails')">ÃÂ°ÃÂÃÂÃÂ§ Mails <span id="mailsBadge" class="badge review hidden">0</span></button>
-    <button id="navWhatsApp" class="hidden" onclick="switchView('whatsapp')">ÃÂ°ÃÂÃÂÃÂ¬ WhatsApp <span id="waBadge" class="badge review hidden">0</span></button>
-    <button id="navTrain" class="hidden" onclick="switchView('train')">ÃÂ°ÃÂÃÂÃÂ Training</button>
-    <button id="navBriefing" class="hidden" onclick="switchView('briefing')">ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Briefing</button>
+    <button id="navMails" class="hidden" onclick="switchView('mails')">📧 Mails <span id="mailsBadge" class="badge review hidden">0</span></button>
+    <button id="navWhatsApp" class="hidden" onclick="switchView('whatsapp')">💬 WhatsApp <span id="waBadge" class="badge review hidden">0</span></button>
+    <button id="navTrain" class="hidden" onclick="switchView('train')">🎓 Training</button>
+    <button id="navBriefing" class="hidden" onclick="switchView('briefing')">☀️ Briefing</button>
     <button id="navAdmin" class="hidden" onclick="switchView('admin')">Protokoll</button>
     <button id="navGaps" class="hidden" onclick="switchView('gaps')">Luecken <span id="gapsBadge" class="badge gap hidden">0</span></button>
   </div>
-  <div class="right"><span class="userTag" id="userTag"></span><button class="icon" style="width:28px;height:28px;font-size:14px" onclick="logout()" title="Logout">ÃÂ¢ÃÂÃÂ</button></div>
+  <div class="right"><span class="userTag" id="userTag"></span><button class="icon" style="width:28px;height:28px;font-size:14px" onclick="logout()" title="Logout">⎋</button></div>
 </header>
 
 <div id="dashboard" class="hidden">
   <div id="installBanner" class="dash-install-banner hidden">
     <div style="flex:1">
-      <strong>ÃÂ°ÃÂÃÂÃÂ² Als App installieren</strong><br>
-      <span style="font-size:12px;opacity:0.9">Ein Klick - lÃÂÃÂ¤uft dann wie eine echte Desktop-App</span>
+      <strong>📲 Als App installieren</strong><br>
+      <span style="font-size:12px;opacity:0.9">Ein Klick - läuft dann wie eine echte Desktop-App</span>
     </div>
     <button onclick="installPwa()">Installieren</button>
   </div>
@@ -223,18 +223,18 @@
   </div>
 
   <div class="dash-grid" id="dashGrid">
-    <!-- Wird dynamisch befÃÂÃÂ¼llt -->
+    <!-- Wird dynamisch befüllt -->
   </div>
 
   <div class="dash-quick">
     <h3>Schnellzugriff</h3>
     <div class="dash-quick-btns">
-      <button onclick="switchView('chat')">ÃÂ°ÃÂÃÂÃÂ¬ Mit KI chatten</button>
-      <button onclick="switchView('whatsapp')">ÃÂ°ÃÂÃÂÃÂ± WhatsApp ÃÂÃÂ¶ffnen</button>
-      <button onclick="switchView('mails')">ÃÂ°ÃÂÃÂÃÂ§ Mails prÃÂÃÂ¼fen</button>
-      <button onclick="switchView('briefing')">ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Volles Briefing</button>
-      <button onclick="switchView('train')">ÃÂ°ÃÂÃÂÃÂ KI trainieren</button>
-      <button onclick="switchView('lager')">ÃÂ°ÃÂÃÂÃÂ¦ Lager</button>
+      <button onclick="switchView('chat')">💬 Mit KI chatten</button>
+      <button onclick="switchView('whatsapp')">📱 WhatsApp öffnen</button>
+      <button onclick="switchView('mails')">📧 Mails prüfen</button>
+      <button onclick="switchView('briefing')">☀️ Volles Briefing</button>
+      <button onclick="switchView('train')">🎓 KI trainieren</button>
+      <button onclick="switchView('lager')">📦 Lager</button>
     </div>
   </div>
 </div>
@@ -242,37 +242,37 @@
 <div id="chat" class="hidden"></div>
 <div id="chatPresets" class="presets hidden"></div>
 <form id="chatForm" class="chat-form hidden">
-  <button type="button" class="icon" id="btnMic" title="Voice">ÃÂ°ÃÂÃÂÃÂ¤</button>
-  <button type="button" class="icon" id="btnPhoto" title="Foto">ÃÂ°ÃÂÃÂÃÂ·</button>
+  <button type="button" class="icon" id="btnMic" title="Voice">🎤</button>
+  <button type="button" class="icon" id="btnPhoto" title="Foto">📷</button>
   <textarea id="input" rows="2" placeholder="Frage an die Herzog KI..."></textarea>
   <button type="submit" class="send">Senden</button>
 </form>
 
 <div id="lager" class="hidden">
   <div class="foto-upload">
-    <h3>ÃÂ°ÃÂÃÂÃÂ· Neues Regal scannen</h3>
-    <p style="font-size:13px;color:#94a3b8;margin:8px 0">Foto von Regal/Fach + Standort ÃÂ¢ÃÂÃÂ KI erkennt die Artikel</p>
+    <h3>📷 Neues Regal scannen</h3>
+    <p style="font-size:13px;color:#94a3b8;margin:8px 0">Foto von Regal/Fach + Standort → KI erkennt die Artikel</p>
     <div>
-      <select id="lagerOrtRaum" style="width:140px"><option value="Keller">Keller</option><option value="Werkstatt">Werkstatt</option><option value="LKW">LKW</option><option value="Buero">BÃÂÃÂ¼ro</option></select>
+      <select id="lagerOrtRaum" style="width:140px"><option value="Keller">Keller</option><option value="Werkstatt">Werkstatt</option><option value="LKW">LKW</option><option value="Buero">Büro</option></select>
       <input type="text" id="lagerOrtDetail" placeholder="Regal 3, Fach 2" style="width:160px">
     </div>
     <input type="file" id="lagerFotoInput" accept="image/*" capture="environment">
-    <label for="lagerFotoInput">ÃÂ°ÃÂÃÂÃÂ· Foto aufnehmen</label>
+    <label for="lagerFotoInput">📷 Foto aufnehmen</label>
     <div id="lagerFotoStatus" style="margin-top:12px;font-size:13px;color:#94a3b8"></div>
   </div>
-  <h3 style="margin-bottom:8px">ÃÂ°ÃÂÃÂÃÂ¦ Bestand</h3>
+  <h3 style="margin-bottom:8px">📦 Bestand</h3>
   <input type="text" id="lagerSearch" placeholder="Suchen..." style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px;border-radius:8px;margin-bottom:12px;font-size:15px">
   <div id="lagerList"></div>
 </div>
 
 <div id="review" class="hidden">
-  <h3 style="margin-bottom:12px">ÃÂ¢ÃÂ­ÃÂ KI-VorschlÃÂÃÂ¤ge zum Reviewen</h3>
-  <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">Die KI hat diese EintrÃÂÃÂ¤ge automatisch erstellt. PrÃÂÃÂ¼fe und bestÃÂÃÂ¤tige oder lÃÂÃÂ¶sche.</p>
+  <h3 style="margin-bottom:12px">⭐ KI-Vorschläge zum Reviewen</h3>
+  <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">Die KI hat diese Einträge automatisch erstellt. Prüfe und bestätige oder lösche.</p>
   <div id="reviewList"></div>
 </div>
 
 <div id="admin" class="hidden">
-  <h3 style="margin-bottom:12px">ÃÂ°ÃÂÃÂÃÂ Chat-Protokoll aller Mitarbeiter</h3>
+  <h3 style="margin-bottom:12px">📋 Chat-Protokoll aller Mitarbeiter</h3>
   <div class="filter-bar">
     <button class="active" data-filter="today" onclick="loadAdmin('today')">Heute</button>
     <button data-filter="week" onclick="loadAdmin('week')">Letzte 7 Tage</button>
@@ -328,32 +328,32 @@
 }
 </style>
 <div id="train" class="hidden">
-  <h3 style="margin-bottom:4px">ÃÂ°ÃÂÃÂÃÂ KI trainieren</h3>
+  <h3 style="margin-bottom:4px">🎓 KI trainieren</h3>
   <p style="font-size:13px;color:#94a3b8;margin-bottom:20px">Bring der KI dein Wissen bei: Sprachnotiz, Text oder PDF. Wird automatisch strukturiert und embedded.</p>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
     <!-- VOICE -->
     <div style="background:#0f1729;padding:16px;border-radius:8px">
-      <h4 style="margin-bottom:8px">ÃÂ°ÃÂÃÂÃÂ¤ Sprachnotiz</h4>
+      <h4 style="margin-bottom:8px">🎤 Sprachnotiz</h4>
       <p style="font-size:12px;color:#94a3b8;margin-bottom:10px">Einfach reinsprechen - Whisper transkribiert, KI strukturiert</p>
-      <button id="trainRecBtn" onclick="trainToggleRec()" style="background:#dc2626;color:#fff;border:0;padding:10px 20px;border-radius:6px;font-size:14px;cursor:pointer;width:100%">ÃÂ°ÃÂÃÂÃÂ¤ Aufnahme starten</button>
+      <button id="trainRecBtn" onclick="trainToggleRec()" style="background:#dc2626;color:#fff;border:0;padding:10px 20px;border-radius:6px;font-size:14px;cursor:pointer;width:100%">🎤 Aufnahme starten</button>
       <div id="trainRecStatus" style="font-size:12px;color:#94a3b8;margin-top:8px;min-height:16px"></div>
     </div>
 
     <!-- PDF -->
     <div style="background:#0f1729;padding:16px;border-radius:8px">
-      <h4 style="margin-bottom:8px">ÃÂ°ÃÂÃÂÃÂ PDF-Upload</h4>
-      <p style="font-size:12px;color:#94a3b8;margin-bottom:10px">Anleitungen, DatenblÃÂÃÂ¤tter, Manuals</p>
+      <h4 style="margin-bottom:8px">📄 PDF-Upload</h4>
+      <p style="font-size:12px;color:#94a3b8;margin-bottom:10px">Anleitungen, Datenblätter, Manuals</p>
       <input type="file" id="trainPdfFile" accept=".pdf" style="color:#e5e7eb;font-size:13px;margin-bottom:8px;width:100%">
       <input type="text" id="trainPdfTitle" placeholder="Titel (z.B. Vaillant ecoTEC)" style="width:100%;padding:6px;background:#1a2340;color:#e5e7eb;border:1px solid #334155;border-radius:4px;margin-bottom:8px">
-      <button onclick="trainUploadPdf()" style="width:100%;padding:8px">ÃÂ°ÃÂÃÂÃÂ¤ Hochladen & lernen</button>
+      <button onclick="trainUploadPdf()" style="width:100%;padding:8px">📤 Hochladen & lernen</button>
       <div id="trainPdfStatus" style="font-size:12px;color:#94a3b8;margin-top:8px;min-height:16px"></div>
     </div>
   </div>
 
   <!-- TEXT -->
   <div style="background:#0f1729;padding:16px;border-radius:8px;margin-bottom:20px">
-    <h4 style="margin-bottom:8px">ÃÂ°ÃÂÃÂÃÂ Text-Notiz</h4>
+    <h4 style="margin-bottom:8px">📝 Text-Notiz</h4>
     <textarea id="trainText" rows="4" placeholder="Tipp / Regel / Erfahrung eintippen..." style="width:100%;padding:8px;background:#1a2340;color:#e5e7eb;border:1px solid #334155;border-radius:4px;margin-bottom:8px"></textarea>
     <button onclick="trainSendText()">Speichern</button>
     <div id="trainTextStatus" style="font-size:12px;color:#94a3b8;margin-top:8px;display:inline-block;margin-left:10px"></div>
@@ -361,11 +361,11 @@
 
   <!-- CURRICULUM -->
   <div style="background:#0f1729;padding:16px;border-radius:8px">
-    <h4 style="margin-bottom:8px">ÃÂ°ÃÂÃÂÃÂ SHK-Curriculum Fortschritt</h4>
+    <h4 style="margin-bottom:8px">📚 SHK-Curriculum Fortschritt</h4>
     <p style="font-size:12px;color:#94a3b8;margin-bottom:10px">KI arbeitet 100 SHK-Themen aus Ausbildung + Meisterschule durch (Normen, Technik, Diagnose, Recht...)</p>
     <div id="trainCurriculumStats">Lade...</div>
     <div style="background:#1a2340;border-radius:999px;height:10px;margin:10px 0;overflow:hidden"><div id="trainCurriculumBar" style="height:100%;background:#22c55e;width:0%;transition:width 0.3s"></div></div>
-    <button onclick="trainProcessOne()">ÃÂ¢ÃÂÃÂ¶ Ein weiteres Thema verarbeiten</button>
+    <button onclick="trainProcessOne()">▶ Ein weiteres Thema verarbeiten</button>
   </div>
 
   <div style="margin-top:24px;padding:14px;background:#0f1729;border-radius:8px;font-size:12px;color:#94a3b8">
@@ -378,7 +378,7 @@
   <div class="wa-wrap" id="waWrap">
     <div class="wa-left">
       <div class="wa-header">
-        ÃÂ°ÃÂÃÂÃÂ¬ WhatsApp
+        💬 WhatsApp
         <span id="waWorkerBadge" class="wa-status off">offline</span>
       </div>
       <div class="wa-search">
@@ -391,8 +391,8 @@
     <div class="wa-right" id="waRight">
       <div class="wa-empty">
         <div>
-          <div style="font-size:40px;margin-bottom:10px">ÃÂ°ÃÂÃÂÃÂ¬</div>
-          Chat auswÃÂÃÂ¤hlen um Nachrichten zu sehen
+          <div style="font-size:40px;margin-bottom:10px">💬</div>
+          Chat auswählen um Nachrichten zu sehen
         </div>
       </div>
     </div>
@@ -401,20 +401,20 @@
 
 <div id="briefing" class="hidden">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <h3>ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Briefing ÃÂÃÂ· Aufgaben abhaken</h3>
-    <button onclick="loadBriefing()">ÃÂ°ÃÂÃÂÃÂ Neu laden</button>
+    <h3>☀️ Briefing · Aufgaben abhaken</h3>
+    <button onclick="loadBriefing()">🔄 Neu laden</button>
   </div>
   <div id="briefingContent">Lade...</div>
 </div>
 
 <div id="gaps" class="hidden">
-  <h3 style="margin-bottom:12px">ÃÂ°ÃÂÃÂÃÂ³ WissenslÃÂÃÂ¼cken</h3>
-  <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">Fragen die keinen Treffer hatten. Hier siehst du was die KI noch nicht weiÃÂÃÂ.</p>
+  <h3 style="margin-bottom:12px">🕳 Wissenslücken</h3>
+  <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">Fragen die keinen Treffer hatten. Hier siehst du was die KI noch nicht weiß.</p>
   <div id="gapsList"></div>
 </div>
 
 <div id="mails" class="hidden">
-  <h3 style="margin-bottom:12px">ÃÂ°ÃÂÃÂÃÂ§ Mails</h3>
+  <h3 style="margin-bottom:12px">📧 Mails</h3>
   <div class="filter-bar">
     <button class="active" data-filter="pending" onclick="loadMails('pending')">Offen</button>
     <button data-filter="urgent" onclick="loadMails('urgent')">Dringend</button>
@@ -424,7 +424,7 @@
   <div id="mailsList"></div>
   <div id="mailDetail" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;padding:12px;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="max-width:900px;margin:0 auto;background:#1e293b;border-radius:12px;padding:16px;margin-bottom:40px">
-      <button onclick="closeMailDetail()" style="background:#334155;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;float:right">ÃÂ¢ÃÂÃÂ Schliessen</button>
+      <button onclick="closeMailDetail()" style="background:#334155;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;float:right">✕ Schliessen</button>
       <div id="mailDetailContent"></div>
     </div>
   </div>
@@ -439,7 +439,7 @@ const TRAIN_API = "https://nrmqdhcrshyoigesqapm.supabase.co/functions/v1/herzog-
 const CURRICULUM_API = "https://nrmqdhcrshyoigesqapm.supabase.co/functions/v1/herzog-curriculum";
 window.HKI_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ybXFkaGNyc2h5b2lnZXNxYXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTQ3MjksImV4cCI6MjA4ODk5MDcyOX0.Hw4hg6f9iiJcw92veiEU4-oPGcRX_k5NoLuxHU5_ors";
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ybXFkaGNyc2h5b2lnZXNxYXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTQ3MjksImV4cCI6MjA4ODk5MDcyOX0.Hw4hg6f9iiJcw92veiEU4-oPGcRX_k5NoLuxHU5_ors";
-const PRESETS = ["Was steht heute im Kalender?","Was steht morgen im Kalender?","Wartungen bald fÃÂÃÂ¤llig","Zugang Reisser","Zugang GC Online","Kontakt Bosch Service","Fehlercode Vaillant F22","Wie Heizung entlÃÂÃÂ¼ften?","Wo ist Kupferrohr 15mm?","Mails von heute","KfW FÃÂÃÂ¶rderung WÃÂÃÂ¤rmepumpe 2026"];
+const PRESETS = ["Was steht heute im Kalender?","Was steht morgen im Kalender?","Wartungen bald fällig","Zugang Reisser","Zugang GC Online","Kontakt Bosch Service","Fehlercode Vaillant F22","Wie Heizung entlüften?","Wo ist Kupferrohr 15mm?","Mails von heute","KfW Förderung Wärmepumpe 2026"];
 
 let pw = localStorage.getItem('hki_pw') || '';
 let userName = localStorage.getItem('hki_user') || '';
@@ -472,7 +472,7 @@ function showApp() {
   document.getElementById('userTag').textContent = userName;
   if (isAdmin()) { document.getElementById('navAdmin').classList.remove('hidden'); document.getElementById('navGaps').classList.remove('hidden'); }
   if (isBuero()) { document.getElementById('navMails').classList.remove('hidden'); document.getElementById('navBriefing').classList.remove('hidden'); document.getElementById('navWhatsApp').classList.remove('hidden'); document.getElementById('navTrain').classList.remove('hidden'); }
-  // Letzte View: URL > localStorage > Default (Dashboard BÃÂÃÂ¼ro / Chat Monteur)
+  // Letzte View: URL > localStorage > Default (Dashboard Büro / Chat Monteur)
   const urlView = new URLSearchParams(location.search).get('view');
   let savedView = null;
   try { savedView = localStorage.getItem('hki_view'); } catch {}
@@ -527,29 +527,29 @@ document.getElementById('chatForm').addEventListener('submit', async function(e)
     const reader = res.body.getReader(); const dec = new TextDecoder(); let buffer = '', full = '';
     while (true) { const { done, value } = await reader.read(); if (done) break; buffer += dec.decode(value, { stream: true }); const lines = buffer.split('\n'); buffer = lines.pop(); for (const line of lines) { if (!line.startsWith('data: ')) continue; const data = line.slice(6).trim(); if (data === '[DONE]') continue; try { const c = JSON.parse(data); const d = c.choices?.[0]?.delta?.content || ''; full += d; thinking.textContent = full; document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight; } catch {} } }
     chatHistory.push({ role: 'assistant', content: full });
-    // Feedback-Buttons fÃÂÃÂ¼r alle + Save fÃÂÃÂ¼r Admin
+    // Feedback-Buttons für alle + Save für Admin
     const actions = document.createElement('div'); actions.className = 'msg-actions';
     let convId = convIdHeader;
-    const goodBtn = document.createElement('button'); goodBtn.textContent = 'ÃÂ°ÃÂÃÂÃÂ'; goodBtn.title = 'Antwort war hilfreich';
-    const badBtn = document.createElement('button'); badBtn.textContent = 'ÃÂ°ÃÂÃÂÃÂ'; badBtn.title = 'Antwort war falsch oder unpassend';
+    const goodBtn = document.createElement('button'); goodBtn.textContent = '👍'; goodBtn.title = 'Antwort war hilfreich';
+    const badBtn = document.createElement('button'); badBtn.textContent = '👎'; badBtn.title = 'Antwort war falsch oder unpassend';
     const sendFeedback = async (value, btn) => {
       if (!convId) { await new Promise(r => setTimeout(r, 600)); convId = await findConvId(text); }
-      if (!convId) { btn.textContent = 'ÃÂ¢ÃÂÃÂ'; return; }
+      if (!convId) { btn.textContent = '❌'; return; }
       const r = await fetch(API_BASE + '/feedback', { method: 'POST', headers: headers(), body: JSON.stringify({ conversation_id: convId, feedback: value }) });
-      if (r.ok) { btn.classList.add('saved'); btn.textContent = value === 'good' ? 'ÃÂ°ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ' : 'ÃÂ°ÃÂÃÂÃÂÃÂ¢ÃÂÃÂ'; goodBtn.disabled = true; badBtn.disabled = true; } else { btn.textContent = 'ÃÂ¢ÃÂÃÂ'; }
+      if (r.ok) { btn.classList.add('saved'); btn.textContent = value === 'good' ? '👍✓' : '👎✓'; goodBtn.disabled = true; badBtn.disabled = true; } else { btn.textContent = '❌'; }
     };
     goodBtn.onclick = () => sendFeedback('good', goodBtn);
     badBtn.onclick = () => sendFeedback('bad', badBtn);
     actions.appendChild(goodBtn); actions.appendChild(badBtn);
     if (isAdmin()) {
-      const saveBtn = document.createElement('button'); saveBtn.textContent = 'ÃÂ°ÃÂÃÂÃÂ¾ Ins Firmenwissen';
+      const saveBtn = document.createElement('button'); saveBtn.textContent = '💾 Ins Firmenwissen';
       saveBtn.onclick = async () => {
-        saveBtn.textContent = 'ÃÂ¢ÃÂÃÂ³ Speichere...';
+        saveBtn.textContent = '⏳ Speichere...';
         if (!convId) { await new Promise(r => setTimeout(r, 800)); convId = await findConvId(text); }
-        if (!convId) { saveBtn.textContent = 'ÃÂ¢ÃÂÃÂ Conv nicht gefunden'; return; }
+        if (!convId) { saveBtn.textContent = '❌ Conv nicht gefunden'; return; }
         const res = await fetch(API_BASE + '/admin/save-knowledge', { method: 'POST', headers: headers(), body: JSON.stringify({ conversation_id: convId }) });
         const j = await res.json();
-        if (j.saved) { saveBtn.textContent = 'ÃÂ¢ÃÂÃÂ Gespeichert'; saveBtn.classList.add('saved'); } else { saveBtn.textContent = 'ÃÂ¢ÃÂÃÂ ' + (j.error || 'Fehler'); }
+        if (j.saved) { saveBtn.textContent = '✓ Gespeichert'; saveBtn.classList.add('saved'); } else { saveBtn.textContent = '❌ ' + (j.error || 'Fehler'); }
       };
       actions.appendChild(saveBtn);
     }
@@ -567,18 +567,18 @@ document.getElementById('pw').addEventListener('keydown', function(e) { if (e.ke
 // Voice
 const btnMic = document.getElementById('btnMic');
 btnMic.addEventListener('click', async () => {
-  if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); btnMic.classList.remove('recording'); btnMic.textContent = 'ÃÂ°ÃÂÃÂÃÂ¤'; return; }
+  if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); btnMic.classList.remove('recording'); btnMic.textContent = '🎤'; return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' }); audioChunks = [];
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
     mediaRecorder.onstop = async () => {
-      stream.getTracks().forEach(t => t.stop()); btnMic.textContent = 'ÃÂ¢ÃÂÃÂ³';
+      stream.getTracks().forEach(t => t.stop()); btnMic.textContent = '⏳';
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
       try { const res = await fetch(API_BASE + '/transcribe', { method: 'POST', headers: { 'Content-Type': 'audio/webm', 'X-Herzog-PW': pw, 'X-Herzog-User': userName, 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY }, body: blob }); const j = await res.json(); if (j.text) { const inp = document.getElementById('input'); inp.value = (inp.value ? inp.value + ' ' : '') + j.text.trim(); inp.focus(); } else alert('Transkription: ' + (j.error || 'leer')); } catch (err) { alert('Voice Fehler: ' + err.message); }
-      btnMic.textContent = 'ÃÂ°ÃÂÃÂÃÂ¤';
+      btnMic.textContent = '🎤';
     };
-    mediaRecorder.start(); btnMic.classList.add('recording'); btnMic.textContent = 'ÃÂ¢ÃÂÃÂ¹';
+    mediaRecorder.start(); btnMic.classList.add('recording'); btnMic.textContent = '⏹';
   } catch (err) { alert('Mikrofon verweigert: ' + err.message); }
 });
 
@@ -589,11 +589,11 @@ document.getElementById('lagerFotoInput').addEventListener('change', async (e) =
   const raum = document.getElementById('lagerOrtRaum').value; const detail = document.getElementById('lagerOrtDetail').value.trim();
   const ort = detail ? raum + ' ' + detail : raum;
   const status = document.getElementById('lagerFotoStatus');
-  status.textContent = 'ÃÂ°ÃÂÃÂÃÂ Foto wird analysiert (10-30 Sek)...';
+  status.textContent = '🔄 Foto wird analysiert (10-30 Sek)...';
   const reader = new FileReader();
   reader.onload = async () => {
     const base64 = reader.result.split(',')[1];
-    try { const res = await fetch(API_BASE + '/vision', { method: 'POST', headers: headers(), body: JSON.stringify({ image_base64: base64, ort }) }); const j = await res.json(); if (j.error) { status.textContent = 'ÃÂ¢ÃÂÃÂ ' + j.error; return; } status.textContent = 'ÃÂ¢ÃÂÃÂ ' + (j.count || 0) + ' Artikel erkannt ÃÂ¢ÃÂÃÂ Review'; refreshReviewCount(); loadLager(); } catch (err) { status.textContent = 'ÃÂ¢ÃÂÃÂ ' + err.message; }
+    try { const res = await fetch(API_BASE + '/vision', { method: 'POST', headers: headers(), body: JSON.stringify({ image_base64: base64, ort }) }); const j = await res.json(); if (j.error) { status.textContent = '❌ ' + j.error; return; } status.textContent = '✅ ' + (j.count || 0) + ' Artikel erkannt → Review'; refreshReviewCount(); loadLager(); } catch (err) { status.textContent = '❌ ' + err.message; }
     e.target.value = '';
   };
   reader.readAsDataURL(file);
@@ -602,16 +602,16 @@ document.getElementById('lagerFotoInput').addEventListener('change', async (e) =
 async function loadLager() { const el = document.getElementById('lagerList'); el.innerHTML = '<div class="loading">Lade...</div>'; try { const res = await fetch(API_BASE + '/lager/list', { headers: headers() }); const j = await res.json(); renderLagerItems(el, j.items || [], false); } catch (err) { el.innerHTML = '<div class="loading">Fehler: ' + err.message + '</div>'; } }
 document.getElementById('lagerSearch').addEventListener('input', (e) => { const q = e.target.value.toLowerCase(); document.querySelectorAll('#lagerList .lager-item').forEach(el => { el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
 
-async function loadReview() { const el = document.getElementById('reviewList'); el.innerHTML = '<div class="loading">Lade...</div>'; try { const res = await fetch(API_BASE + '/lager/list?review=1', { headers: headers() }); const j = await res.json(); renderLagerItems(el, j.items || [], true); if (!j.items?.length) el.innerHTML = '<div class="loading">Keine offenen VorschlÃÂÃÂ¤ge ÃÂ°ÃÂÃÂÃÂ</div>'; } catch (err) { el.innerHTML = '<div class="loading">Fehler: ' + err.message + '</div>'; } }
+async function loadReview() { const el = document.getElementById('reviewList'); el.innerHTML = '<div class="loading">Lade...</div>'; try { const res = await fetch(API_BASE + '/lager/list?review=1', { headers: headers() }); const j = await res.json(); renderLagerItems(el, j.items || [], true); if (!j.items?.length) el.innerHTML = '<div class="loading">Keine offenen Vorschläge 🎉</div>'; } catch (err) { el.innerHTML = '<div class="loading">Fehler: ' + err.message + '</div>'; } }
 
 async function refreshReviewCount() { try { const res = await fetch(API_BASE + '/lager/list?review=1', { headers: headers() }); const j = await res.json(); const n = (j.items || []).length; const badge = document.getElementById('reviewBadge'); if (n > 0) { badge.textContent = n; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } catch {} }
 async function refreshGapsCount() { try { const res = await fetch(API_BASE + '/admin/gaps', { headers: headers() }); const j = await res.json(); const n = (j.gaps || []).length; const badge = document.getElementById('gapsBadge'); if (n > 0) { badge.textContent = n; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); } catch {} }
 
-function renderLagerItems(container, items, isReview) { container.innerHTML = ''; items.forEach(item => { const div = document.createElement('div'); div.className = 'lager-item' + (item.needs_review ? ' review' : ''); div.innerHTML = `<h4>${esc(item.bezeichnung)} ${item.needs_review ? '<span class="badge review">Entwurf</span>' : ''}</h4><div class="meta">${item.menge || 0} ${item.einheit || 'Stk'} @ ${esc(item.ort || '?')}${item.hersteller ? ' ÃÂÃÂ· ' + esc(item.hersteller) : ''}${item.kategorie ? ' ÃÂÃÂ· ' + esc(item.kategorie) : ''}${item.confidence ? ' ÃÂÃÂ· KI ' + Math.round(item.confidence * 100) + '%' : ''}</div><div class="actions">${isReview ? `<button class="send success" onclick="approveItem('${item.id}')">ÃÂ¢ÃÂÃÂ ÃÂÃÂbernehmen</button>` : ''}<button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="moveItem('${item.id}', 'zugang')">+</button><button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="moveItem('${item.id}', 'abgang')">ÃÂ¢ÃÂÃÂ</button><button class="icon danger" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="deleteItem('${item.id}')">ÃÂ°ÃÂÃÂÃÂ</button></div>`; container.appendChild(div); }); }
+function renderLagerItems(container, items, isReview) { container.innerHTML = ''; items.forEach(item => { const div = document.createElement('div'); div.className = 'lager-item' + (item.needs_review ? ' review' : ''); div.innerHTML = `<h4>${esc(item.bezeichnung)} ${item.needs_review ? '<span class="badge review">Entwurf</span>' : ''}</h4><div class="meta">${item.menge || 0} ${item.einheit || 'Stk'} @ ${esc(item.ort || '?')}${item.hersteller ? ' · ' + esc(item.hersteller) : ''}${item.kategorie ? ' · ' + esc(item.kategorie) : ''}${item.confidence ? ' · KI ' + Math.round(item.confidence * 100) + '%' : ''}</div><div class="actions">${isReview ? `<button class="send success" onclick="approveItem('${item.id}')">✓ Übernehmen</button>` : ''}<button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="moveItem('${item.id}', 'zugang')">+</button><button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="moveItem('${item.id}', 'abgang')">−</button><button class="icon danger" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="deleteItem('${item.id}')">🗑</button></div>`; container.appendChild(div); }); }
 function esc(s) { return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 async function approveItem(id) { await fetch(API_BASE + '/lager/update', { method: 'POST', headers: headers(), body: JSON.stringify({ id, patch: { needs_review: false } }) }); loadReview(); refreshReviewCount(); }
-async function deleteItem(id) { if (!confirm('LÃÂÃÂ¶schen?')) return; await fetch(API_BASE + '/lager/delete', { method: 'POST', headers: headers(), body: JSON.stringify({ id }) }); if (currentView === 'lager') loadLager(); if (currentView === 'review') loadReview(); refreshReviewCount(); }
+async function deleteItem(id) { if (!confirm('Löschen?')) return; await fetch(API_BASE + '/lager/delete', { method: 'POST', headers: headers(), body: JSON.stringify({ id }) }); if (currentView === 'lager') loadLager(); if (currentView === 'review') loadReview(); refreshReviewCount(); }
 async function moveItem(id, typ) { const m = parseInt(prompt(typ === 'zugang' ? 'Wie viele dazu?' : 'Wie viele raus?', '1')); if (!m || isNaN(m)) return; const grund = prompt('Grund (optional):', '') || ''; await fetch(API_BASE + '/lager/bewegung', { method: 'POST', headers: headers(), body: JSON.stringify({ item_id: id, typ, menge: m, grund }) }); loadLager(); }
 
 // ADMIN
@@ -623,19 +623,19 @@ async function loadAdmin(filter) {
     const j = await res.json();
     if (j.error) { el.innerHTML = '<div class="loading">' + j.error + '</div>'; return; }
     const items = j.conversations || [];
-    if (!items.length) { el.innerHTML = '<div class="loading">Keine EintrÃÂÃÂ¤ge</div>'; return; }
+    if (!items.length) { el.innerHTML = '<div class="loading">Keine Einträge</div>'; return; }
     el.innerHTML = '';
     items.forEach(c => {
       const div = document.createElement('div'); div.className = 'conv-item';
       const date = new Date(c.created_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-      div.innerHTML = `<div class="meta">${esc(c.user_name || '?')} ÃÂÃÂ· ${date} ÃÂÃÂ· Hits: ${c.hits ?? 0}${c.saved_to_knowledge ? ' ÃÂÃÂ· ÃÂ¢ÃÂÃÂ im Wissen' : ''}</div><div class="conv-frage">${esc(c.frage)}</div><div class="conv-antwort">${esc(c.antwort || '(keine Antwort geloggt)')}</div><div class="actions">${c.antwort && !c.saved_to_knowledge ? `<button class="send success" onclick="saveConvToKnowledge('${c.id}', this)">ÃÂ°ÃÂÃÂÃÂ¾ Ins Firmenwissen</button>` : ''}<button class="icon danger" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="deleteConv('${c.id}')">ÃÂ°ÃÂÃÂÃÂ</button></div>`;
+      div.innerHTML = `<div class="meta">${esc(c.user_name || '?')} · ${date} · Hits: ${c.hits ?? 0}${c.saved_to_knowledge ? ' · ✓ im Wissen' : ''}</div><div class="conv-frage">${esc(c.frage)}</div><div class="conv-antwort">${esc(c.antwort || '(keine Antwort geloggt)')}</div><div class="actions">${c.antwort && !c.saved_to_knowledge ? `<button class="send success" onclick="saveConvToKnowledge('${c.id}', this)">💾 Ins Firmenwissen</button>` : ''}<button class="icon danger" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="deleteConv('${c.id}')">🗑</button></div>`;
       div.querySelector('.conv-antwort').addEventListener('click', function() { this.classList.toggle('expanded'); });
       el.appendChild(div);
     });
   } catch (err) { el.innerHTML = '<div class="loading">Fehler: ' + err.message + '</div>'; }
 }
-async function saveConvToKnowledge(id, btn) { btn.textContent = 'ÃÂ¢ÃÂÃÂ³'; const res = await fetch(API_BASE + '/admin/save-knowledge', { method: 'POST', headers: headers(), body: JSON.stringify({ conversation_id: id }) }); const j = await res.json(); if (j.saved) { btn.textContent = 'ÃÂ¢ÃÂÃÂ Gespeichert'; btn.classList.remove('success'); btn.classList.add('saved'); } else { btn.textContent = 'ÃÂ¢ÃÂÃÂ ' + (j.error || 'Fehler'); } }
-async function deleteConv(id) { if (!confirm('LÃÂÃÂ¶schen?')) return; await fetch(API_BASE + '/admin/delete-conversation', { method: 'POST', headers: headers(), body: JSON.stringify({ id }) }); loadAdmin(document.querySelector('#admin .filter-bar button.active')?.dataset.filter || 'today'); }
+async function saveConvToKnowledge(id, btn) { btn.textContent = '⏳'; const res = await fetch(API_BASE + '/admin/save-knowledge', { method: 'POST', headers: headers(), body: JSON.stringify({ conversation_id: id }) }); const j = await res.json(); if (j.saved) { btn.textContent = '✓ Gespeichert'; btn.classList.remove('success'); btn.classList.add('saved'); } else { btn.textContent = '❌ ' + (j.error || 'Fehler'); } }
+async function deleteConv(id) { if (!confirm('Löschen?')) return; await fetch(API_BASE + '/admin/delete-conversation', { method: 'POST', headers: headers(), body: JSON.stringify({ id }) }); loadAdmin(document.querySelector('#admin .filter-bar button.active')?.dataset.filter || 'today'); }
 
 let waConversations = [];
 let waCurrentChat = null;
@@ -675,7 +675,7 @@ async function loadDashboard() {
   document.getElementById('dashDate').textContent = new Date().toLocaleDateString('de-DE', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
 
   const grid = document.getElementById('dashGrid');
-  grid.innerHTML = '<div class="loading">Lade ÃÂÃÂberblick...</div>';
+  grid.innerHTML = '<div class="loading">Lade Überblick...</div>';
 
   try {
     const r = await fetch(BRIEFING_API + '/today?format=json', { headers: { 'X-Herzog-PW': localStorage.getItem('hki_pw') || '' } });
@@ -710,19 +710,19 @@ async function loadDashboard() {
 
     cards.push(`
       <div class="dash-card ${terminCount > 0 ? 'highlight' : ''}" onclick="switchView('briefing')">
-        <h3>Termine heute <span class="icon">ÃÂ°ÃÂÃÂÃÂ</span></h3>
+        <h3>Termine heute <span class="icon">📅</span></h3>
         <div class="dash-value ${terminCount > 0 ? 'pink' : ''}">${terminCount}</div>
         <div class="dash-subtext">${terminCount === 0 ? 'Kein Termin' : terminCount === 1 ? '1 Termin geplant' : terminCount + ' Termine'}</div>
         ${terminCount > 0 ? '<div class="dash-list">' + b.termine_heute.slice(0,3).map(t => {
           const zeit = new Date(t.start_time).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-          return `<div class="dash-list-item"><span class="time">${zeit}</span> ÃÂÃÂ· ${t.title || '?'}${t.projects?.customer_name ? ' (' + t.projects.customer_name + ')' : ''}</div>`;
+          return `<div class="dash-list-item"><span class="time">${zeit}</span> · ${t.title || '?'}${t.projects?.customer_name ? ' (' + t.projects.customer_name + ')' : ''}</div>`;
         }).join('') + '</div>' : ''}
       </div>
     `);
 
     cards.push(`
       <div class="dash-card ${mailCount > 5 ? 'highlight' : ''}" onclick="switchView('mails')">
-        <h3>Offene Mails <span class="icon">ÃÂ°ÃÂÃÂÃÂ§</span></h3>
+        <h3>Offene Mails <span class="icon">📧</span></h3>
         <div class="dash-value ${mailCount > 5 ? 'pink' : ''}">${mailCount}</div>
         <div class="dash-subtext">${mailCount === 0 ? 'Alles beantwortet' : '> 24h unbeantwortet'}</div>
         ${b.neue_mails_12h_count ? '<div class="dash-subtext" style="margin-top:6px">+ ' + b.neue_mails_12h_count + ' neue letzte 12h</div>' : ''}
@@ -731,35 +731,35 @@ async function loadDashboard() {
 
     cards.push(`
       <div class="dash-card ${waNeuCount > 0 ? 'highlight' : ''}" onclick="switchView('whatsapp')">
-        <h3>WhatsApp <span class="icon">ÃÂ°ÃÂÃÂÃÂ¬</span></h3>
+        <h3>WhatsApp <span class="icon">💬</span></h3>
         <div class="dash-value ${waNeuCount > 0 ? 'pink' : ''}">${waNeuCount}</div>
-        <div class="dash-subtext">neue Nachrichten${waStatus?.running ? '' : ' ÃÂÃÂ· ÃÂ¢ÃÂÃÂ  Worker offline'}</div>
+        <div class="dash-subtext">neue Nachrichten${waStatus?.running ? '' : ' · ⚠ Worker offline'}</div>
       </div>
     `);
 
     cards.push(`
       <div class="dash-card ${auftragCount > 0 ? 'highlight' : ''}" onclick="switchView('briefing')">
-        <h3>Offene AuftrÃÂÃÂ¤ge <span class="icon">ÃÂ°ÃÂÃÂÃÂ</span></h3>
+        <h3>Offene Aufträge <span class="icon">📝</span></h3>
         <div class="dash-value ${auftragCount > 0 ? 'pink' : ''}">${auftragCount}</div>
         <div class="dash-subtext">Angebote + Beauftragt</div>
         ${auftragCount > 0 ? '<div class="dash-list">' + b.offene_auftraege.slice(0,3).map(p =>
-          `<div class="dash-list-item"><span class="time">${p.status || '?'}</span> ÃÂÃÂ· ${p.customer_name || '?'}</div>`
+          `<div class="dash-list-item"><span class="time">${p.status || '?'}</span> · ${p.customer_name || '?'}</div>`
         ).join('') + '</div>' : ''}
       </div>
     `);
 
     cards.push(`
       <div class="dash-card ${backlogCount > 0 ? 'highlight' : ''}" onclick="switchView('briefing')">
-        <h3>Backlog <span class="icon">ÃÂ°ÃÂÃÂÃÂ</span></h3>
+        <h3>Backlog <span class="icon">📋</span></h3>
         <div class="dash-value ${backlogCount > 0 ? 'pink' : ''}">${backlogCount}</div>
-        <div class="dash-subtext">offene EintrÃÂÃÂ¤ge</div>
+        <div class="dash-subtext">offene Einträge</div>
       </div>
     `);
 
     cards.push(`
       <div class="dash-card wide" onclick="switchView('briefing')">
-        <h3>ÃÂ°ÃÂÃÂ§ÃÂ  Gemerkte Dinge <span class="icon">${gemerktCount}</span></h3>
-        ${gemerktCount === 0 ? '<div class="dash-subtext">Noch nichts gespeichert. Im Chat: ÃÂ¢ÃÂÃÂMerk dir ..."</div>' :
+        <h3>🧠 Gemerkte Dinge <span class="icon">${gemerktCount}</span></h3>
+        ${gemerktCount === 0 ? '<div class="dash-subtext">Noch nichts gespeichert. Im Chat: „Merk dir ..."</div>' :
           '<div class="dash-list">' + b.gemerkte_dinge.slice(0,5).map(g =>
             `<div class="dash-list-item"><strong>${(g.titel || '').slice(0,60)}</strong><div class="time">${(g.inhalt || '').slice(0,100)}</div></div>`
           ).join('') + '</div>'}
@@ -768,35 +768,35 @@ async function loadDashboard() {
 
     cards.push(`
       <div class="dash-card ${wartungCount > 3 ? 'highlight' : ''}" onclick="switchView('briefing')">
-        <h3>FÃÂÃÂ¤llige Wartungen <span class="icon">ÃÂ°ÃÂÃÂÃÂ§</span></h3>
+        <h3>Fällige Wartungen <span class="icon">🔧</span></h3>
         <div class="dash-value ${wartungCount > 3 ? 'pink' : ''}">${wartungCount}</div>
-        <div class="dash-subtext">nÃÂÃÂ¤chste 30 Tage</div>
+        <div class="dash-subtext">nächste 30 Tage</div>
         ${wartungCount > 0 ? '<div class="dash-list">' + b.faellige_wartungen_30tage.slice(0,3).map(w =>
-          `<div class="dash-list-item"><span class="time">${w.naechste_wartung}</span> ÃÂÃÂ· ${w.kunde}</div>`
+          `<div class="dash-list-item"><span class="time">${w.naechste_wartung}</span> · ${w.kunde}</div>`
         ).join('') + '</div>' : ''}
       </div>
     `);
 
     cards.push(`
       <div class="dash-card ${taskCount > 0 ? 'highlight' : ''}" onclick="switchView('briefing')">
-        <h3>FÃÂÃÂ¤llige Aufgaben <span class="icon">ÃÂ¢ÃÂÃÂ</span></h3>
+        <h3>Fällige Aufgaben <span class="icon">✅</span></h3>
         <div class="dash-value ${taskCount > 0 ? 'pink' : ''}">${taskCount}</div>
-        <div class="dash-subtext">Heute oder ÃÂÃÂ¼berfÃÂÃÂ¤llig</div>
+        <div class="dash-subtext">Heute oder überfällig</div>
       </div>
     `);
 
     cards.push(`
       <div class="dash-card" onclick="switchView('briefing')">
-        <h3>Stille Baustellen <span class="icon">ÃÂ°ÃÂÃÂÃÂ</span></h3>
+        <h3>Stille Baustellen <span class="icon">🏗</span></h3>
         <div class="dash-value">${stilleCount}</div>
-        <div class="dash-subtext">> 3 Tage ohne AktivitÃÂÃÂ¤t</div>
+        <div class="dash-subtext">> 3 Tage ohne Aktivität</div>
       </div>
     `);
 
     if (isAdmin()) {
       cards.push(`
         <div class="dash-card" onclick="switchView('gaps')">
-          <h3>KI-WissenslÃÂÃÂ¼cken <span class="icon">ÃÂ°ÃÂÃÂÃÂ³</span></h3>
+          <h3>KI-Wissenslücken <span class="icon">🕳</span></h3>
           <div class="dash-value">${lueckenCount}</div>
           <div class="dash-subtext">Fragen ohne Treffer</div>
         </div>
@@ -805,7 +805,7 @@ async function loadDashboard() {
       if (curriculum) {
         cards.push(`
           <div class="dash-card" onclick="switchView('train')">
-            <h3>SHK-Wissen <span class="icon">ÃÂ°ÃÂÃÂÃÂ</span></h3>
+            <h3>SHK-Wissen <span class="icon">🎓</span></h3>
             <div class="dash-value pink">${curriculum.percent}%</div>
             <div class="dash-subtext">${curriculum.done}/${curriculum.total} Themen trainiert</div>
             <div style="background:#1a2340;border-radius:999px;height:6px;margin-top:8px;overflow:hidden"><div style="height:100%;background:var(--herzog-pink);width:${curriculum.percent}%"></div></div>
@@ -850,7 +850,7 @@ async function loadCurriculumStats() {
     const r = await fetch(CURRICULUM_API + '/stats', { headers: headers() });
     const j = await r.json();
     document.getElementById('trainCurriculumStats').innerHTML =
-      `<strong>${j.done}/${j.total}</strong> Themen fertig ÃÂÃÂ· ${j.pending} offen${j.error ? ' ÃÂÃÂ· ' + j.error + ' Fehler' : ''}`;
+      `<strong>${j.done}/${j.total}</strong> Themen fertig · ${j.pending} offen${j.error ? ' · ' + j.error + ' Fehler' : ''}`;
     document.getElementById('trainCurriculumBar').style.width = j.percent + '%';
   } catch {}
 }
@@ -862,19 +862,19 @@ async function trainSendText() {
   const t = document.getElementById('trainText').value.trim();
   const st = document.getElementById('trainTextStatus');
   if (!t) { st.textContent = 'Text fehlt'; return; }
-  st.textContent = 'ÃÂ¢ÃÂÃÂ³ KI strukturiert...';
+  st.textContent = '⏳ KI strukturiert...';
   const r = await fetch(TRAIN_API + '/text', { method: 'POST', headers: headers(), body: JSON.stringify({ text: t }) });
   const j = await r.json();
-  if (j.saved_id) { st.textContent = 'ÃÂ¢ÃÂÃÂ Gespeichert: ' + (j.knowledge?.title || '?'); document.getElementById('trainText').value = ''; }
-  else if (j.skipped) { st.textContent = 'ÃÂ¢ÃÂÃÂ  ' + (j.reason || 'nicht gespeichert'); }
-  else st.textContent = 'ÃÂ¢ÃÂÃÂ ' + (j.error || 'Fehler');
+  if (j.saved_id) { st.textContent = '✓ Gespeichert: ' + (j.knowledge?.title || '?'); document.getElementById('trainText').value = ''; }
+  else if (j.skipped) { st.textContent = '⚠ ' + (j.reason || 'nicht gespeichert'); }
+  else st.textContent = '✗ ' + (j.error || 'Fehler');
 }
 async function trainToggleRec() {
   const btn = document.getElementById('trainRecBtn');
   const st = document.getElementById('trainRecStatus');
   if (trainMediaRecorder && trainMediaRecorder.state === 'recording') {
     trainMediaRecorder.stop();
-    btn.textContent = 'ÃÂ°ÃÂÃÂÃÂ¤ Aufnahme starten';
+    btn.textContent = '🎤 Aufnahme starten';
     btn.style.background = '#dc2626';
     return;
   }
@@ -886,36 +886,36 @@ async function trainToggleRec() {
     trainMediaRecorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
       const blob = new Blob(trainChunks, { type: 'audio/webm' });
-      st.textContent = 'ÃÂ¢ÃÂÃÂ³ Transkribiere & strukturiere...';
+      st.textContent = '⏳ Transkribiere & strukturiere...';
       try {
         const r = await fetch(TRAIN_API + '/voice', { method: 'POST', headers: { 'X-Herzog-PW': localStorage.getItem('hki_pw') || '', 'X-Herzog-User': userName || 'unbekannt', 'Content-Type': 'audio/webm' }, body: blob });
         const j = await r.json();
-        if (j.saved_id) st.innerHTML = 'ÃÂ¢ÃÂÃÂ Gespeichert: <strong>' + (j.knowledge?.title || '?') + '</strong><br>Transkript: ' + (j.transcript || '').slice(0, 200);
-        else if (j.skipped) st.textContent = 'ÃÂ¢ÃÂÃÂ  Nicht gespeichert: ' + (j.reason || '');
-        else st.textContent = 'ÃÂ¢ÃÂÃÂ ' + (j.error || 'Fehler');
-      } catch (e) { st.textContent = 'ÃÂ¢ÃÂÃÂ ' + e.message; }
+        if (j.saved_id) st.innerHTML = '✓ Gespeichert: <strong>' + (j.knowledge?.title || '?') + '</strong><br>Transkript: ' + (j.transcript || '').slice(0, 200);
+        else if (j.skipped) st.textContent = '⚠ Nicht gespeichert: ' + (j.reason || '');
+        else st.textContent = '✗ ' + (j.error || 'Fehler');
+      } catch (e) { st.textContent = '✗ ' + e.message; }
     };
     trainMediaRecorder.start();
-    btn.textContent = 'ÃÂ¢ÃÂÃÂ¹ Stoppen';
+    btn.textContent = '⏹ Stoppen';
     btn.style.background = '#16a34a';
-    st.textContent = 'ÃÂ°ÃÂÃÂÃÂ´ Aufnahme lÃÂÃÂ¤uft... sprich jetzt';
-  } catch (e) { st.textContent = 'ÃÂ¢ÃÂÃÂ ' + e.message; }
+    st.textContent = '🔴 Aufnahme läuft... sprich jetzt';
+  } catch (e) { st.textContent = '✗ ' + e.message; }
 }
 async function trainUploadPdf() {
   const f = document.getElementById('trainPdfFile').files[0];
   const title = document.getElementById('trainPdfTitle').value.trim() || (f?.name || 'PDF');
   const st = document.getElementById('trainPdfStatus');
-  if (!f) { st.textContent = 'Datei wÃÂÃÂ¤hlen'; return; }
-  st.textContent = 'ÃÂ¢ÃÂÃÂ³ Parse PDF + strukturiere Chunks...';
+  if (!f) { st.textContent = 'Datei wählen'; return; }
+  st.textContent = '⏳ Parse PDF + strukturiere Chunks...';
   try {
     const buf = await f.arrayBuffer();
     const r = await fetch(TRAIN_API + '/pdf', { method: 'POST', headers: { 'X-Herzog-PW': localStorage.getItem('hki_pw') || '', 'X-Herzog-User': userName || 'unbekannt', 'Content-Type': 'application/pdf', 'X-Document-Title': title }, body: buf });
     const j = await r.json();
-    if (j.error) { st.textContent = 'ÃÂ¢ÃÂÃÂ ' + j.error; return; }
-    st.innerHTML = `ÃÂ¢ÃÂÃÂ <strong>${j.saved} Wissens-EintrÃÂÃÂ¤ge</strong> aus ${j.processed}/${j.total_chunks} Chunks (${j.chars} Zeichen)`;
+    if (j.error) { st.textContent = '✗ ' + j.error; return; }
+    st.innerHTML = `✓ <strong>${j.saved} Wissens-Einträge</strong> aus ${j.processed}/${j.total_chunks} Chunks (${j.chars} Zeichen)`;
     document.getElementById('trainPdfFile').value = '';
     document.getElementById('trainPdfTitle').value = '';
-  } catch (e) { st.textContent = 'ÃÂ¢ÃÂÃÂ ' + e.message; }
+  } catch (e) { st.textContent = '✗ ' + e.message; }
 }
 
 async function loadWhatsApp() {
@@ -926,7 +926,7 @@ async function loadWhatsApp() {
     const badge = document.getElementById('waWorkerBadge');
     if (s.running) {
       badge.className = 'wa-status on';
-      badge.textContent = 'online ÃÂÃÂ· ' + (s.phone || '?');
+      badge.textContent = 'online · ' + (s.phone || '?');
     } else {
       badge.className = 'wa-status off';
       badge.textContent = 'worker aus';
@@ -966,7 +966,7 @@ function waRenderChatList() {
     const row = document.createElement('div');
     row.className = 'wa-chat-row' + (waCurrentChat?.chat_jid === c.chat_jid ? ' active' : '');
     row.onclick = () => waOpenChat(c);
-    const lastPreview = (c.last_from === 'me' ? 'ÃÂ¢ÃÂÃÂ ' : '') + (c.last_text || '').slice(0, 50);
+    const lastPreview = (c.last_from === 'me' ? '✓ ' : '') + (c.last_text || '').slice(0, 50);
     row.innerHTML = `
       <div class="wa-avatar ${c.is_group ? 'group' : ''}">${waInitials(c.name)}</div>
       <div class="wa-chat-meta">
@@ -986,7 +986,7 @@ function waFilterList(val) { waRenderChatList(); }
 async function waOpenChat(conv) {
   // Unread-Badge sofort auf 0 setzen (optimistisch, Server markiert gleich als gelesen)
   conv.unread = 0;
-  // Auch im globalen Array updaten damit es beim nÃÂÃÂ¤chsten Poll stabil bleibt
+  // Auch im globalen Array updaten damit es beim nächsten Poll stabil bleibt
   const existing = waConversations.find(c => c.chat_jid === conv.chat_jid);
   if (existing) existing.unread = 0;
   waCurrentChat = conv;
@@ -1000,13 +1000,13 @@ async function waOpenChat(conv) {
         <div class="wa-chat-title">${waEscape(conv.name || '?')}</div>
         <div class="wa-chat-sub">${conv.is_group ? 'Gruppe' : (conv.sender_number || '')}</div>
       </div>
-      <button onclick="waCurrentChat=null;document.getElementById('waWrap').classList.remove('chat-open');document.getElementById('waRight').innerHTML='<div class=&quot;wa-empty&quot;><div><div style=&quot;font-size:40px&quot;>ÃÂ°ÃÂÃÂÃÂ¬</div>Chat auswÃÂÃÂ¤hlen</div></div>'" style="background:transparent;color:#8696a0;border:0;cursor:pointer;font-size:20px">ÃÂ¢ÃÂÃÂ</button>
+      <button onclick="waCurrentChat=null;document.getElementById('waWrap').classList.remove('chat-open');document.getElementById('waRight').innerHTML='<div class=&quot;wa-empty&quot;><div><div style=&quot;font-size:40px&quot;>💬</div>Chat auswählen</div></div>'" style="background:transparent;color:#8696a0;border:0;cursor:pointer;font-size:20px">✕</button>
     </div>
     <div class="wa-messages" id="waMessages"><div class="wa-empty">Lade...</div></div>
     <div class="wa-input">
-      <button class="draft" onclick="waGetDraft()" title="KI-Entwurf">ÃÂ°ÃÂÃÂÃÂ¡ KI</button>
+      <button class="draft" onclick="waGetDraft()" title="KI-Entwurf">💡 KI</button>
       <textarea id="waComposer" placeholder="Nachricht..." onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();waSendCurrent()}"></textarea>
-      <button onclick="waSendCurrent()" title="Senden">ÃÂ¢ÃÂÃÂ¤</button>
+      <button onclick="waSendCurrent()" title="Senden">➤</button>
     </div>`;
   await waLoadMessages(conv.chat_jid, false);
   // Nach Server-Markierung als gelesen die Konversations-Liste neu laden (echte Counts)
@@ -1036,7 +1036,7 @@ async function waLoadMessages(jid, silent) {
       b.innerHTML = `
         ${isGroupIncoming ? '<div class="wa-sender">' + waEscape(m.sender_name || m.sender_number || '?') + '</div>' : ''}
         <div>${waEscape(m.message_text).replace(/\n/g,'<br>')}</div>
-        <div class="wa-bubble-time">${waFormatFullTime(m.time)}${m.direction === 'out' ? (m.status === 'sent' ? ' ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ' : m.status === 'pending' ? ' ÃÂ°ÃÂÃÂÃÂ' : m.status === 'failed' ? ' ÃÂ¢ÃÂÃÂ' : '') : ''}</div>`;
+        <div class="wa-bubble-time">${waFormatFullTime(m.time)}${m.direction === 'out' ? (m.status === 'sent' ? ' ✓✓' : m.status === 'pending' ? ' 🕓' : m.status === 'failed' ? ' ✗' : '') : ''}</div>`;
       el.appendChild(b);
     }
     if (!silent || wasAtBottom) el.scrollTop = el.scrollHeight;
@@ -1063,7 +1063,7 @@ async function waSendCurrent() {
 async function waGetDraft() {
   if (!waCurrentChat) return;
   const ta = document.getElementById('waComposer');
-  ta.placeholder = 'ÃÂ°ÃÂÃÂÃÂ¡ KI denkt...';
+  ta.placeholder = '💡 KI denkt...';
   try {
     const r = await fetch(WA_API + '/draft', { method: 'POST', headers: headers(), body: JSON.stringify({ chat_jid: waCurrentChat.chat_jid }) });
     const j = await r.json();
@@ -1094,84 +1094,84 @@ function renderBriefing(el, b) {
   if (b.termine_heute?.length) {
     const items = b.termine_heute.map(t => {
       const zeit = new Date(t.start_time).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-      return `<div class="brf-item"><div class="content"><strong>${zeit}</strong> ÃÂÃÂ· ${esc(t.title)}<div class="meta">${esc(t.projects?.customer_name || '')}${t.projects?.address ? ' ÃÂÃÂ· ' + esc(t.projects.address) : ''}${t.projects?.assigned_employee ? ' ÃÂÃÂ· Monteur: ' + esc(t.projects.assigned_employee) : ''}</div></div></div>`;
+      return `<div class="brf-item"><div class="content"><strong>${zeit}</strong> · ${esc(t.title)}<div class="meta">${esc(t.projects?.customer_name || '')}${t.projects?.address ? ' · ' + esc(t.projects.address) : ''}${t.projects?.assigned_employee ? ' · Monteur: ' + esc(t.projects.assigned_employee) : ''}</div></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ Termine heute <span class="count">${b.termine_heute.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>📅 Termine heute <span class="count">${b.termine_heute.length}</span></h4>${items}</div>`);
   }
 
-  // FÃÂÃÂ¤llige Aufgaben (interaktiv)
+  // Fällige Aufgaben (interaktiv)
   if (b.faellige_aufgaben?.length) {
     const items = b.faellige_aufgaben.map(t => {
-      return `<div class="brf-item" id="task-${t.id}"><div class="content"><strong>${esc(t.title)}</strong>${t.due_date ? ' <span class="meta">bis ' + t.due_date + '</span>' : ''}${t.description ? '<div class="meta">' + esc(t.description.slice(0,200)) + '</div>' : ''}${t.projects?.customer_name ? '<div class="meta">' + esc(t.projects.customer_name) + (t.projects.order_no ? ' ÃÂÃÂ· ' + esc(t.projects.order_no) : '') + '</div>' : ''}</div><div class="actions"><button class="brf-check" title="Erledigt" onclick="brfTaskDone('${t.id}')">ÃÂ¢ÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item" id="task-${t.id}"><div class="content"><strong>${esc(t.title)}</strong>${t.due_date ? ' <span class="meta">bis ' + t.due_date + '</span>' : ''}${t.description ? '<div class="meta">' + esc(t.description.slice(0,200)) + '</div>' : ''}${t.projects?.customer_name ? '<div class="meta">' + esc(t.projects.customer_name) + (t.projects.order_no ? ' · ' + esc(t.projects.order_no) : '') + '</div>' : ''}</div><div class="actions"><button class="brf-check" title="Erledigt" onclick="brfTaskDone('${t.id}')">✓</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ¢ÃÂÃÂ FÃÂÃÂ¤llige Aufgaben <span class="count">${b.faellige_aufgaben.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>✅ Fällige Aufgaben <span class="count">${b.faellige_aufgaben.length}</span></h4>${items}</div>`);
   }
 
   // Offene Mails > 24h (interaktiv)
   if (b.unbeantwortete_mails_24h?.length) {
     const items = b.unbeantwortete_mails_24h.map(m => {
       const d = new Date(m.received_at).toLocaleDateString('de-DE');
-      return `<div class="brf-item" id="mail-${m.id}"><div class="content"><strong>${esc(m.sender_name || '?')}</strong><div>${esc(m.subject || '')}</div><div class="meta">${d}</div></div><div class="actions"><button class="brf-check" title="Als erledigt markieren" onclick="brfMailDone('${m.id}')">ÃÂ¢ÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item" id="mail-${m.id}"><div class="content"><strong>${esc(m.sender_name || '?')}</strong><div>${esc(m.subject || '')}</div><div class="meta">${d}</div></div><div class="actions"><button class="brf-check" title="Als erledigt markieren" onclick="brfMailDone('${m.id}')">✓</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ§ Mails &gt; 24h offen <span class="count">${b.unbeantwortete_mails_24h.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>📧 Mails &gt; 24h offen <span class="count">${b.unbeantwortete_mails_24h.length}</span></h4>${items}</div>`);
   }
 
-  // FÃÂÃÂ¤llige Wartungen (interaktiv)
+  // Fällige Wartungen (interaktiv)
   if (b.faellige_wartungen_30tage?.length) {
     const items = b.faellige_wartungen_30tage.map(w => {
-      return `<div class="brf-item" id="wartung-${w.id}"><div class="content"><strong>${esc(w.kunde)}</strong> ÃÂÃÂ· ${esc(w.anlage_typ || '')} ${esc(w.hersteller || '')}<div class="meta">${w.naechste_wartung} ÃÂÃÂ· ${esc(w.adresse || '')}${w.telefon ? ' ÃÂÃÂ· ' + esc(w.telefon) : ''}</div></div><div class="actions"><button class="brf-check" title="DurchgefÃÂÃÂ¼hrt (+1 Jahr)" onclick="brfWartungDone('${w.id}')">ÃÂ¢ÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item" id="wartung-${w.id}"><div class="content"><strong>${esc(w.kunde)}</strong> · ${esc(w.anlage_typ || '')} ${esc(w.hersteller || '')}<div class="meta">${w.naechste_wartung} · ${esc(w.adresse || '')}${w.telefon ? ' · ' + esc(w.telefon) : ''}</div></div><div class="actions"><button class="brf-check" title="Durchgeführt (+1 Jahr)" onclick="brfWartungDone('${w.id}')">✓</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ§ FÃÂÃÂ¤llige Wartungen 30 Tage <span class="count">${b.faellige_wartungen_30tage.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>🔧 Fällige Wartungen 30 Tage <span class="count">${b.faellige_wartungen_30tage.length}</span></h4>${items}</div>`);
   }
 
   // Backlog
   if (b.offene_backlog?.length) {
     const items = b.offene_backlog.map(bl => {
       const prioClass = bl.priority === 'high' ? 'brf-prio-high' : bl.priority === 'medium' ? 'brf-prio-med' : '';
-      return `<div class="brf-item ${prioClass}" id="backlog-${bl.id}"><div class="content"><strong>${esc(bl.short_text || '?')}</strong>${bl.customer_name ? '<div class="meta">' + esc(bl.customer_name) + (bl.address ? ' ÃÂÃÂ· ' + esc(bl.address) : '') + '</div>' : ''}${bl.order_no ? '<div class="meta">Auftrag: ' + esc(bl.order_no) + '</div>' : ''}</div><div class="actions"><button class="brf-check" title="Erledigt" onclick="brfBacklogDone('${bl.id}')">ÃÂ¢ÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item ${prioClass}" id="backlog-${bl.id}"><div class="content"><strong>${esc(bl.short_text || '?')}</strong>${bl.customer_name ? '<div class="meta">' + esc(bl.customer_name) + (bl.address ? ' · ' + esc(bl.address) : '') + '</div>' : ''}${bl.order_no ? '<div class="meta">Auftrag: ' + esc(bl.order_no) + '</div>' : ''}</div><div class="actions"><button class="brf-check" title="Erledigt" onclick="brfBacklogDone('${bl.id}')">✓</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ Offene Backlog-EintrÃÂÃÂ¤ge <span class="count">${b.offene_backlog.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>📋 Offene Backlog-Einträge <span class="count">${b.offene_backlog.length}</span></h4>${items}</div>`);
   }
 
-  // Offene AuftrÃÂÃÂ¤ge (Angebot, Beauftragt)
+  // Offene Aufträge (Angebot, Beauftragt)
   if (b.offene_auftraege?.length) {
     const items = b.offene_auftraege.map(p => {
-      return `<div class="brf-item"><div class="content"><strong>${esc(p.customer_name || '?')}</strong> ÃÂÃÂ· <span class="meta">${esc(p.status || '')}</span>${p.order_no ? ' ÃÂÃÂ· ' + esc(p.order_no) : ''}${p.address ? '<div class="meta">' + esc(p.address) + '</div>' : ''}${p.description ? '<div class="meta">' + esc(p.description.slice(0,150)) + '</div>' : ''}</div></div>`;
+      return `<div class="brf-item"><div class="content"><strong>${esc(p.customer_name || '?')}</strong> · <span class="meta">${esc(p.status || '')}</span>${p.order_no ? ' · ' + esc(p.order_no) : ''}${p.address ? '<div class="meta">' + esc(p.address) + '</div>' : ''}${p.description ? '<div class="meta">' + esc(p.description.slice(0,150)) + '</div>' : ''}</div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ Offene AuftrÃÂÃÂ¤ge <span class="count">${b.offene_auftraege.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>📝 Offene Aufträge <span class="count">${b.offene_auftraege.length}</span></h4>${items}</div>`);
   }
 
   // Stille Baustellen
   if (b.stille_baustellen_3tage?.length) {
     const items = b.stille_baustellen_3tage.map(p => {
-      return `<div class="brf-item"><div class="content"><strong>${esc(p.customer_name || '?')}</strong>${p.order_no ? ' ÃÂÃÂ· ' + esc(p.order_no) : ''}<div class="meta">${esc(p.address || '')}</div></div></div>`;
+      return `<div class="brf-item"><div class="content"><strong>${esc(p.customer_name || '?')}</strong>${p.order_no ? ' · ' + esc(p.order_no) : ''}<div class="meta">${esc(p.address || '')}</div></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ Stille Baustellen > 3 Tage <span class="count">${b.stille_baustellen_3tage.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>🏗 Stille Baustellen > 3 Tage <span class="count">${b.stille_baustellen_3tage.length}</span></h4>${items}</div>`);
   }
 
   // Gemerkte Dinge
   if (b.gemerkte_dinge?.length) {
     const items = b.gemerkte_dinge.map(g => {
       const d = new Date(g.created_at).toLocaleDateString('de-DE');
-      return `<div class="brf-item" id="gemerkt-${g.id}"><div class="content"><strong>${esc(g.titel)}</strong><div class="meta">${esc((g.inhalt || '').slice(0,200))}</div><div class="meta">${d} ÃÂÃÂ· ${esc(g.bereich || '')}</div></div><div class="actions"><button class="brf-ignore" title="Nicht mehr merken" onclick="brfGemerktDelete('${g.id}')">ÃÂ°ÃÂÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item" id="gemerkt-${g.id}"><div class="content"><strong>${esc(g.titel)}</strong><div class="meta">${esc((g.inhalt || '').slice(0,200))}</div><div class="meta">${d} · ${esc(g.bereich || '')}</div></div><div class="actions"><button class="brf-ignore" title="Nicht mehr merken" onclick="brfGemerktDelete('${g.id}')">🗑</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂ§ÃÂ  Gemerkte Dinge <span class="count">${b.gemerkte_dinge.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>🧠 Gemerkte Dinge <span class="count">${b.gemerkte_dinge.length}</span></h4>${items}</div>`);
   }
 
-  // KI-LÃÂÃÂ¼cken
+  // KI-Lücken
   if (b.offene_ki_luecken?.length) {
     const items = b.offene_ki_luecken.map(g => {
-      return `<div class="brf-item" id="gap-${g.id}"><div class="content"><em>${esc(g.frage)}</em><div class="meta">${esc(g.user_name)} ÃÂÃÂ· ${new Date(g.created_at).toLocaleDateString('de-DE')}</div></div><div class="actions"><button class="brf-ignore" title="Reviewed" onclick="brfGapReviewed('${g.id}')">ÃÂ¢ÃÂÃÂ</button></div></div>`;
+      return `<div class="brf-item" id="gap-${g.id}"><div class="content"><em>${esc(g.frage)}</em><div class="meta">${esc(g.user_name)} · ${new Date(g.created_at).toLocaleDateString('de-DE')}</div></div><div class="actions"><button class="brf-ignore" title="Reviewed" onclick="brfGapReviewed('${g.id}')">✓</button></div></div>`;
     }).join('');
-    sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ³ KI-WissenslÃÂÃÂ¼cken <span class="count">${b.offene_ki_luecken.length}</span></h4>${items}</div>`);
+    sections.push(`<div class="brf-section"><h4>🕳 KI-Wissenslücken <span class="count">${b.offene_ki_luecken.length}</span></h4>${items}</div>`);
   }
 
   // Eingang-Zusammenfassung
-  const inboxSummary = `${b.neue_mails_12h_count || 0} neue Mails ÃÂÃÂ· ${b.neue_whatsapp_count || 0} WhatsApp neu ÃÂÃÂ· ${b.neue_belege_24h_count || 0} Belege`;
-  sections.push(`<div class="brf-section"><h4>ÃÂ°ÃÂÃÂÃÂ¥ Eingang letzte 12h</h4><div style="font-size:13px;color:var(--text-muted)">${inboxSummary}</div></div>`);
+  const inboxSummary = `${b.neue_mails_12h_count || 0} neue Mails · ${b.neue_whatsapp_count || 0} WhatsApp neu · ${b.neue_belege_24h_count || 0} Belege`;
+  sections.push(`<div class="brf-section"><h4>📥 Eingang letzte 12h</h4><div style="font-size:13px;color:var(--text-muted)">${inboxSummary}</div></div>`);
 
   if (!sections.length) {
-    el.innerHTML = '<div class="brf-empty" style="text-align:center;padding:40px">Nichts Akutes heute ÃÂ°ÃÂÃÂÃÂ</div>';
+    el.innerHTML = '<div class="brf-empty" style="text-align:center;padding:40px">Nichts Akutes heute 🎉</div>';
     return;
   }
 
@@ -1199,9 +1199,9 @@ async function loadGaps() {
     const res = await fetch(API_BASE + '/admin/gaps', { headers: headers() }); const j = await res.json();
     if (j.error) { el.innerHTML = '<div class="loading">' + j.error + '</div>'; return; }
     const items = j.gaps || [];
-    if (!items.length) { el.innerHTML = '<div class="loading">Keine WissenslÃÂÃÂ¼cken ÃÂ°ÃÂÃÂÃÂ</div>'; return; }
+    if (!items.length) { el.innerHTML = '<div class="loading">Keine Wissenslücken 🎉</div>'; return; }
     el.innerHTML = '';
-    items.forEach(g => { const div = document.createElement('div'); div.className = 'gap-item'; const date = new Date(g.created_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', hour:'2-digit' }); div.innerHTML = `<div class="meta">${esc(g.user_name || '?')} ÃÂÃÂ· ${date}</div><div class="conv-frage">${esc(g.frage)}</div><div class="actions"><button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="markGapReviewed('${g.id}')">ÃÂ¢ÃÂÃÂ erledigt</button></div>`; el.appendChild(div); });
+    items.forEach(g => { const div = document.createElement('div'); div.className = 'gap-item'; const date = new Date(g.created_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', hour:'2-digit' }); div.innerHTML = `<div class="meta">${esc(g.user_name || '?')} · ${date}</div><div class="conv-frage">${esc(g.frage)}</div><div class="actions"><button class="icon" style="width:auto;height:auto;padding:4px 8px;font-size:12px" onclick="markGapReviewed('${g.id}')">✓ erledigt</button></div>`; el.appendChild(div); });
   } catch (err) { el.innerHTML = '<div class="loading">Fehler: ' + err.message + '</div>'; }
 }
 async function markGapReviewed(id) { await fetch(API_BASE + '/admin/gap-reviewed', { method: 'POST', headers: headers(), body: JSON.stringify({ id }) }); loadGaps(); refreshGapsCount(); }
@@ -1223,10 +1223,10 @@ async function loadMails(filter) {
       const div = document.createElement('div'); div.className = 'conv-item'; div.style.cursor = 'pointer';
       const date = new Date(m.received_at).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
       const urgencyBadge = m.urgency === 'hoch' ? '<span class="badge gap">dringend</span>' : '';
-      const attachBadge = m.has_attachments ? '<span class="badge">ÃÂ°ÃÂÃÂÃÂ</span>' : '';
+      const attachBadge = m.has_attachments ? '<span class="badge">📎</span>' : '';
       const draftBadge = m.draft_reply ? '<span class="badge review">Entwurf</span>' : '';
       const projTag = m.project ? ` @ ${esc(m.project.customer_name || '')}` : (m.customer ? ` (${esc(m.customer.name)})` : '');
-      div.innerHTML = `<div class="meta">${date} ÃÂÃÂ· ${esc(m.sender_name || m.sender_email || '?')}${projTag} ${urgencyBadge}${attachBadge}${draftBadge}</div><div class="conv-frage">${esc(m.subject || '(kein Betreff)')}</div><div class="conv-antwort">${esc(m.summary || m.body_preview || '').slice(0, 250)}</div>`;
+      div.innerHTML = `<div class="meta">${date} · ${esc(m.sender_name || m.sender_email || '?')}${projTag} ${urgencyBadge}${attachBadge}${draftBadge}</div><div class="conv-frage">${esc(m.subject || '(kein Betreff)')}</div><div class="conv-antwort">${esc(m.summary || m.body_preview || '').slice(0, 250)}</div>`;
       div.onclick = () => openMailDetail(m);
       el.appendChild(div);
     });
@@ -1244,31 +1244,31 @@ function openMailDetail(mail) {
   const date = new Date(mail.received_at).toLocaleString('de-DE');
   const attachments = ai;
   let projectInfo = '';
-  if (mail.project) projectInfo = `<div style="color:#60a5fa;margin:6px 0">ÃÂ°ÃÂÃÂÃÂ Projekt: ${esc(mail.project.customer_name)} (${esc(mail.project.order_no || '')})</div>`;
-  else if (mail.customer) projectInfo = `<div style="color:#60a5fa;margin:6px 0">ÃÂ°ÃÂÃÂÃÂ¤ Kunde: ${esc(mail.customer.name)}</div>`;
-  else projectInfo = '<div style="color:#fca5a5;margin:6px 0">ÃÂ¢ÃÂÃÂ  Keine Projekt/Kunden-Zuordnung</div>';
+  if (mail.project) projectInfo = `<div style="color:#60a5fa;margin:6px 0">📁 Projekt: ${esc(mail.project.customer_name)} (${esc(mail.project.order_no || '')})</div>`;
+  else if (mail.customer) projectInfo = `<div style="color:#60a5fa;margin:6px 0">👤 Kunde: ${esc(mail.customer.name)}</div>`;
+  else projectInfo = '<div style="color:#fca5a5;margin:6px 0">⚠ Keine Projekt/Kunden-Zuordnung</div>';
 
   dd.innerHTML = `
     <h3 style="margin-right:80px">${esc(mail.subject || '(kein Betreff)')}</h3>
-    <div class="meta" style="margin-top:8px">${date} ÃÂÃÂ· Von: ${esc(mail.sender_name || '')} &lt;${esc(mail.sender_email || '')}&gt;</div>
+    <div class="meta" style="margin-top:8px">${date} · Von: ${esc(mail.sender_name || '')} &lt;${esc(mail.sender_email || '')}&gt;</div>
     ${projectInfo}
     ${mail.summary ? `<div style="background:#0f172a;padding:10px;border-radius:8px;margin:10px 0"><b>KI-Zusammenfassung:</b><br>${esc(mail.summary)}</div>` : ''}
     <div style="background:#0f172a;padding:10px;border-radius:8px;margin:10px 0;max-height:200px;overflow-y:auto;white-space:pre-wrap;font-size:13px">${esc(mail.body_preview || '').slice(0, 2000)}</div>
-    ${attachments.length ? `<div style="margin:10px 0"><b>ÃÂ°ÃÂÃÂÃÂ AnhÃÂÃÂ¤nge (${attachments.length}):</b><div id="attList" style="margin-top:6px">${renderAttachments(attachments)}</div></div>` : ''}
+    ${attachments.length ? `<div style="margin:10px 0"><b>📎 Anhänge (${attachments.length}):</b><div id="attList" style="margin-top:6px">${renderAttachments(attachments)}</div></div>` : ''}
     <div id="extraAttachments" style="margin:10px 0"></div>
     <hr style="border:none;border-top:1px solid #334155;margin:16px 0">
-    <h4 style="margin-bottom:8px">ÃÂ¢ÃÂÃÂ Antwort-Entwurf</h4>
+    <h4 style="margin-bottom:8px">✍ Antwort-Entwurf</h4>
     <textarea id="draftArea" rows="10" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px;border-radius:8px;font-family:inherit;font-size:14px">${esc(mail.draft_reply || '')}</textarea>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
-      <button class="send" onclick="genDraft(false)">ÃÂ¢ÃÂÃÂ¨ Entwurf erstellen</button>
-      <button class="send" onclick="genDraft(true)" style="background:#475569">ÃÂ°ÃÂÃÂÃÂ Neu generieren</button>
-      <button class="send" onclick="saveDraft()" style="background:#16a34a">ÃÂ°ÃÂÃÂÃÂ¾ Entwurf speichern</button>
-      <button class="send" onclick="copyDraft()" style="background:#475569">ÃÂ°ÃÂÃÂÃÂ In Zwischenablage</button>
-      <button class="send" onclick="queueOpenOutlook()" style="background:#2563eb">ÃÂ°ÃÂÃÂÃÂ¬ In Outlook ÃÂÃÂ¶ffnen</button>
-      ${attachments.length ? `<button class="send" onclick="queueSaveAttachments()" style="background:#eab308;color:#422006">ÃÂ°ÃÂÃÂÃÂ In Baustellenakte</button>` : ''}
-      <button class="send" onclick="uploadOwnAttachment()" style="background:#475569">ÃÂ°ÃÂÃÂÃÂ Datei anhaengen</button>
-      <button class="send" onclick="openBaustelleDialog()" style="background:#0891b2">ÃÂ°ÃÂÃÂÃÂ In Baustellenakte</button>
-      <button class="send" onclick="markMailDone()" style="background:#64748b">ÃÂ¢ÃÂÃÂ Erledigt</button>
+      <button class="send" onclick="genDraft(false)">✨ Entwurf erstellen</button>
+      <button class="send" onclick="genDraft(true)" style="background:#475569">🔄 Neu generieren</button>
+      <button class="send" onclick="saveDraft()" style="background:#16a34a">💾 Entwurf speichern</button>
+      <button class="send" onclick="copyDraft()" style="background:#475569">📋 In Zwischenablage</button>
+      <button class="send" onclick="queueOpenOutlook()" style="background:#2563eb">📬 In Outlook öffnen</button>
+      ${attachments.length ? `<button class="send" onclick="queueSaveAttachments()" style="background:#eab308;color:#422006">📎 In Baustellenakte</button>` : ''}
+      <button class="send" onclick="uploadOwnAttachment()" style="background:#475569">📎 Datei anhaengen</button>
+      <button class="send" onclick="openBaustelleDialog()" style="background:#0891b2">📁 In Baustellenakte</button>
+      <button class="send" onclick="markMailDone()" style="background:#64748b">✓ Erledigt</button>
     </div>
     <div id="mailStatus" style="margin-top:10px;color:#94a3b8;font-size:13px"></div>
   `;
@@ -1283,11 +1283,11 @@ function renderAttachments(attachments) {
     const size = a.size || (a.bytes ? Math.round(a.bytes/1024) + ' KB' : '?');
     const isPdf = /\.pdf$/i.test(a.name || a.filename || '');
     if (a.url) {
-      const editBtn = isPdf ? `<button onclick="editAttachment(${idx})" style="background:#eab308;color:#422006;border:none;padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px">ÃÂ¢ÃÂÃÂ Bearbeiten</button>` : '';
-      const attachBtn = `<button onclick="attachOriginal(${idx})" style="background:#2563eb;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px">ÃÂ¢ÃÂÃÂ An Reply</button>`;
-      return `<div style="display:inline-block;margin:4px 6px 4px 0;padding:6px 10px;background:#334155;border-radius:6px;vertical-align:top"><a href="${esc(a.url)}" target="_blank" rel="noopener" style="color:#60a5fa;text-decoration:underline">ÃÂ°ÃÂÃÂÃÂ ${name}</a> <span style="color:#94a3b8;font-size:11px">(${size})</span>${editBtn}${attachBtn}</div>`;
+      const editBtn = isPdf ? `<button onclick="editAttachment(${idx})" style="background:#eab308;color:#422006;border:none;padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px">✍ Bearbeiten</button>` : '';
+      const attachBtn = `<button onclick="attachOriginal(${idx})" style="background:#2563eb;color:white;border:none;padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px">➕ An Reply</button>`;
+      return `<div style="display:inline-block;margin:4px 6px 4px 0;padding:6px 10px;background:#334155;border-radius:6px;vertical-align:top"><a href="${esc(a.url)}" target="_blank" rel="noopener" style="color:#60a5fa;text-decoration:underline">📎 ${name}</a> <span style="color:#94a3b8;font-size:11px">(${size})</span>${editBtn}${attachBtn}</div>`;
     }
-    return `<span style="display:inline-block;margin:4px 6px 4px 0;padding:4px 8px;background:#1e293b;border:1px solid #334155;border-radius:6px;color:#94a3b8">ÃÂ°ÃÂÃÂÃÂ ${name} (${size}) <span style="font-size:11px">ÃÂÃÂ· noch nicht in Cloud</span></span>`;
+    return `<span style="display:inline-block;margin:4px 6px 4px 0;padding:4px 8px;background:#1e293b;border:1px solid #334155;border-radius:6px;color:#94a3b8">📎 ${name} (${size}) <span style="font-size:11px">· noch nicht in Cloud</span></span>`;
   }).join(' ');
 }
 
@@ -1301,7 +1301,7 @@ function attachOriginal(idx) {
   if (currentMail.extra_attachments.some(x => x.url === a.url)) { setMailStatus('Schon in Reply-Liste', '#fcd34d'); return; }
   currentMail.extra_attachments.push({ name: a.name || a.filename || 'Anhang', url: a.url, size: a.size || (a.bytes ? Math.round(a.bytes/1024) + ' KB' : '?') });
   renderExtraAttachments();
-  setMailStatus('ÃÂ¢ÃÂÃÂ "' + (a.name || a.filename) + '" an Reply angehaengt', '#86efac');
+  setMailStatus('✓ "' + (a.name || a.filename) + '" an Reply angehaengt', '#86efac');
 }
 
 async function uploadOwnAttachment() {
@@ -1312,7 +1312,7 @@ async function uploadOwnAttachment() {
   picker.onchange = async () => {
     const files = Array.from(picker.files || []);
     if (!files.length) return;
-    setMailStatus('ÃÂ¢ÃÂÃÂ³ Lade hoch: ' + files.length + ' Datei(en)...');
+    setMailStatus('⏳ Lade hoch: ' + files.length + ' Datei(en)...');
     for (const f of files) {
       try {
         const ts = Date.now();
@@ -1323,14 +1323,14 @@ async function uploadOwnAttachment() {
           headers: { 'Authorization': 'Bearer ' + ANON_KEY, 'apikey': ANON_KEY, 'Content-Type': f.type || 'application/octet-stream', 'x-upsert': 'true' },
           body: f
         });
-        if (!r.ok) { setMailStatus('ÃÂ¢ÃÂÃÂ Upload ' + f.name + ': ' + r.status, '#fca5a5'); continue; }
+        if (!r.ok) { setMailStatus('❌ Upload ' + f.name + ': ' + r.status, '#fca5a5'); continue; }
         const url = `https://nrmqdhcrshyoigesqapm.supabase.co/storage/v1/object/public/mail-attachments/${storageKey}`;
         if (!currentMail.extra_attachments) currentMail.extra_attachments = [];
         currentMail.extra_attachments.push({ name: f.name, url, size: Math.round(f.size/1024) + ' KB' });
-      } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+      } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
     }
     renderExtraAttachments();
-    setMailStatus('ÃÂ¢ÃÂÃÂ Hochgeladen. An Reply angehaengt.', '#86efac');
+    setMailStatus('✓ Hochgeladen. An Reply angehaengt.', '#86efac');
   };
   picker.click();
 }
@@ -1352,16 +1352,16 @@ function renderExtraAttachments() {
   const el = document.getElementById('extraAttachments');
   if (!el || !currentMail || !currentMail.extra_attachments || !currentMail.extra_attachments.length) { if(el) el.innerHTML = ''; return; }
   el.innerHTML = `<div style="background:#422006;border:1px solid #eab308;padding:10px;border-radius:8px;margin-top:8px">
-    <b style="color:#eab308">ÃÂ¢ÃÂÃÂ Bearbeitete Anhaenge (an Reply anhaengen):</b><br>
-    ${currentMail.extra_attachments.map((a, i) => `<div style="margin-top:6px"><a href="${esc(a.url)}" target="_blank" style="color:#60a5fa;text-decoration:underline">ÃÂ°ÃÂÃÂÃÂ ${esc(a.name)}</a> <button onclick="copyAttUrl(${i})" style="background:#2563eb;color:white;border:none;padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer">ÃÂ°ÃÂÃÂÃÂ Link kopieren</button> <button onclick="removeExtra(${i})" style="background:#dc2626;color:white;border:none;padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer">ÃÂ¢ÃÂÃÂ</button></div>`).join('')}
-    <div style="margin-top:8px;font-size:12px;color:#fde68a">Hinweis: Beim Klick auf "In Zwischenablage" kommen diese Links auch mit ÃÂ¢ÃÂÃÂ du kannst in Outlook per Drag oder "Anhang einfuegen" die Dateien anhaengen.</div>
+    <b style="color:#eab308">✍ Bearbeitete Anhaenge (an Reply anhaengen):</b><br>
+    ${currentMail.extra_attachments.map((a, i) => `<div style="margin-top:6px"><a href="${esc(a.url)}" target="_blank" style="color:#60a5fa;text-decoration:underline">📎 ${esc(a.name)}</a> <button onclick="copyAttUrl(${i})" style="background:#2563eb;color:white;border:none;padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer">🔗 Link kopieren</button> <button onclick="removeExtra(${i})" style="background:#dc2626;color:white;border:none;padding:3px 8px;border-radius:4px;font-size:11px;cursor:pointer">✕</button></div>`).join('')}
+    <div style="margin-top:8px;font-size:12px;color:#fde68a">Hinweis: Beim Klick auf "In Zwischenablage" kommen diese Links auch mit – du kannst in Outlook per Drag oder "Anhang einfuegen" die Dateien anhaengen.</div>
   </div>`;
 }
 
 function copyAttUrl(i) {
   const a = currentMail.extra_attachments[i];
   navigator.clipboard.writeText(a.url);
-  setMailStatus('ÃÂ¢ÃÂÃÂ Link kopiert: ' + a.name, '#86efac');
+  setMailStatus('✓ Link kopiert: ' + a.name, '#86efac');
 }
 
 function removeExtra(i) {
@@ -1373,28 +1373,28 @@ function setMailStatus(msg, color) { const s = document.getElementById('mailStat
 
 async function genDraft(regenerate) {
   if (!currentMail) return;
-  setMailStatus('ÃÂ¢ÃÂÃÂ³ KI schreibt Entwurf...');
+  setMailStatus('⏳ KI schreibt Entwurf...');
   try {
     const res = await fetch(MAILS_API + '/draft', { method: 'POST', headers: headers(), body: JSON.stringify({ mail_id: currentMail.id, regenerate: !!regenerate }) });
     const j = await res.json();
-    if (j.error) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + j.error, '#fca5a5'); return; }
+    if (j.error) { setMailStatus('❌ ' + j.error, '#fca5a5'); return; }
     document.getElementById('draftArea').value = j.draft;
     currentMail.draft_reply = j.draft;
-    setMailStatus(j.cached ? 'ÃÂ¢ÃÂÃÂ Entwurf geladen (Cache)' : 'ÃÂ¢ÃÂÃÂ Entwurf generiert', '#86efac');
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+    setMailStatus(j.cached ? '✓ Entwurf geladen (Cache)' : '✓ Entwurf generiert', '#86efac');
+  } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
 }
 
 async function saveDraft() {
   if (!currentMail) return;
   const draft = document.getElementById('draftArea').value;
-  setMailStatus('ÃÂ¢ÃÂÃÂ³ Speichere...');
+  setMailStatus('⏳ Speichere...');
   try {
     const res = await fetch(MAILS_API + '/draft-save', { method: 'POST', headers: headers(), body: JSON.stringify({ mail_id: currentMail.id, draft }) });
     const j = await res.json();
-    if (j.error) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + j.error, '#fca5a5'); return; }
+    if (j.error) { setMailStatus('❌ ' + j.error, '#fca5a5'); return; }
     currentMail.draft_reply = draft;
-    setMailStatus('ÃÂ¢ÃÂÃÂ Gespeichert', '#86efac');
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+    setMailStatus('✓ Gespeichert', '#86efac');
+  } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
 }
 
 async function copyDraft() {
@@ -1407,31 +1407,31 @@ async function copyDraft() {
   }
   try {
     await navigator.clipboard.writeText(draft);
-    setMailStatus('ÃÂ¢ÃÂÃÂ In Zwischenablage kopiert. Wechsel zu Outlook ÃÂ¢ÃÂÃÂ Antworten ÃÂ¢ÃÂÃÂ Strg+V', '#86efac');
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ Clipboard-Zugriff verweigert: ' + err.message, '#fca5a5'); }
+    setMailStatus('✓ In Zwischenablage kopiert. Wechsel zu Outlook → Antworten → Strg+V', '#86efac');
+  } catch (err) { setMailStatus('❌ Clipboard-Zugriff verweigert: ' + err.message, '#fca5a5'); }
 }
 
 async function queueOpenOutlook() {
   if (!currentMail) return;
   const draft = document.getElementById('draftArea').value;
-  setMailStatus('ÃÂ¢ÃÂÃÂ³ Schicke Befehl an Michaels PC...');
+  setMailStatus('⏳ Schicke Befehl an Michaels PC...');
   try {
     const res = await fetch(MAILS_API + '/queue-open', { method: 'POST', headers: headers(), body: JSON.stringify({ mail_id: currentMail.id, draft }) });
     const j = await res.json();
-    if (j.error) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + j.error, '#fca5a5'); return; }
-    setMailStatus('ÃÂ¢ÃÂÃÂ ' + (j.message || 'In Warteschlange'), '#86efac');
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+    if (j.error) { setMailStatus('❌ ' + j.error, '#fca5a5'); return; }
+    setMailStatus('✓ ' + (j.message || 'In Warteschlange'), '#86efac');
+  } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
 }
 
 async function queueSaveAttachments() {
   if (!currentMail) return;
-  setMailStatus('ÃÂ¢ÃÂÃÂ³ Schicke Befehl an Michaels PC...');
+  setMailStatus('⏳ Schicke Befehl an Michaels PC...');
   try {
     const res = await fetch(MAILS_API + '/queue-save-attachments', { method: 'POST', headers: headers(), body: JSON.stringify({ mail_id: currentMail.id }) });
     const j = await res.json();
-    if (j.error) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + j.error, '#fca5a5'); return; }
-    setMailStatus('ÃÂ¢ÃÂÃÂ ' + (j.message || 'AnhÃÂÃÂ¤nge werden gespeichert'), '#86efac');
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+    if (j.error) { setMailStatus('❌ ' + j.error, '#fca5a5'); return; }
+    setMailStatus('✓ ' + (j.message || 'Anhänge werden gespeichert'), '#86efac');
+  } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
 }
 
 // ----- Baustellenakte -----
@@ -1445,7 +1445,7 @@ async function openBaustelleDialog() {
       const res = await fetch(MAILS_API + '/projects', { headers: headers() });
       const j = await res.json();
       projectsCache = j.projects || [];
-    } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); return; }
+    } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); return; }
   }
   setMailStatus('');
 
@@ -1457,14 +1457,14 @@ async function openBaustelleDialog() {
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:150;display:flex;align-items:center;justify-content:center;padding:16px';
   overlay.innerHTML = `
     <div style="background:#1e293b;border-radius:12px;padding:16px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto">
-      <h3 style="margin-bottom:12px;color:#e2e8f0">ÃÂ°ÃÂÃÂÃÂ In Baustellenakte ÃÂÃÂ¼bernehmen</h3>
+      <h3 style="margin-bottom:12px;color:#e2e8f0">📁 In Baustellenakte übernehmen</h3>
       <label style="color:#94a3b8;font-size:13px">Baustelle/Projekt suchen:</label>
       <input id="projSearch" type="text" placeholder="Kunde, Adresse, Auftrags-Nr..." style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px;border-radius:8px;margin:6px 0;font-size:15px" autofocus>
       <div id="projList" style="max-height:300px;overflow-y:auto;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:4px"></div>
       <label style="display:block;margin-top:12px;color:#e2e8f0"><input type="checkbox" id="bstIncText" checked> Mail-Text mitsenden</label>
-      <label style="display:block;margin-top:6px;color:#e2e8f0"><input type="checkbox" id="bstIncAtts" ${hasAtts ? 'checked' : 'disabled'}> AnhÃÂÃÂ¤nge mitsenden${hasAtts ? ` (${attachments.length})` : ' (keine vorhanden)'}</label>
+      <label style="display:block;margin-top:6px;color:#e2e8f0"><input type="checkbox" id="bstIncAtts" ${hasAtts ? 'checked' : 'disabled'}> Anhänge mitsenden${hasAtts ? ` (${attachments.length})` : ' (keine vorhanden)'}</label>
       <label style="display:block;margin-top:6px;color:#94a3b8;font-size:12px">Zusatznotiz (optional):</label>
-      <textarea id="bstNotiz" rows="2" placeholder="z.B. 'fÃÂÃÂ¼r Uwe zur Baustelle'" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:8px;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      <textarea id="bstNotiz" rows="2" placeholder="z.B. 'für Uwe zur Baustelle'" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:8px;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical"></textarea>
       <div id="bstSelectedInfo" style="margin-top:10px;color:#60a5fa;font-size:13px"></div>
       <div style="display:flex;gap:6px;margin-top:12px;justify-content:flex-end">
         <button onclick="closeBaustelleDialog()" style="background:#475569;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer">Abbrechen</button>
@@ -1484,32 +1484,32 @@ async function openBaustelleDialog() {
     const f = (filter || '').toLowerCase();
     const filtered = projectsCache.filter(p => !f || (p.customer_name || '').toLowerCase().includes(f) || (p.address || '').toLowerCase().includes(f) || (p.order_no || '').toLowerCase().includes(f));
     listEl.innerHTML = filtered.slice(0, 50).map(p =>
-      `<div onclick="selectProject('${p.id}', '${esc((p.customer_name || '') + ' - ' + (p.address || ''))}')" style="padding:8px 10px;cursor:pointer;border-radius:6px;color:#e2e8f0;font-size:13px" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='transparent'"><b>${esc(p.customer_name || '?')}</b> <span style="color:#94a3b8">${esc(p.order_no || '')}</span><br><span style="color:#94a3b8;font-size:12px">${esc(p.address || '')} ÃÂÃÂ· ${esc(p.status || '')}</span></div>`
+      `<div onclick="selectProject('${p.id}', '${esc((p.customer_name || '') + ' - ' + (p.address || ''))}')" style="padding:8px 10px;cursor:pointer;border-radius:6px;color:#e2e8f0;font-size:13px" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='transparent'"><b>${esc(p.customer_name || '?')}</b> <span style="color:#94a3b8">${esc(p.order_no || '')}</span><br><span style="color:#94a3b8;font-size:12px">${esc(p.address || '')} · ${esc(p.status || '')}</span></div>`
     ).join('');
     if (!filtered.length) listEl.innerHTML = '<div style="padding:12px;color:#94a3b8">Keine Treffer</div>';
   }
   renderList('');
   if (currentMail.project_id) {
     const match = projectsCache.find(p => p.id === currentMail.project_id);
-    if (match) { selectedId = match.id; infoEl.textContent = 'ÃÂ¢ÃÂÃÂ vorgeschlagen: ' + (match.customer_name || '?') + ' - ' + (match.address || ''); sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+    if (match) { selectedId = match.id; infoEl.textContent = '✓ vorgeschlagen: ' + (match.customer_name || '?') + ' - ' + (match.address || ''); sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
   }
   search.addEventListener('input', e => renderList(e.target.value));
 
   window.selectProject = function(id, label) {
-    selectedId = id; infoEl.textContent = 'ÃÂ¢ÃÂÃÂ ' + label; sendBtn.disabled = false; sendBtn.style.opacity = '1';
+    selectedId = id; infoEl.textContent = '✓ ' + label; sendBtn.disabled = false; sendBtn.style.opacity = '1';
   };
   window.closeBaustelleDialog = function() { overlay.remove(); delete window.selectProject; delete window.sendToBaustelle; delete window.closeBaustelleDialog; };
   window.sendToBaustelle = async function() {
     if (!selectedId) return;
-    sendBtn.disabled = true; sendBtn.textContent = 'ÃÂ¢ÃÂÃÂ³ Sende...';
+    sendBtn.disabled = true; sendBtn.textContent = '⏳ Sende...';
     const body = { mail_id: currentMail.id, project_id: selectedId, include_text: document.getElementById('bstIncText').checked, include_attachments: document.getElementById('bstIncAtts').checked, extra_text: document.getElementById('bstNotiz').value.trim() };
     try {
       const res = await fetch(MAILS_API + '/to-baustelle', { method: 'POST', headers: headers(), body: JSON.stringify(body) });
       const j = await res.json();
-      if (j.error) { sendBtn.textContent = 'ÃÂ¢ÃÂÃÂ ' + j.error; return; }
-      setMailStatus(`ÃÂ¢ÃÂÃÂ In Baustellenakte ÃÂÃÂ¼bernommen (${j.files_created} Dateien)`, '#86efac');
+      if (j.error) { sendBtn.textContent = '❌ ' + j.error; return; }
+      setMailStatus(`✓ In Baustellenakte übernommen (${j.files_created} Dateien)`, '#86efac');
       closeBaustelleDialog();
-    } catch (err) { sendBtn.textContent = 'ÃÂ¢ÃÂÃÂ ' + err.message; }
+    } catch (err) { sendBtn.textContent = '❌ ' + err.message; }
   };
 }
 
@@ -1517,9 +1517,9 @@ async function markMailDone() {
   if (!currentMail) return;
   try {
     await fetch(MAILS_API + '/mark', { method: 'POST', headers: headers(), body: JSON.stringify({ mail_id: currentMail.id, status: 'erledigt' }) });
-    setMailStatus('ÃÂ¢ÃÂÃÂ Als erledigt markiert', '#86efac');
+    setMailStatus('✓ Als erledigt markiert', '#86efac');
     setTimeout(() => { closeMailDetail(); loadMails('pending'); }, 1000);
-  } catch (err) { setMailStatus('ÃÂ¢ÃÂÃÂ ' + err.message, '#fca5a5'); }
+  } catch (err) { setMailStatus('❌ ' + err.message, '#fca5a5'); }
 }
 </script>
 </body>
