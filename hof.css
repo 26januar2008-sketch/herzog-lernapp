@@ -77,3 +77,25 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .cheats{background:linear-gradient(180deg,#ff7043,#d84315);color:#fff;padding:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:12px;flex-shrink:0;box-shadow:0 4px 8px rgba(0,0,0,.3)}
 .cheats button{background:rgba(255,255,255,.25);border:none;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer}
 .cheats button:active{background:rgba(255,255,255,.4)}
+
+/* === Lern-Münzen-Chip (Brücke zur Lern-App) === */
+.lern-chip{display:flex;align-items:center;gap:4px;background:linear-gradient(135deg,#b39ddb,#7e57c2);color:#fff;border:2px solid rgba(255,255,255,.5);padding:8px 14px;border-radius:24px;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:chipGlow 3s ease-in-out infinite}
+.lern-chip:active{transform:scale(.95)}
+@keyframes chipGlow{0%,100%{box-shadow:0 4px 12px rgba(0,0,0,.3)}50%{box-shadow:0 4px 18px rgba(179,157,219,.8)}}
+
+/* === Münzen fliegen ins Konto === */
+.muenze-flug{position:fixed;font-size:28px;z-index:300;pointer-events:none;transition:transform .7s cubic-bezier(.5,-.2,.7,1),opacity .7s ease-in;will-change:transform,opacity}
+
+/* === Tiere: sanftes Wippen + Hüpfer beim Antippen === */
+.tier{animation:tierBob 3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%;cursor:pointer}
+@keyframes tierBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.tier-hops{animation:tierHops .5s ease-out}
+@keyframes tierHops{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.08)}60%{transform:translateY(0) scale(.96)}100%{transform:translateY(0) scale(1)}}
+
+/* === Pflanzen wiegen sich im Wind (1 Animation pro Feld) === */
+.pflanzen-sway{transform-box:fill-box;transform-origin:50% 90%;animation:pflanzenSway 3.4s ease-in-out infinite}
+@keyframes pflanzenSway{0%,100%{transform:rotate(-.6deg)}50%{transform:rotate(.6deg)}}
+
+/* === Staub beim Bauen === */
+.staub{animation:staubWeg .85s ease-out forwards;opacity:.8}
+@keyframes staubWeg{from{transform:translate(0,0);opacity:.8}to{transform:translate(var(--dx),var(--dy));opacity:0}}

@@ -202,6 +202,20 @@ function loadState() {
     if (f.brachSeit == null) f.brachSeit = Date.now();
     if (f.bonusReady == null) f.bonusReady = false;
   }
+  // Einmalig: Münzen aus der alten Mini-Farm übernehmen (die gibt es nicht mehr)
+  if (!TEST_MODE) {
+    try {
+      const alteFarm = JSON.parse(localStorage.getItem('herzog_farm_state') || 'null');
+      if (alteFarm && alteFarm.farmCoins > 0) {
+        const betrag = Math.round(alteFarm.farmCoins);
+        GS.geld += betrag;
+        GS.gesehen.miniFarmImport = betrag;
+        localStorage.removeItem('herzog_farm_state');
+        setTimeout(() => toast(`💰 ${betrag} € von deiner alten Mini-Farm übernommen!`, '#43a047'), 1500);
+        saveState();
+      }
+    } catch (e) {}
+  }
 }
 
 function saveState() {
@@ -212,10 +226,56 @@ function saveState() {
 }
 async function syncToSupabase() {
   try {
+    // Bestehende char_outfits erst holen und mergen, damit Outfits
+    // aus der Lern-App nicht überschrieben werden.
+    let outfits = {};
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.liam&select=char_outfits`, {
+        headers:{apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY}
+      });
+      if (r.ok) { const rows = await r.json(); outfits = (rows[0] && rows[0].char_outfits) || {}; }
+    } catch (e) {}
+    outfits.hof_v5 = GS;
     await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.liam`, {
       method:'PATCH',
       headers:{apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY, 'Content-Type':'application/json', Prefer:'return=minimal'},
-      body: JSON.stringify({char_outfits: {hof_v5: GS}})
+      body: JSON.stringify({char_outfits: outfits})
+    });
+  } catch (e) {}
+}
+
+// ============================================================
+// BRÜCKE ZUR LERN-APP – Lern-Münzen sind im Hof Geld wert
+// ============================================================
+const LERNAPP_STORAGE_KEY = 'herzog_lernapp_v1';
+const KURS_MUENZE_EURO = 5; // 1 Lern-Münze = 5 € Hof-Geld
+
+function lernMuenzen() {
+  try {
+    const d = JSON.parse(localStorage.getItem(LERNAPP_STORAGE_KEY) || 'null');
+    return (d && d.profiles && d.profiles.liam && d.profiles.liam.coins) || 0;
+  } catch (e) { return 0; }
+}
+
+function lernMuenzenAbziehen(n) {
+  try {
+    const d = JSON.parse(localStorage.getItem(LERNAPP_STORAGE_KEY) || 'null');
+    if (!d || !d.profiles || !d.profiles.liam) return false;
+    if ((d.profiles.liam.coins || 0) < n) return false;
+    d.profiles.liam.coins -= n;
+    localStorage.setItem(LERNAPP_STORAGE_KEY, JSON.stringify(d));
+    if (!TEST_MODE) muenzenStandPushen(d.profiles.liam.coins);
+    return true;
+  } catch (e) { return false; }
+}
+
+// Neuen Münzstand auch in Supabase spiegeln (für Sync zwischen Tablets)
+async function muenzenStandPushen(coins) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.liam`, {
+      method:'PATCH',
+      headers:{apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY, 'Content-Type':'application/json', Prefer:'return=minimal'},
+      body: JSON.stringify({coins: coins, updated_at: new Date().toISOString()})
     });
   } catch (e) {}
 }
@@ -300,7 +360,8 @@ function buildUI() {
       el('div', {id:'geldAnzeige', class:'geld'},
         el('div', {class:'coin'}, '€'),
         el('span', {id:'geldText'}, formatGeld(GS.geld))
-      )
+      ),
+      el('button', {id:'lernChip', class:'lern-chip', onclick: openWechselstube}, '🪙 ' + lernMuenzen())
     ),
     el('button', {class:'shop-btn', onclick: openShop}, '🛒')
   ));
@@ -346,6 +407,7 @@ function buildUI() {
 }
 
 function updateGeldText() { const t = document.getElementById('geldText'); if (t) t.textContent = formatGeld(GS.geld); }
+function updateLernChip() { const c = document.getElementById('lernChip'); if (c) c.textContent = '🪙 ' + lernMuenzen(); }
 function updateModus() {
   const m = document.getElementById('modusIndikator');
   if (!m) return;
@@ -379,6 +441,12 @@ function buildSVG(container) {
     <linearGradient id="trkRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e53935"/><stop offset="100%" stop-color="#b71c1c"/></linearGradient>
     <linearGradient id="trkBlue" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1976d2"/><stop offset="100%" stop-color="#0d47a1"/></linearGradient>
     <radialGradient id="grasFlecken"><stop offset="0%" stop-color="#7cb342"/><stop offset="100%" stop-color="#558b2f"/></radialGradient>
+    <pattern id="grasTex" x="0" y="0" width="46" height="38" patternUnits="userSpaceOnUse">
+      <path d="M 8 30 l -2 -7 M 8 30 l 2 -7 M 8 30 l 0 -9" stroke="#4a7c2f" stroke-width="1.3" fill="none" opacity=".65"/>
+      <path d="M 30 14 l -2 -6 M 30 14 l 2 -6" stroke="#659a3b" stroke-width="1.2" fill="none" opacity=".55"/>
+      <circle cx="22" cy="32" r="1.1" fill="#fdd835" opacity=".45"/>
+      <circle cx="40" cy="24" r="1.3" fill="#8bc34a" opacity=".5"/>
+    </pattern>
   `;
   svg.appendChild(defs);
 
@@ -389,6 +457,8 @@ function buildSVG(container) {
 
   // Hintergrund Welt
   weltGrp.appendChild(svgEl('rect', {x:'0', y:'0', width:String(W), height:String(H), fill:ep.farbeBoden}));
+  // Boden-Textur: feine Grashalme + Blümchen als Muster statt flacher Farbe
+  weltGrp.appendChild(svgEl('rect', {x:'0', y:'0', width:String(W), height:String(H), fill:'url(#grasTex)', 'pointer-events':'none'}));
   // Naturflecken/Hügel
   const natur = svgEl('g', {opacity:'.5'});
   for (let i = 0; i < 30; i++) {
@@ -415,9 +485,20 @@ function buildSVG(container) {
   `;
   weltGrp.appendChild(wege);
 
-  // Dekoration
+  // Dekoration – tagsüber lachende Sonne, nachts Mond mit Sternen
   const deko = svgEl('g');
-  deko.innerHTML = `
+  deko.innerHTML = istNacht() ? `
+    <g transform="translate(2200,150)">
+      <circle r="36" fill="#fff9c4" opacity=".95"/>
+      <circle cx="14" cy="-6" r="30" fill="#0d1b4c" opacity=".55"/>
+      <circle cx="-14" cy="4" r="5" fill="#e6d9a0" opacity=".6"/>
+      <circle cx="-4" cy="16" r="3" fill="#e6d9a0" opacity=".6"/>
+    </g>
+    <g fill="#fff" opacity=".85">
+      <circle cx="1900" cy="120" r="3"/><circle cx="2050" cy="230" r="2"/><circle cx="2340" cy="90" r="2.5"/>
+      <circle cx="300" cy="130" r="2.5"/><circle cx="700" cy="90" r="2"/><circle cx="1200" cy="140" r="3"/>
+    </g>
+  ` : `
     <g transform="translate(2200,150)">
       <g opacity=".6"><line x1="0" y1="-50" x2="0" y2="-65" stroke="#fff176" stroke-width="3"/><line x1="50" y1="0" x2="65" y2="0" stroke="#fff176" stroke-width="3"/><line x1="-50" y1="0" x2="-65" y2="0" stroke="#fff176" stroke-width="3"/></g>
       <circle r="40" fill="#fff176"/><circle r="32" fill="#ffeb3b"/>
@@ -482,6 +563,10 @@ function buildSVG(container) {
   // Platzier-Geist
   const ghost = svgEl('g', {id:'platzGhost', style:'display:none', opacity:'.7'});
   weltGrp.appendChild(ghost);
+
+  // Tageszeit-Lichtstimmung als sanftes Overlay (ein einziges Rechteck – Fire-Tablet-freundlich)
+  const licht = lichtStimmung();
+  if (licht) svg.appendChild(svgEl('rect', {x:'0', y:'0', width:String(VIEW_W), height:String(VIEW_H), fill:licht.farbe, opacity:licht.opacity, 'pointer-events':'none'}));
 
   updateKamera();
   container.appendChild(svg);
@@ -599,13 +684,16 @@ function drawPflanzenSchoen(g, type, w, h, reif) {
   const tileSz = reif ? 32 : 24;
   const cols = Math.floor(w / (tileSz + 4));
   const rows = Math.floor((h - 20) / (tileSz + 6));
+  // Alle Pflanzen in EINER Gruppe, die sanft im Wind wiegt (nur 1 Animation pro Feld)
+  const pflanzGrp = svgEl('g', {class:'pflanzen-sway'});
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const px = (c + 0.5) * w / cols;
       const py = h * 0.18 + r * ((h - 20) / Math.max(rows,1)) * 0.95 + (r%2 ? 4 : 0);
-      g.appendChild(svgFromString(imgEmoji(em, px, py, tileSz)));
+      pflanzGrp.appendChild(svgFromString(imgEmoji(em, px, py, tileSz)));
     }
   }
+  g.appendChild(pflanzGrp);
 }
 function svgFromString(htmlStr) {
   const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -1646,11 +1734,15 @@ function drawTiereInto(svg) {
     for (let i = 0; i < tl.count; i++) {
       const tx = tl.baseX + (i % tl.cols) * (tl.sz + 8);
       const ty = tl.baseY + Math.floor(i / tl.cols) * (tl.sz + 4);
-      const g = svgEl('g');
+      const cx = tx + tl.sz / 2, cy = ty + tl.sz / 2;
+      const g = svgEl('g', {class:'tier'});
+      g.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
+      g.style.animationDuration = (2.6 + Math.random() * 1.6).toFixed(2) + 's';
       g.innerHTML = `
-        <ellipse cx="${tx + tl.sz/2}" cy="${ty + tl.sz - 4}" rx="${tl.sz*0.45}" ry="${tl.sz*0.1}" fill="#000" opacity=".35"/>
-        ${imgEmoji(tl.em, tx + tl.sz/2, ty + tl.sz/2, tl.sz)}
+        <ellipse cx="${cx}" cy="${ty + tl.sz - 4}" rx="${tl.sz*0.45}" ry="${tl.sz*0.1}" fill="#000" opacity=".35"/>
+        ${imgEmoji(tl.em, cx, cy, tl.sz)}
       `;
+      g.addEventListener('click', () => tierReagiert(g, tl.typ, cx, cy - tl.sz / 2));
       svg.appendChild(g);
     }
   }
@@ -1658,11 +1750,14 @@ function drawTiereInto(svg) {
   const huehner = Math.min(GS.tiere.huhn || 0, 8);
   for (let i = 0; i < huehner; i++) {
     const tx = 1180 + (i % 4) * 36, ty = 700 + Math.floor(i / 4) * 32;
-    const g = svgEl('g');
+    const g = svgEl('g', {class:'tier'});
+    g.style.animationDelay = (Math.random() * 2).toFixed(2) + 's';
+    g.style.animationDuration = (2 + Math.random()).toFixed(2) + 's';
     g.innerHTML = `
       <ellipse cx="${tx+22}" cy="${ty+40}" rx="18" ry="4" fill="#000" opacity=".3"/>
       ${imgEmoji('🐔', tx+22, ty+22, 44)}
     `;
+    g.addEventListener('click', () => tierReagiert(g, 'huhn', tx + 22, ty));
     svg.appendChild(g);
   }
 }
@@ -1696,7 +1791,7 @@ function setupTouch(container) {
       container.classList.add('dragging');
       return;
     }
-    const t = e.target.closest('[data-gebaeude]');
+    const t = e.target.closest('[data-gebaeude], .tier');
     if (t) { panning = false; dragging = false; return; }
     dragging = true;
     container.classList.add('dragging');
@@ -1873,9 +1968,12 @@ function commitPlatzieren() {
   }
   GS.gebaeudePos[platzierenItem.gid] = {x: Math.round(platzierenPos.x), y: Math.round(platzierenPos.y)};
   toast(`🎉 ${meta.name} steht!`, '#43a047');
+  const staubX = platzierenPos.x + meta.w / 2, staubY = platzierenPos.y + meta.h;
   platzierenItem = null;
   document.getElementById('platzGhost').style.display = 'none';
   saveState(); updateGeldText(); buildUI();
+  sfx('pow');
+  spawnStaub(staubX, staubY);
 }
 
 // ============================================================
@@ -1908,7 +2006,7 @@ function verkaufenMitMathe(cropType, saecke) {
             if (correct) {
               GS.geld += richtigerPreis; GS.inventar[cropType] = Math.max(0, (GS.inventar[cropType] || 0) - saecke);
               GS.stats.mathe_richtig++; saveState();
-              setTimeout(() => { closeModal(); updateGeldText(); toast(`✅ +${formatGeld(richtigerPreis)}!`, '#43a047'); }, 800);
+              setTimeout(() => { closeModal(); updateGeldText(); muenzenFlug(saecke); toast(`✅ +${formatGeld(richtigerPreis)}!`, '#43a047'); }, 800);
             } else {
               const halbe = Math.floor(richtigerPreis / 2);
               GS.geld += halbe; GS.inventar[cropType] = Math.max(0, (GS.inventar[cropType] || 0) - saecke);
@@ -1946,7 +2044,7 @@ function verkaufenMitMatheCustom(item, menge, preisProEinheit, titel, em) {
             if (correct) {
               GS.geld += Math.round(richtigerPreis / 100); GS.inventar[item] = Math.max(0, (GS.inventar[item] || 0) - menge);
               GS.stats.mathe_richtig++; saveState();
-              setTimeout(() => { closeModal(); updateGeldText(); toast(`✅ +${Math.round(richtigerPreis/100)}€`, '#43a047'); }, 800);
+              setTimeout(() => { closeModal(); updateGeldText(); muenzenFlug(6); toast(`✅ +${Math.round(richtigerPreis/100)}€`, '#43a047'); }, 800);
             } else {
               GS.geld += Math.round(richtigerPreis / 200); GS.inventar[item] = Math.max(0, (GS.inventar[item] || 0) - menge);
               saveState();
@@ -2104,7 +2202,7 @@ function openSchafstallInnen() {
   card.appendChild(el('p', {style:{'text-align':'center', 'margin':'10px'}}, `${schafe} Schafe · ${wolle} Wolle · ${milch} L Milch`));
   card.appendChild(aktionBtn('🧶 Wolle scheren', `+${wolle*8}€`, () => {
     if (schafe === 0) { toast('Keine Schafe', '#ef5350'); return; }
-    GS.geld += wolle * 8; updateGeldText(); saveState(); closeModal(); toast(`🧶 +${wolle*8}€`);
+    GS.geld += wolle * 8; updateGeldText(); saveState(); closeModal(); muenzenFlug(4); toast(`🧶 +${wolle*8}€`);
   }));
   card.appendChild(aktionBtn('🥛 Milch sammeln', `+${milch*1}€`, () => {
     if (schafe === 0) return;
@@ -2136,7 +2234,7 @@ function openSchweinestallInnen() {
     const verdient = schweine * 50;
     GS.geld += verdient; GS.tiere.schwein = 0; updateGeldText(); saveState();
     closeModal(); buildUI();
-    toast(`🍖 +${verdient}€!`);
+    muenzenFlug(6); toast(`🍖 +${verdient}€!`);
   }));
   showModalRaw(card);
 }
@@ -2174,7 +2272,7 @@ function openHofladenInnen() {
     }
     total = Math.round(total * 1.2);
     GS.geld += total; updateGeldText(); saveState();
-    closeModal(); toast(`💰 +${formatGeld(total)}!`);
+    closeModal(); muenzenFlug(8); toast(`💰 +${formatGeld(total)}!`);
   }));
   showModalRaw(card);
 }
@@ -2203,7 +2301,7 @@ function openMuehleInnen(gid) {
     if (w === 0) { toast('Kein Weizen!', '#ef5350'); return; }
     const ertrag = w * 3;
     GS.inventar.weizen = 0;
-    GS.geld += ertrag; updateGeldText(); saveState(); closeModal(); toast(`🌾→💰 +${ertrag}€`);
+    GS.geld += ertrag; updateGeldText(); saveState(); closeModal(); muenzenFlug(5); toast(`🌾→💰 +${ertrag}€`);
   }));
   showModalRaw(card);
 }
@@ -2225,7 +2323,7 @@ function openBiogasInnen() {
   card.appendChild(aktionBtn('Strom verkaufen', '5 €/Sack', () => {
     if (m === 0) { toast('Kein Mais', '#ef5350'); return; }
     const v = m * 5;
-    GS.inventar.mais = 0; GS.geld += v; updateGeldText(); saveState(); closeModal(); toast(`⚡ +${v}€`);
+    GS.inventar.mais = 0; GS.geld += v; updateGeldText(); saveState(); closeModal(); muenzenFlug(5); toast(`⚡ +${v}€`);
   }));
   showModalRaw(card);
 }
@@ -2444,6 +2542,125 @@ function zeigeLerntextModal(titel, text) {
 }
 
 // ============================================================
+// WECHSELSTUBE – Lern-Münzen gegen Hof-Geld tauschen
+// ============================================================
+function openWechselstube() {
+  const muenzen = lernMuenzen();
+  const card = el('div', {class:'modal-card'});
+  card.appendChild(el('button', {class:'close', onclick: closeModal}, '✕'));
+  card.appendChild(el('h2', {}, '🪙 Lern-Münzen tauschen'));
+  card.appendChild(el('div', {style:{background:'linear-gradient(135deg,#fff9c4,#ffe082)', padding:'14px', 'border-radius':'14px', 'text-align':'center', 'margin-bottom':'14px'}},
+    el('div', {style:{'font-size':'15px', color:'#5d4037', 'font-weight':'700'}}, 'Deine Lern-Münzen aus der Lern-App:'),
+    el('div', {style:{'font-size':'34px', 'font-weight':'900', color:'#3e2723', 'margin-top':'4px'}}, `🪙 ${muenzen}`),
+    el('div', {style:{'font-size':'13px', color:'#5d4037', 'margin-top':'6px'}}, `1 Münze = ${KURS_MUENZE_EURO} € Hof-Geld`)
+  ));
+  function tauschen(n) {
+    if (!lernMuenzenAbziehen(n)) { toast('❌ So viele Münzen hast du nicht', '#ef5350'); return; }
+    GS.geld += n * KURS_MUENZE_EURO;
+    GS.stats.muenzenGetauscht = (GS.stats.muenzenGetauscht || 0) + n;
+    saveState(); updateGeldText(); updateLernChip(); closeModal();
+    muenzenFlug(n);
+    toast(`🪙 → 💰 +${formatGeld(n * KURS_MUENZE_EURO)}!`, '#43a047');
+  }
+  if (muenzen >= 5) card.appendChild(aktionBtn('5 Münzen tauschen', `→ +${5 * KURS_MUENZE_EURO} €`, () => tauschen(5)));
+  if (muenzen >= 10) card.appendChild(aktionBtn('10 Münzen tauschen', `→ +${10 * KURS_MUENZE_EURO} €`, () => tauschen(10)));
+  if (muenzen > 0) card.appendChild(aktionBtn(`Alle ${muenzen} Münzen tauschen`, `→ +${formatGeld(muenzen * KURS_MUENZE_EURO)}`, () => tauschen(muenzen)));
+  else card.appendChild(el('p', {style:{'text-align':'center', color:'#888', margin:'12px 0', 'line-height':'1.5'}}, 'Noch keine Münzen da. Löse Aufgaben in der Lern-App – jede Münze macht deinen Hof reicher!'));
+  const lernBtn = el('button', {style:{display:'block', width:'100%', padding:'16px', background:'linear-gradient(180deg,#7e57c2,#4527a0)', color:'#fff', border:'none', 'border-radius':'14px', 'font-weight':'900', 'font-size':'17px', cursor:'pointer', 'margin-top':'6px', 'box-shadow':'0 4px 0 #311b92'}}, '📚 Lernen & Münzen verdienen');
+  lernBtn.addEventListener('click', zurueckZurApp);
+  card.appendChild(lernBtn);
+  showModalRaw(card);
+}
+
+// ============================================================
+// EFFEKTE – Münzen-Flug, Bau-Staub, Tier-Reaktionen
+// ============================================================
+function sfx(name) { try { if (typeof playSound === 'function') playSound(name); } catch (e) {} }
+
+// Münzen fliegen ins Geld-Konto oben
+function muenzenFlug(anz) {
+  const ziel = document.getElementById('geldAnzeige');
+  if (!ziel) return;
+  const zr = ziel.getBoundingClientRect();
+  const n = Math.max(3, Math.min(10, anz));
+  for (let i = 0; i < n; i++) {
+    const m = document.createElement('div');
+    m.className = 'muenze-flug';
+    m.textContent = '🪙';
+    const startX = window.innerWidth / 2 + (Math.random() - 0.5) * 180;
+    const startY = window.innerHeight * 0.55 + (Math.random() - 0.5) * 90;
+    m.style.left = startX + 'px';
+    m.style.top = startY + 'px';
+    document.body.appendChild(m);
+    setTimeout(() => {
+      m.style.transform = `translate(${zr.left + zr.width / 2 - startX}px, ${zr.top + zr.height / 2 - startY}px) scale(.4)`;
+      m.style.opacity = '0';
+    }, 30 + i * 60);
+    setTimeout(() => m.remove(), 950 + i * 60);
+  }
+  sfx('sparkle');
+}
+
+// Staubwolke beim Bauen
+function spawnStaub(cx, cy) {
+  if (!weltGrp) return;
+  const g = svgEl('g', {'pointer-events':'none'});
+  for (let i = 0; i < 8; i++) {
+    const dx = (Math.random() - 0.5) * 110, dy = -10 - Math.random() * 45;
+    const c = svgEl('circle', {cx:String(cx + dx * 0.25), cy:String(cy), r:String(7 + Math.random() * 9), fill:'#bcaaa4', class:'staub'});
+    c.style.setProperty('--dx', dx + 'px');
+    c.style.setProperty('--dy', dy + 'px');
+    c.style.animationDelay = (Math.random() * 0.15) + 's';
+    g.appendChild(c);
+  }
+  weltGrp.appendChild(g);
+  setTimeout(() => g.remove(), 1100);
+}
+
+// Tier antippen: Geräusch + Hüpfer + Sprechblase
+function tierLaut(typ) {
+  const laute = {schwein:'Oink!', schaf:'Mäh!', kuh:'Muuh!', pferd:'Wieher!', hund:'Wuff!', ochse:'Muuh!', huhn:'Gack!'};
+  return laute[typ] || '♪';
+}
+function tierSound(typ) {
+  if (typeof tone !== 'function' || typeof slide !== 'function') return;
+  try {
+    switch (typ) {
+      case 'kuh': case 'ochse': slide(200, 110, 0.5, 'sawtooth', 0.25); break;
+      case 'schaf': slide(440, 330, 0.16, 'square', 0.18); slide(430, 320, 0.16, 'square', 0.18, 0.18); break;
+      case 'schwein': noise(0.12, 0.25, 0, 600); slide(160, 90, 0.2, 'sawtooth', 0.28, 0.04); break;
+      case 'pferd': slide(900, 300, 0.4, 'square', 0.14); break;
+      case 'hund': tone(240, 0.09, 'square', 0.28); tone(200, 0.1, 'square', 0.28, 0.14); break;
+      case 'huhn': tone(880, 0.07, 'square', 0.18); tone(1100, 0.07, 'square', 0.18, 0.09); tone(1320, 0.12, 'square', 0.2, 0.18); break;
+      default: tone(600, 0.1, 'sine', 0.18);
+    }
+  } catch (e) {}
+}
+function tierReagiert(g, typ, cx, cy) {
+  tierSound(typ);
+  g.classList.remove('tier-hops');
+  requestAnimationFrame(() => g.classList.add('tier-hops'));
+  const b = svgEl('g', {'pointer-events':'none'});
+  b.innerHTML = `
+    <rect x="${cx - 40}" y="${cy - 62}" width="80" height="32" rx="15" fill="#fff" stroke="#3e2723" stroke-width="2.5"/>
+    <path d="M ${cx - 7} ${cy - 30} l 7 13 l 7 -13 Z" fill="#fff" stroke="#3e2723" stroke-width="2"/>
+    <text x="${cx}" y="${cy - 40}" text-anchor="middle" font-size="17" font-weight="900" fill="#3e2723">${tierLaut(typ)}</text>
+  `;
+  weltGrp.appendChild(b);
+  setTimeout(() => b.remove(), 1300);
+}
+
+// Tageszeit: nachts dunkelblau, abends warm, morgens hell
+function lichtStimmung() {
+  const h = new Date().getHours();
+  if (h >= 21 || h < 6) return {farbe:'#0d1b4c', opacity:'0.32'};
+  if (h >= 17) return {farbe:'#ff8f00', opacity:'0.14'};
+  if (h < 9) return {farbe:'#fff9c4', opacity:'0.10'};
+  return null;
+}
+function istNacht() { const h = new Date().getHours(); return h >= 21 || h < 6; }
+
+// ============================================================
 // Modal-Helper
 // ============================================================
 function showModal(content) {
@@ -2507,6 +2724,9 @@ setInterval(() => {
     }
   }
 }, TEST_MODE ? 1000 : 5000);
+
+// Lern-Münzen-Anzeige aktualisieren, wenn Liam aus der Lern-App zurückkommt
+document.addEventListener('visibilitychange', () => { if (!document.hidden) updateLernChip(); });
 
 loadState();
 buildUI();
