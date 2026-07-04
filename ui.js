@@ -294,8 +294,9 @@ function renderQuizTask(topKey, sub, pool, statKey) {
       if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
       if (typeof schedulePush === 'function') schedulePush(currentProfile);
       setTimeout(() => {
-        if (result.unlocked) { sfxUnlock?.(); showReward(result.unlocked, ()=> renderQuizTask(topKey, sub, pool, statKey)); }
-        else renderQuizTask(topKey, sub, pool, statKey);
+        const cont = ()=> renderQuizTask(topKey, sub, pool, statKey);
+        if (result.unlocked) { sfxUnlock?.(); showReward(result.unlocked, ()=> maybePauseOrContinue(statKey, cont)); }
+        else maybePauseOrContinue(statKey, cont);
       }, correct ? 800 : 1800);
     });
     input.addEventListener('keyup', e => { if (e.key === 'Enter') btn.click(); });
@@ -588,26 +589,138 @@ function answer(btn, correct, next){
 
 function maybePauseOrContinue(subject, next){
   const p = State.data.profiles[currentProfile];
-  // Raik: Pause nach 5 richtigen Aufgaben (ADHS-Modus)
+  // Raik: nach 5 richtigen Antworten erscheint ein wildes Pokémon,
+  // danach die Mini-Pause (ADHS-Modus)
   // Liam: Bewegungs-Pause nach 10 Aufgaben
   const trigger = currentProfile==='raik' ? 5 : 10;
-  if (Settings.isEnabled('movement_pause') && (p.sessionCount||0) >= trigger) {
+  if ((p.sessionCount||0) >= trigger) {
     p.sessionCount = 0;
     State.save();
-    showPauseScreen(()=> next ? next() : renderTask(subject));
-    return;
+    const goOn = ()=> next ? next() : renderTask(subject);
+    const pauseThenGo = ()=> Settings.isEnabled('movement_pause') ? showPauseScreen(goOn) : goOn();
+    if (currentProfile === 'raik' && typeof pickWildPokemon === 'function') {
+      const wild = pickWildPokemon(currentProfile);
+      if (wild) return showCatchMoment(wild, pauseThenGo);
+    }
+    return pauseThenGo();
   }
   if (next) next(); else renderTask(subject);
 }
 
+// Konfetti-Regen für Belohnungs-Momente (rein CSS-animiert, kurz und leicht)
+function spawnConfetti(container, count=28){
+  const colors = ['#ffd700','#ff5252','#40c4ff','#69f0ae','#ff9800','#e040fb','#fff176'];
+  for (let i=0; i<count; i++) {
+    const f = document.createElement('div');
+    f.className = 'confetti';
+    f.style.left = Math.random()*100 + '%';
+    f.style.background = colors[i % colors.length];
+    f.style.animationDelay = (Math.random()*0.5) + 's';
+    f.style.animationDuration = (1.5 + Math.random()*1.3) + 's';
+    container.appendChild(f);
+    setTimeout(()=> f.remove(), 3500);
+  }
+}
+
 function showReward(item, then){
+  let visual;
+  if (item.img) {
+    visual = document.createElement('img');
+    visual.className = 'reward-img';
+    visual.src = item.img;
+    visual.alt = item.name;
+    visual.onerror = ()=> { visual.replaceWith(el('div',{class:'big', text: item.icon || '🎁'})); };
+  } else {
+    visual = el('div',{class:'big', text: item.icon});
+  }
+  let rewardDone = false; // Doppel-Tap-Schutz (Tablet!)
   const overlay = el('div',{class:'reward'},
-    el('div',{class:'big', text: item.icon}),
+    visual,
     el('div',{class:'text', text:'NEU FREIGESCHALTET!'}),
     el('div',{class:'sub', text: item.name}),
-    el('button',{text:'Weiter machen!', onclick: ()=>{ overlay.remove(); then(); }})
+    el('button',{text:'Weiter machen!', onclick: ()=>{ if (rewardDone) return; rewardDone = true; overlay.remove(); then(); }})
   );
+  spawnConfetti(overlay);
   root.appendChild(overlay);
+}
+
+// ===== Pokémon-Fang-Moment (Raik) =====
+// Kurz und knackig: Pokémon erscheint → Tipp auf den Pokéball →
+// einsaugen, wackeln, gefangen! Kein Fehlschlag möglich.
+function showCatchMoment(wild, then){
+  const c = wild.char;
+  const overlay = el('div',{class:'catch-overlay' + (wild.legendary ? ' legendary' : '')});
+  const title = el('div',{class:'catch-title',
+    text: (wild.legendary ? '⭐ Ein legendäres ' : 'Ein wildes ') + c.name + ' erscheint!'});
+  const stage = el('div',{class:'catch-stage'});
+  let poke;
+  if (c.img) {
+    poke = document.createElement('img');
+    poke.className = 'catch-poke';
+    poke.src = c.img;
+    poke.alt = c.name;
+    poke.onerror = ()=> {
+      const fb = el('div',{class:'catch-poke catch-poke-emoji', text: c.icon || '🔮'});
+      poke.replaceWith(fb);
+    };
+  } else {
+    poke = el('div',{class:'catch-poke catch-poke-emoji', text: c.icon || '🔮'});
+  }
+  stage.appendChild(poke);
+  const ballZone = el('div',{class:'catch-ballzone'});
+  const ball = el('div',{class:'pokeball idle'});
+  const hint = el('div',{class:'catch-hint', text:'Tippe den Pokéball!'});
+  ballZone.appendChild(ball);
+  ballZone.appendChild(hint);
+  overlay.appendChild(title);
+  overlay.appendChild(stage);
+  overlay.appendChild(ballZone);
+  document.body.appendChild(overlay);
+  if (typeof playSound === 'function') playSound(wild.legendary ? 'fanfare' : 'sparkle');
+
+  let thrown = false;
+  let finished = false; // Doppel-Tap-Schutz für den Weiter-Button
+  const autoTimer = setTimeout(doThrow, 8000); // wirft automatisch, falls nicht getippt
+  function doThrow(){
+    if (thrown) return;
+    thrown = true;
+    clearTimeout(autoTimer);
+    hint.remove();
+    ball.classList.remove('idle');
+    if (typeof playSound === 'function') playSound('whoosh');
+    const target = stage.querySelector('.catch-poke');
+    if (target) target.classList.add('sucked');
+    setTimeout(()=>{
+      if (typeof playSound === 'function') playSound('pow');
+      ball.classList.add('wobble');
+      setTimeout(()=>{
+        ball.classList.remove('wobble');
+        ball.classList.add('caught');
+        const r = catchPokemon(currentProfile, c.id);
+        if (typeof schedulePush === 'function') schedulePush(currentProfile);
+        if (typeof sfxUnlock === 'function') sfxUnlock();
+        spawnConfetti(overlay);
+        title.textContent = r.isNew
+          ? c.name + ' wurde gefangen!'
+          : c.name + ' war schon da – +15 Münzen!';
+        const done = el('div',{class:'catch-done'});
+        if (c.img) {
+          const mini = document.createElement('img');
+          mini.className = 'catch-mini';
+          mini.src = c.img;
+          mini.alt = c.name;
+          mini.onerror = ()=> mini.remove();
+          done.appendChild(mini);
+        }
+        if (r.isNew) done.appendChild(el('div',{class:'catch-sub', text:'Ab in deinen Pokédex! 📕'}));
+        done.appendChild(el('button',{class:'catch-btn', text:'Weiter!',
+          onclick: ()=>{ if (finished) return; finished = true; overlay.remove(); then(); }}));
+        overlay.appendChild(done);
+      }, 1400);
+    }, 600);
+  }
+  ball.addEventListener('click', doThrow);
+  overlay.addEventListener('click', ()=> { if (!thrown) doThrow(); });
 }
 
 function showPauseScreen(then){
@@ -619,10 +732,11 @@ function showPauseScreen(then){
   overlay.appendChild(cd);
   document.body.appendChild(overlay);
   let n = 10;
+  let pauseDone = false;
   const iv = setInterval(()=>{
     n--;
     cd.textContent = n;
-    if (n<=0) { clearInterval(iv); overlay.remove(); then(); }
+    if (n<=0 && !pauseDone) { pauseDone = true; clearInterval(iv); overlay.remove(); then(); }
   }, 1000);
 }
 
@@ -640,6 +754,22 @@ function renderCollection(){
   root.appendChild(top);
   const wrap = el('div',{class:'collection'});
   wrap.appendChild(el('h2',{text:`${p.unlocked.length} / ${collection.length} freigeschaltet · Tippe an um anzuschauen`}));
+
+  // Pokédex-Banner (Raik): Fortschritt + Einstieg in die Pokédex-Ansicht
+  if (currentProfile === 'raik' && typeof POKEDEX !== 'undefined' && typeof caughtDexNumbers === 'function') {
+    const caught = caughtDexNumbers(p).size;
+    const pct = Math.round(caught / POKEDEX.length * 100);
+    const banner = el('div',{class:'dex-banner', onclick: renderPokedex});
+    banner.appendChild(el('div',{class:'dex-banner-title', text:'📕 Pokédex'}));
+    banner.appendChild(el('div',{class:'dex-banner-count', text:`Gefangen: ${caught} / ${POKEDEX.length}`}));
+    const bar = el('div',{class:'dex-bar'});
+    const fill = el('div',{class:'dex-bar-fill'});
+    fill.style.width = pct + '%';
+    bar.appendChild(fill);
+    banner.appendChild(bar);
+    banner.appendChild(el('div',{class:'dex-banner-hint', text:'Wilde Pokémon fängst du mit 5 richtigen Antworten!'}));
+    wrap.appendChild(banner);
+  }
 
   // Booster-Pack-Button (wenn cards-Feature on UND etwas freigeschaltet)
   if (Settings.isEnabled('collection_cards') && p.unlocked.length > 0) {
@@ -691,6 +821,90 @@ function renderCollection(){
     grid.appendChild(cell);
   });
   wrap.appendChild(grid);
+  root.appendChild(wrap);
+}
+
+// ===== Pokédex-Ansicht (Raik) =====
+function renderPokedex(){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-raik';
+  const caughtSet = caughtDexNumbers(p);
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderCollection}),
+    el('div',{text:'📕 Pokédex'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(top);
+  const wrap = el('div',{class:'collection'});
+  const head = el('div',{class:'dex-head'});
+  head.appendChild(el('div',{class:'dex-head-count', text:`Gefangen: ${caughtSet.size} / ${POKEDEX.length}`}));
+  const bar = el('div',{class:'dex-bar'});
+  const fill = el('div',{class:'dex-bar-fill'});
+  fill.style.width = Math.round(caughtSet.size / POKEDEX.length * 100) + '%';
+  bar.appendChild(fill);
+  head.appendChild(bar);
+  wrap.appendChild(head);
+  const grid = el('div',{class:'dex-grid'});
+  for (const e of POKEDEX) {
+    const caught = caughtSet.has(e.n);
+    const cell = el('div',{class:'dex-item ' + (caught ? 'caught' : 'missing'),
+      onclick: caught ? ()=> renderPokedexDetail(e.n) : null});
+    const img = document.createElement('img');
+    img.src = 'img/chars/pokemon/' + e.n + '.png';
+    img.alt = caught ? e.de : '???';
+    img.loading = 'lazy';
+    if (!caught) img.className = 'silhouette';
+    img.onerror = ()=> { img.replaceWith(el('div',{class:'dex-fallback', text: caught ? '🔮' : '❓'})); };
+    cell.appendChild(img);
+    cell.appendChild(el('div',{class:'dex-no', text:'#'+e.n}));
+    cell.appendChild(el('div',{class:'dex-name', text: caught ? e.de : '???'}));
+    grid.appendChild(cell);
+  }
+  wrap.appendChild(grid);
+  root.appendChild(wrap);
+}
+
+// Detailkarte eines gefangenen Pokémon (Bild, Typ, Beschreibung)
+function renderPokedexDetail(n){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-raik';
+  const e = POKEDEX.find(x => x.n === n);
+  if (!e) return renderPokedex();
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderPokedex}),
+    el('div',{text:'📕 #' + e.n}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(top);
+  const wrap = el('div',{class:'detail'});
+  const card = el('div',{class:'detail-card'});
+  const img = document.createElement('img');
+  img.className = 'detail-img';
+  img.src = 'img/chars/pokemon/' + e.n + '.png';
+  img.alt = e.de;
+  img.onerror = ()=> { img.replaceWith(el('div',{class:'detail-icon', text:'🔮'})); };
+  card.appendChild(img);
+  card.appendChild(el('div',{class:'detail-name', text: e.de, attrs:{style:'color:'+(e.color||'#1b5e20')}}));
+  card.appendChild(el('div',{class:'detail-typ', text: '#' + e.n + ' · ' + (e.type || 'Pokemon')}));
+  if (e.desc) {
+    const sec = el('div',{class:'detail-section'});
+    sec.appendChild(el('h4',{text:'Was ist das?'}));
+    sec.appendChild(el('p',{text: e.desc}));
+    card.appendChild(sec);
+  }
+  const charId = 'pkm_' + e.n;
+  if (p.unlocked.includes(charId)) {
+    card.appendChild(el('button',{text:'🌟 Anschauen & spielen',
+      onclick: ()=> renderCharDetail(charId),
+      attrs:{style:'display:block;margin:14px auto 0;padding:12px 24px;background:#e53935;color:#fff;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer'}}));
+  }
+  if (Settings.isEnabled('tts') && e.desc) {
+    card.appendChild(el('button',{text:'🔊 Vorlesen', onclick: ()=> speak(e.de + '. ' + (e.type||'') + '. ' + e.desc),
+      attrs:{style:'display:block;margin:10px auto 0;padding:10px 20px;background:#1976d2;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
+  }
+  wrap.appendChild(card);
   root.appendChild(wrap);
 }
 

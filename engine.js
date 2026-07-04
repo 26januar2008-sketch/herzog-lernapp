@@ -210,3 +210,84 @@ function todayStats(profileKey) {
     math: todays.filter(h => h.subject==='math').length
   };
 }
+
+// ============================================================
+// Pokémon-Fang-System (Raik): alle 5 richtigen Antworten
+// erscheint ein wildes Pokémon. Nutzt die bestehende
+// unlocked-Sammlung, damit der Supabase-Sync weiterläuft.
+// ============================================================
+
+// Welche Pokédex-Nummern hat das Profil schon?
+// (pkm_*-IDs direkt, alte Einzel-Charaktere wie 'glumanda' über den Namen)
+function caughtDexNumbers(p) {
+  const set = new Set();
+  if (typeof POKEDEX === 'undefined' || typeof CHARS === 'undefined') return set;
+  const byName = {};
+  for (const e of POKEDEX) byName[e.de] = e.n;
+  for (const id of (p.unlocked || [])) {
+    const c = CHARS.find(x => x.id === id);
+    if (!c) continue;
+    if (c.pokedexNo) set.add(c.pokedexNo);
+    else if (byName[c.name]) set.add(byName[c.name]);
+  }
+  return set;
+}
+
+function isLegendaryDex(n) { return (n >= 144 && n <= 151) || (n >= 243 && n <= 251); }
+
+// Wildes Pokémon ziehen: überwiegend häufige, bei starken Tagen (15/25
+// richtige) seltenere. Legendäre nur bei perfekter 10er-Serie ohne Fehler
+// oder perfektem Tag (ab 20 Aufgaben, alle richtig). Bereits gefangene
+// werden nicht doppelt gezogen, solange noch welche fehlen.
+function pickWildPokemon(profileKey) {
+  if (typeof CHARS === 'undefined' || typeof POKEDEX === 'undefined') return null;
+  const p = State.data.profiles[profileKey];
+  const all = CHARS.filter(c => c.pokedexNo);
+  if (all.length === 0) return null;
+  const caught = caughtDexNumbers(p);
+  const missing = all.filter(c => !caught.has(c.pokedexNo));
+  if (missing.length === 0) {
+    // Alle 251 gefangen: ein bekanntes Pokémon schaut vorbei (Bonus-Münzen)
+    return { char: all[Math.floor(Math.random() * all.length)], alreadyCaught: true };
+  }
+  const today = todayStats(profileKey);
+  const last10 = (p.history || []).slice(-10);
+  const perfectRun = last10.length === 10 && last10.every(h => h.correct);
+  const perfectDay = today.total >= 20 && today.correct === today.total;
+  const legends = missing.filter(c => isLegendaryDex(c.pokedexNo));
+  if (legends.length && (perfectRun || perfectDay) && Math.random() < 0.25) {
+    return { char: legends[Math.floor(Math.random() * legends.length)], legendary: true };
+  }
+  const normal = missing.filter(c => !isLegendaryDex(c.pokedexNo));
+  const pool = normal.length ? normal : missing;
+  // Seltenheit über den Preis (spiegelt Pokédex-Nr + Endform wider)
+  const common = pool.filter(c => c.price <= 45);
+  const medium = pool.filter(c => c.price > 45 && c.price <= 90);
+  const rare   = pool.filter(c => c.price > 90);
+  let wC = 70, wM = 25, wR = 5;
+  if (today.correct >= 25)      { wC = 35; wM = 40; wR = 25; }
+  else if (today.correct >= 15) { wC = 50; wM = 35; wR = 15; }
+  const buckets = [[common, wC], [medium, wM], [rare, wR]].filter(b => b[0].length > 0);
+  if (buckets.length === 0) return { char: pool[Math.floor(Math.random() * pool.length)] };
+  const total = buckets.reduce((s, b) => s + b[1], 0);
+  let r = Math.random() * total;
+  for (const [arr, w] of buckets) {
+    r -= w;
+    if (r < 0) return { char: arr[Math.floor(Math.random() * arr.length)] };
+  }
+  return { char: pool[Math.floor(Math.random() * pool.length)] };
+}
+
+// Gefangenes Pokémon in die bestehende unlocked-Sammlung übernehmen
+function catchPokemon(profileKey, charId) {
+  const p = State.data.profiles[profileKey];
+  const isNew = !p.unlocked.includes(charId);
+  if (isNew) {
+    p.unlocked.push(charId);
+    grantStandardCard(profileKey, charId);
+  } else {
+    p.coins += 15; // Bonus, falls schon da (nur möglich wenn alle 251 gefangen)
+  }
+  State.save();
+  return { isNew };
+}
