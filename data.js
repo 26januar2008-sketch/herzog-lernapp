@@ -514,7 +514,7 @@ const LIAM_ZAHLENMUSTER = [
 
 // --- LIAM Deutsch Sub-Pools ---
 const LIAM_RECHTSCHREIBUNG = [
-  {q:"Welches Wort ist richtig?",options:["Ferner","Verner","Vehrner","Ferrner"],correct:0},
+  {q:"Welches Wort ist richtig?",options:["Fogel","Vogel","Vohgel","Vogl"],correct:1},
   {q:"-ck oder -k? Pa___",options:["ck","k","kk","gk"],correct:0},
   {q:"-tz oder -z? Spi___e",options:["tz","z","ts","zz"],correct:0},
   {q:"Welche Schreibung ist richtig?",options:["Strase","Straße","Strasse","Strate"],correct:1},
