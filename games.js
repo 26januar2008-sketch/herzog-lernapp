@@ -253,45 +253,112 @@ let unicornState = null;
 function unicornSVG() {
   return `<svg viewBox="0 0 140 120" width="140" height="120" xmlns="http://www.w3.org/2000/svg">
     <defs>
+      <radialGradient id="uBody" cx="42%" cy="38%" r="75%">
+        <stop offset="0" stop-color="#ffffff"/><stop offset="65%" stop-color="#fbf3ff"/><stop offset="100%" stop-color="#efd8f5"/>
+      </radialGradient>
+      <radialGradient id="uHead" cx="40%" cy="35%" r="80%">
+        <stop offset="0" stop-color="#ffffff"/><stop offset="70%" stop-color="#fbf1ff"/><stop offset="100%" stop-color="#ecd3f4"/>
+      </radialGradient>
       <linearGradient id="hornGrad" x1="0" y1="1" x2="1" y2="0">
-        <stop offset="0" stop-color="#ffd54f"/><stop offset="1" stop-color="#fff8e1"/>
+        <stop offset="0" stop-color="#ffb300"/><stop offset="45%" stop-color="#ffd54f"/><stop offset="100%" stop-color="#fff8e1"/>
+      </linearGradient>
+      <linearGradient id="uHoof" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f8bbd0"/><stop offset="1" stop-color="#ce93d8"/>
       </linearGradient>
     </defs>
-    <ellipse cx="60" cy="78" rx="34" ry="24" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
-    <rect x="34" y="92" width="9" height="22" rx="4" fill="#fff" stroke="#f3e5f5"/>
-    <rect x="52" y="96" width="9" height="20" rx="4" fill="#fff" stroke="#f3e5f5"/>
-    <rect x="70" y="96" width="9" height="20" rx="4" fill="#fff" stroke="#f3e5f5"/>
-    <rect x="84" y="92" width="9" height="22" rx="4" fill="#fff" stroke="#f3e5f5"/>
-    <path d="M28 82 Q10 88 14 102 Q22 96 26 90" fill="none" stroke="#ce93d8" stroke-width="6" stroke-linecap="round"/>
-    <path d="M30 86 Q16 94 20 106" fill="none" stroke="#80deea" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="94" cy="52" r="22" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
-    <ellipse cx="112" cy="58" rx="12" ry="9" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
-    <ellipse cx="116" cy="60" rx="3" ry="2.2" fill="#f8bbd0"/>
-    <circle cx="97" cy="48" r="3.5" fill="#4a148c"/>
-    <circle cx="98.4" cy="46.8" r="1.2" fill="#fff"/>
-    <ellipse cx="90" cy="58" rx="4" ry="2.5" fill="#f8bbd0" opacity=".7"/>
-    <path d="M86 32 L98 32 L104 20 Z" fill="#fff" stroke="#f3e5f5"/>
-    <path d="M100 34 L124 6 L108 30 Z" fill="url(#hornGrad)" stroke="#ffc107" stroke-width="1.5"/>
-    <path d="M78 40 Q66 30 72 52 Q60 44 66 62 Q56 58 64 72" fill="none" stroke="#f48fb1" stroke-width="7" stroke-linecap="round"/>
-    <path d="M74 44 Q64 38 68 56 Q60 52 66 66" fill="none" stroke="#ba68c8" stroke-width="5" stroke-linecap="round"/>
-    <path d="M72 50 Q64 48 68 62" fill="none" stroke="#4dd0e1" stroke-width="4" stroke-linecap="round"/>
+    <!-- Regenbogen-Schweif -->
+    <path d="M27 78 Q6 82 8 100 Q16 96 22 88" fill="none" stroke="#ef5350" stroke-width="7" stroke-linecap="round"/>
+    <path d="M28 82 Q9 90 13 104 Q20 98 24 90" fill="none" stroke="#ffa726" stroke-width="6" stroke-linecap="round"/>
+    <path d="M30 85 Q14 94 18 106" fill="none" stroke="#ffee58" stroke-width="5" stroke-linecap="round"/>
+    <path d="M31 88 Q19 96 22 107" fill="none" stroke="#66bb6a" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M32 90 Q23 97 26 106" fill="none" stroke="#42a5f5" stroke-width="4" stroke-linecap="round"/>
+    <path d="M33 92 Q27 98 30 105" fill="none" stroke="#ab47bc" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Körper + Beine -->
+    <ellipse cx="60" cy="78" rx="35" ry="25" fill="url(#uBody)" stroke="#e1bee7" stroke-width="2"/>
+    <ellipse cx="50" cy="70" rx="18" ry="9" fill="#ffffff" opacity=".7"/>
+    <rect x="34" y="92" width="9" height="22" rx="4" fill="url(#uBody)" stroke="#e1bee7"/>
+    <rect x="52" y="96" width="9" height="20" rx="4" fill="url(#uBody)" stroke="#e1bee7"/>
+    <rect x="70" y="96" width="9" height="20" rx="4" fill="url(#uBody)" stroke="#e1bee7"/>
+    <rect x="84" y="92" width="9" height="22" rx="4" fill="url(#uBody)" stroke="#e1bee7"/>
+    <rect x="34" y="108" width="9" height="6" rx="3" fill="url(#uHoof)"/>
+    <rect x="52" y="110" width="9" height="6" rx="3" fill="url(#uHoof)"/>
+    <rect x="70" y="110" width="9" height="6" rx="3" fill="url(#uHoof)"/>
+    <rect x="84" y="108" width="9" height="6" rx="3" fill="url(#uHoof)"/>
+    <!-- Hals + Kopf -->
+    <path d="M78 74 Q80 56 92 50 L104 62 Q92 72 86 82 Z" fill="url(#uBody)" stroke="#e1bee7" stroke-width="1.5"/>
+    <circle cx="94" cy="52" r="22" fill="url(#uHead)" stroke="#e1bee7" stroke-width="2"/>
+    <ellipse cx="112" cy="58" rx="12.5" ry="9.5" fill="url(#uHead)" stroke="#e1bee7" stroke-width="2"/>
+    <ellipse cx="116" cy="60" rx="3" ry="2.2" fill="#f06292"/>
+    <ellipse cx="119" cy="58" rx="1.4" ry="1" fill="#ad1457"/>
+    <!-- Ohr -->
+    <path d="M82 34 L92 30 L88 44 Z" fill="url(#uHead)" stroke="#e1bee7"/>
+    <path d="M84 35 L90 33 L88 42 Z" fill="#f8bbd0"/>
+    <!-- Auge (glänzend, mit Wimpern) -->
+    <ellipse cx="97" cy="49" rx="4.2" ry="5" fill="#4a148c"/>
+    <circle cx="98.6" cy="47" r="1.6" fill="#fff"/>
+    <circle cx="96" cy="51" r="0.9" fill="#ce93d8"/>
+    <path d="M92 45 Q96 42 100 44" fill="none" stroke="#4a148c" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M101 45 l3 -2 M101 47 l3.5 -0.5" stroke="#4a148c" stroke-width="1.4" stroke-linecap="round"/>
+    <ellipse cx="90" cy="59" rx="4.5" ry="2.8" fill="#f8bbd0" opacity=".7"/>
+    <!-- Horn spiralig -->
+    <path d="M100 32 L118 6 L106 30 Z" fill="url(#hornGrad)" stroke="#ff8f00" stroke-width="1.2"/>
+    <path d="M104 26 l7 -9 M106 22 l6 -8 M108 18 l5 -7" stroke="#ff8f00" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+    <!-- Mähne, fließend & regenbogenbunt -->
+    <path d="M80 40 Q66 28 72 52 Q58 42 66 64 Q54 58 63 74" fill="none" stroke="#f06292" stroke-width="7.5" stroke-linecap="round"/>
+    <path d="M76 42 Q64 34 69 55 Q58 50 65 68" fill="none" stroke="#ba68c8" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M73 47 Q64 44 68 60 Q60 58 66 70" fill="none" stroke="#4dd0e1" stroke-width="4" stroke-linecap="round"/>
+    <path d="M71 52 Q66 51 69 63" fill="none" stroke="#fff176" stroke-width="3" stroke-linecap="round"/>
+    <!-- Funkeln -->
+    <path d="M120 20 l1.4 4 l4 1.4 l-4 1.4 l-1.4 4 l-1.4 -4 l-4 -1.4 l4 -1.4 Z" fill="#fff59d"/>
+    <path d="M108 44 l0.9 2.6 l2.6 0.9 l-2.6 0.9 l-0.9 2.6 l-0.9 -2.6 l-2.6 -0.9 l2.6 -0.9 Z" fill="#fff"/>
   </svg>`;
 }
 
 function shadowFairySVG() {
   return `<svg viewBox="0 0 100 110" width="86" height="95" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="30" cy="45" rx="26" ry="16" fill="#b39ddb" opacity=".55" transform="rotate(-25 30 45)"/>
-    <ellipse cx="70" cy="45" rx="26" ry="16" fill="#b39ddb" opacity=".55" transform="rotate(25 70 45)"/>
-    <path d="M50 38 L30 96 Q50 106 70 96 Z" fill="#5e35b1"/>
-    <path d="M38 72 Q50 80 62 72 L70 96 Q50 106 30 96 Z" fill="#4527a0"/>
-    <circle cx="50" cy="30" r="17" fill="#7e57c2"/>
-    <path d="M36 22 Q40 8 50 12 Q62 4 64 20 Q70 16 66 26 L36 26 Z" fill="#311b92"/>
-    <circle cx="44" cy="30" r="3.6" fill="#fff"/>
-    <circle cx="56" cy="30" r="3.6" fill="#fff"/>
-    <circle cx="44.8" cy="30.8" r="1.7" fill="#311b92"/>
-    <circle cx="56.8" cy="30.8" r="1.7" fill="#311b92"/>
-    <path d="M45 39 Q50 42 55 39" fill="none" stroke="#311b92" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="50" cy="8" r="3" fill="#ffd54f"/>
+    <defs>
+      <radialGradient id="fBody" cx="45%" cy="30%" r="75%">
+        <stop offset="0" stop-color="#9575cd"/><stop offset="60%" stop-color="#5e35b1"/><stop offset="100%" stop-color="#4527a0"/>
+      </radialGradient>
+      <radialGradient id="fHead" cx="42%" cy="32%" r="72%">
+        <stop offset="0" stop-color="#b39ddb"/><stop offset="70%" stop-color="#7e57c2"/><stop offset="100%" stop-color="#5e35b1"/>
+      </radialGradient>
+      <radialGradient id="fWing" cx="50%" cy="50%" r="60%">
+        <stop offset="0" stop-color="#e1bee7" stop-opacity=".85"/><stop offset="100%" stop-color="#b39ddb" stop-opacity=".35"/>
+      </radialGradient>
+      <radialGradient id="fGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#d1c4e9" stop-opacity=".6"/><stop offset="100%" stop-color="#d1c4e9" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- weicher Schimmer -->
+    <circle cx="50" cy="52" r="46" fill="url(#fGlow)"/>
+    <!-- Flügel mit Adern -->
+    <g transform="rotate(-25 30 45)"><ellipse cx="30" cy="45" rx="27" ry="17" fill="url(#fWing)" stroke="#ce93d8" stroke-width="1"/>
+      <path d="M12 45 Q30 42 48 45 M18 38 Q30 44 20 52" stroke="#ce93d8" stroke-width="0.8" fill="none" opacity=".7"/></g>
+    <g transform="rotate(25 70 45)"><ellipse cx="70" cy="45" rx="27" ry="17" fill="url(#fWing)" stroke="#ce93d8" stroke-width="1"/>
+      <path d="M52 45 Q70 42 88 45 M82 38 Q70 44 80 52" stroke="#ce93d8" stroke-width="0.8" fill="none" opacity=".7"/></g>
+    <!-- Körper/Kleid -->
+    <path d="M50 38 L29 97 Q50 107 71 97 Z" fill="url(#fBody)"/>
+    <path d="M37 73 Q50 81 63 73 L71 97 Q50 107 29 97 Z" fill="#4527a0"/>
+    <path d="M44 44 Q50 50 56 44 L58 66 Q50 71 42 66 Z" fill="#7e57c2" opacity=".6"/>
+    <!-- Kopf -->
+    <circle cx="50" cy="30" r="17.5" fill="url(#fHead)"/>
+    <ellipse cx="44" cy="24" rx="6" ry="4" fill="#d1c4e9" opacity=".5"/>
+    <!-- wuscheliger Haarschopf -->
+    <path d="M34 24 Q34 6 48 11 Q54 2 60 12 Q72 6 67 24 Q72 18 68 28 Q60 20 52 24 Q44 19 38 28 Q34 22 34 24 Z" fill="#311b92"/>
+    <!-- große glänzende Augen -->
+    <ellipse cx="44" cy="30" rx="4.2" ry="4.8" fill="#fff"/>
+    <ellipse cx="56" cy="30" rx="4.2" ry="4.8" fill="#fff"/>
+    <circle cx="44.6" cy="31" r="2.4" fill="#311b92"/>
+    <circle cx="56.6" cy="31" r="2.4" fill="#311b92"/>
+    <circle cx="45.4" cy="29.6" r="1" fill="#fff"/>
+    <circle cx="57.4" cy="29.6" r="1" fill="#fff"/>
+    <!-- Wangen + fröhlicher Mund -->
+    <ellipse cx="39" cy="36" rx="3" ry="2" fill="#f48fb1" opacity=".7"/>
+    <ellipse cx="61" cy="36" rx="3" ry="2" fill="#f48fb1" opacity=".7"/>
+    <path d="M45 38 Q50 43 55 38" fill="none" stroke="#311b92" stroke-width="2" stroke-linecap="round"/>
+    <!-- Krönchen-Stern -->
+    <path d="M50 3 l1.5 4 l4 0.5 l-3 2.8 l0.8 4.2 l-3.3 -2.2 l-3.3 2.2 l0.8 -4.2 l-3 -2.8 l4 -0.5 Z" fill="#ffd54f" stroke="#ffb300" stroke-width="0.6"/>
   </svg>`;
 }
 
