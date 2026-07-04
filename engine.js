@@ -88,6 +88,38 @@ function pickTask(profileKey, subject) {
   return { item: pool[realIdx], idx: realIdx };
 }
 
+// ===== Abwechslungs-Bonus (gegen Einseitigkeits-Farming) =====
+// Gleiche Aufgabenart oft hintereinander → Münzen werden weniger
+// (nie 0!). Fachwechsel nach einer Serie → +1 Bonus-Münze.
+// Kindgerecht: kein Abzug, nur „volle Münzen gibt's bei Abwechslung".
+function varietyAdjust(profileKey, taskType, baseReward) {
+  const p = State.data.profiles[profileKey];
+  if (profileKey === 'alva') return { reward: baseReward, bonus: 0, reduced: false, firstReduced: false }; // Alva (4) immer voll
+  if (!p.recentTypes) p.recentTypes = [];
+  const arr = p.recentTypes;
+  // Wie lang ist die gleichartige Serie am Ende?
+  let run = 0;
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (arr[i] === taskType) run++; else break;
+  }
+  let reward = baseReward, reduced = false;
+  if (run >= 6) { reward = 1; reduced = baseReward > 1; }
+  else if (run >= 3) { reward = Math.max(1, Math.ceil(baseReward / 2)); reduced = reward < baseReward; }
+  // Bonus: vorher lief 3+ mal etwas anderes, jetzt gewechselt
+  let bonus = 0;
+  if (arr.length >= 3 && arr[arr.length - 1] !== taskType) {
+    const lastType = arr[arr.length - 1];
+    let lastRun = 0;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] === lastType) lastRun++; else break;
+    }
+    if (lastRun >= 3) bonus = 1;
+  }
+  arr.push(taskType);
+  if (arr.length > 30) arr.splice(0, arr.length - 30);
+  return { reward: reward + bonus, bonus, reduced, firstReduced: reduced && run === 3 };
+}
+
 function recordAnswer(profileKey, subject, correct) {
   const p = State.data.profiles[profileKey];
   // Auto-init unbekannte Subjects (z.B. 'extra' für Knobeln)
@@ -95,13 +127,15 @@ function recordAnswer(profileKey, subject, correct) {
   if (!p.lastIndex[subject]) p.lastIndex[subject] = -1;
   const s = p.stats[subject];
   s.tries++;
+  let adj = null;
   if (correct) {
     s.correct++;
     let reward = profileKey === 'liam'
       ? (subject === 'read' ? 3 : subject === 'math' ? 1 : 2)
       : (subject === 'read' ? 2 : 1);
     if (p.powerup_double) { reward *= 2; p.powerup_double = false; }
-    p.coins += reward;
+    adj = varietyAdjust(profileKey, subject, reward);
+    p.coins += adj.reward;
     p.sessionCount = (p.sessionCount||0) + 1;
   }
   // Adaptive Level (einfach gehalten)
@@ -112,7 +146,13 @@ function recordAnswer(profileKey, subject, correct) {
   if (p.history.length > 200) p.history = p.history.slice(-200);
   // KEIN Auto-Unlock mehr - Items müssen aktiv mit Münzen gekauft werden
   State.save();
-  return { unlocked: null, coins: p.coins };
+  return {
+    unlocked: null,
+    coins: p.coins,
+    bonus: adj ? adj.bonus : 0,
+    reduced: adj ? adj.reduced : false,
+    firstReduced: adj ? adj.firstReduced : false
+  };
 }
 
 // Aktiver Kauf eines Items (Maschine oder Charakter)

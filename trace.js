@@ -303,25 +303,34 @@ function finishTrace() {
   const success = ratio >= 0.45 && strokes.length > 0;
   const veryGood = ratio >= 0.70;
 
-  // Belohnung
+  // Belohnung (mit Abwechslungs-Bonus-System gegen einseitiges Farmen)
   if (success) {
-    const reward = veryGood ? 4 : 2;
-    State.data.profiles[currentProfile].coins += reward;
+    const base = veryGood ? 4 : 2;
+    const adj = (typeof varietyAdjust === 'function')
+      ? varietyAdjust(currentProfile, 'trace', base)
+      : { reward: base, bonus: 0, reduced: false, firstReduced: false };
+    State.data.profiles[currentProfile].coins += adj.reward;
     State.save();
     if (typeof sfxUnlock === 'function') sfxUnlock();
     if (typeof schedulePush === 'function') schedulePush(currentProfile);
-    showTraceResult(true, ratio, reward);
+    showTraceResult(true, ratio, adj.reward, adj);
   } else {
     if (typeof sfxWrong === 'function') sfxWrong();
-    showTraceResult(false, ratio, 0);
+    showTraceResult(false, ratio, 0, null);
   }
 }
 
-function showTraceResult(ok, ratio, reward) {
+function showTraceResult(ok, ratio, reward, adj) {
+  let sub = ok ? `+${reward} 🪙 verdient!` : `Treffer: ${Math.round(ratio*100)}%`;
+  if (ok && adj && adj.bonus) sub += ' (🌈 Abwechslungs-Bonus dabei!)';
   const overlay = el('div',{class:'reward'},
     el('div',{class:'big', text: ok ? '🎉' : '💪'}),
     el('div',{class:'text', text: ok ? `Super! "${traceText}" ${ratio>=0.70?'PERFEKT':'gut'} nachgezeichnet!` : 'Fast! Versuch es nochmal.'}),
-    el('div',{class:'sub', text: ok ? `+${reward} 🪙 verdient!` : `Treffer: ${Math.round(ratio*100)}%`}),
+    el('div',{class:'sub', text: sub}),
+    ok && adj && adj.reduced
+      ? el('div',{text:'🌈 Schlaufuchs-Tipp: Wechsel mal das Fach – dann gibt es wieder volle Münzen!',
+          attrs:{style:'margin-top:10px;background:rgba(255,255,255,.15);padding:10px 16px;border-radius:12px;font-size:15px;font-weight:700;max-width:320px;text-align:center'}})
+      : null,
     el('button',{text: ok ? 'Nächstes Wort!' : 'Nochmal probieren', onclick: ()=>{
       overlay.remove();
       if (ok) renderTraceTask();

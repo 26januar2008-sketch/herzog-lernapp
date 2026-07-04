@@ -291,6 +291,7 @@ function renderQuizTask(topKey, sub, pool, statKey) {
       btn.style.background = correct ? '#4caf50' : '#e53935';
       btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig: ${item.a}`;
       const result = recordAnswer(currentProfile, statKey, correct);
+      if (correct) showCoinToast(result);
       if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
       if (typeof schedulePush === 'function') schedulePush(currentProfile);
       setTimeout(() => {
@@ -470,6 +471,7 @@ async function renderTask(subject){
       btn.style.background = correct ? '#4caf50' : '#e53935';
       btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig wäre: ${item.a}`;
       const result = recordAnswer(currentProfile, currentTask.subject, correct);
+      if (correct) showCoinToast(result);
       if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
       if (typeof schedulePush === 'function') schedulePush(currentProfile);
       setTimeout(() => {
@@ -577,6 +579,7 @@ function answer(btn, correct, next){
     });
   }
   const result = recordAnswer(currentProfile, currentTask.subject, correct);
+  if (correct) showCoinToast(result);
   // Lern-Zeit tracken: 30 Sek pro Antwort als Schätzung
   trackLearnTime?.(currentProfile, 30);
   if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
@@ -605,6 +608,22 @@ function maybePauseOrContinue(subject, next){
     return pauseThenGo();
   }
   if (next) next(); else renderTask(subject);
+}
+
+// Kleiner Münz-Toast (Abwechslungs-Bonus / Schlaufuchs-Tipp), verschwindet von selbst
+let _lastHintTs = 0;
+function showCoinToast(result){
+  if (!result) return;
+  let text = null;
+  if (result.bonus) text = '🌈 Abwechslungs-Bonus! +1 🪙';
+  else if (result.firstReduced && Date.now() - _lastHintTs > 60000) {
+    text = '🌈 Tipp: Wechsel mal das Fach – volle Münzen!';
+    _lastHintTs = Date.now();
+  }
+  if (!text) return;
+  const t = el('div',{class:'coin-toast', text});
+  document.body.appendChild(t);
+  setTimeout(()=> t.remove(), 2200);
 }
 
 // Konfetti-Regen für Belohnungs-Momente (rein CSS-animiert, kurz und leicht)
