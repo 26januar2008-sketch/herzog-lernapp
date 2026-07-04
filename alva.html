@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f48fb1">
+<title>Alva – Zauberwelt</title>
+<link rel="manifest" href="manifest-alva.json">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/icons/icon-192.png">
+<link rel="apple-touch-icon" href="img/icons/icon-192.png">
+</head>
+<body>
+<div id="app"></div>
+<script>window.__autoProfile = 'alva';</script>
+<script src="pokedex.js"></script>
+<script src="data.js"></script>
+<script src="engine.js"></script>
+<script src="settings.js"></script>
+<script src="sync.js"></script>
+<script src="sounds.js"></script>
+<script src="trace.js"></script>
+<script src="specials.js"></script>
+<script src="games.js"></script>
+<script src="ui.js"></script>
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>

@@ -941,3 +941,36 @@ const RAIK_MUSIK = [
   {q:'Wie viele Töne singst du beim "La-La-La" hintereinander?',options:["1","2","3","viele"],correct:3}
 ];
 
+
+// ============================================================
+// ALVA (4): Zauberwelt-Sticker – gesammelt durchs Nachfahren.
+// Eigene liebevolle Namen, keine Marken-Figuren, nur Emojis.
+// ============================================================
+const ALVA_STICKERS = [
+  {id:'st_sternchen',   emoji:'🦄', name:'Sternchen',        color:'#f8bbd0', desc:'Ein Einhorn mit einem funkelnden Stern auf der Stirn.'},
+  {id:'st_regenboegli', emoji:'🦄', name:'Regenbögli',       color:'#ce93d8', desc:'Dieses Einhorn hat eine Mähne in allen Regenbogenfarben.'},
+  {id:'st_glitzer',     emoji:'🦄', name:'Glitzer',          color:'#b39ddb', desc:'Wo Glitzer hintritt, funkelt der Boden wie Sternenstaub.'},
+  {id:'st_mondschein',  emoji:'🦄', name:'Mondschein',       color:'#90caf9', desc:'Ein Einhorn, das nachts leuchtet wie der Mond.'},
+  {id:'st_marina',      emoji:'🧜‍♀️', name:'Marina',         color:'#80deea', desc:'Eine Meerjungfrau mit türkisfarbener Flosse.'},
+  {id:'st_perla',       emoji:'🧜‍♀️', name:'Perla',          color:'#b2ebf2', desc:'Perla sammelt die schönsten Perlen im ganzen Meer.'},
+  {id:'st_coralie',     emoji:'🧜‍♀️', name:'Coralie',        color:'#f48fb1', desc:'Coralie wohnt in einem rosa Korallengarten.'},
+  {id:'st_puenktchen',  emoji:'🐶', name:'Pünktchen',        color:'#eeeeee', desc:'Ein weißer Welpe mit vielen kleinen schwarzen Punkten.'},
+  {id:'st_fleckchen',   emoji:'🐶', name:'Fleckchen',        color:'#e0e0e0', desc:'Fleckchen hat einen großen Fleck genau über dem Auge.'},
+  {id:'st_kleks',       emoji:'🐶', name:'Kleks',            color:'#f5f5f5', desc:'Kleks sieht aus, als wäre er in ein Tintenfass gehüpft.'},
+  {id:'st_goldi',       emoji:'🦁', name:'Goldi',            color:'#ffe082', desc:'Ein Löwenbaby mit goldenem Fell, das gern kuschelt.'},
+  {id:'st_minimaehne',  emoji:'🦁', name:'Mini-Mähne',       color:'#ffcc80', desc:'Seine Mähne ist noch winzig, aber sein Brüllen ist süß.'},
+  {id:'st_rosalie',     emoji:'👸', name:'Rosalie',          color:'#f8bbd0', desc:'Eine Prinzessin mit einem Kleid aus Rosenblättern.'},
+  {id:'st_lilly',       emoji:'👸', name:'Lilly',            color:'#e1bee7', desc:'Prinzessin Lilly tanzt am liebsten im Mondlicht.'},
+  {id:'st_mia',         emoji:'👸', name:'Mia',              color:'#b39ddb', desc:'Mia ist mutig und reitet auf ihrem Einhorn zur Schule.'},
+  {id:'st_schloss',     emoji:'🏰', name:'Funkelschloss',    color:'#ce93d8', desc:'Ein Schloss mit Türmen, die im Sonnenlicht glitzern.'},
+  {id:'st_krone',       emoji:'👑', name:'Goldkrone',        color:'#ffd54f', desc:'Die Krone für echte Zauberwelt-Prinzessinnen.'},
+  {id:'st_regenbogen',  emoji:'🌈', name:'Regenbogenbrücke', color:'#81d4fa', desc:'Über diese Brücke laufen die Einhörner in die Wolken.'},
+  {id:'st_muschel',     emoji:'🐚', name:'Zaubermuschel',    color:'#ffccbc', desc:'Wer hineinhorcht, hört das Meer singen.'},
+  {id:'st_stern',       emoji:'⭐', name:'Glücksstern',      color:'#fff59d', desc:'Dieser Stern erfüllt einen klitzekleinen Wunsch.'},
+  {id:'st_flatter',     emoji:'🦋', name:'Flatter',          color:'#80cbc4', desc:'Ein Schmetterling mit Flügeln wie Buntglas.'},
+  {id:'st_hoppel',      emoji:'🐰', name:'Hoppel',           color:'#f8bbd0', desc:'Ein Häschen, das vor Freude Purzelbäume hoppelt.'},
+  {id:'st_minka',       emoji:'🐱', name:'Minka',            color:'#ffe0b2', desc:'Ein Kätzchen, das sich in Wollknäuel verliebt.'},
+  {id:'st_splash',      emoji:'🐬', name:'Splash',           color:'#81d4fa', desc:'Ein Delfin, der die höchsten Sprünge im Meer macht.'},
+  {id:'st_zauberstab',  emoji:'✨', name:'Zauberstab',       color:'#fff59d', desc:'Schwing ihn und es regnet Glitzersterne.'},
+  {id:'st_blumenfee',   emoji:'🧚‍♀️', name:'Blumenfee',      color:'#c5e1a5', desc:'Sie weckt jeden Morgen die Blumen mit einem Kuss.'}
+];

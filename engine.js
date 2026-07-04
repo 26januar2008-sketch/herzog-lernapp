@@ -29,6 +29,18 @@ const DEFAULT_STATE = {
       char_outfits: {},
       powerup_double: false,
       sessionCount: 0  // Für Pause-Trigger nach 5 Aufgaben
+    },
+    alva: {
+      name: 'Alva', age: 4, theme: 'alva', class: 0,
+      coins: 0,
+      unlocked: [],  // gesammelte Zauberwelt-Sticker
+      stats: { read:{tries:0,correct:0,level:0}, math:{tries:0,correct:0,level:0}, sach:{tries:0,correct:0,level:0}, musik:{tries:0,correct:0,level:0} },
+      history: [],
+      lastIndex: { read: -1, math: -1, sach: -1, musik: -1 },
+      shop: [],
+      char_outfits: {},
+      powerup_double: false,
+      sessionCount: 0  // Kuschel-Pause nach 5 geschafften Motiven
     }
   }
 };
@@ -42,8 +54,8 @@ const State = {
     } catch(e){
       this.data = structuredClone(DEFAULT_STATE);
     }
-    // Sicherstellen dass beide Profile existieren (Migration bei Updates)
-    for (const k of ['liam','raik']) {
+    // Sicherstellen dass alle Profile existieren (Migration bei Updates)
+    for (const k of ['liam','raik','alva']) {
       if (!this.data.profiles[k]) this.data.profiles[k] = structuredClone(DEFAULT_STATE.profiles[k]);
     }
   },
@@ -316,6 +328,22 @@ function pickWildPokemon(profileKey) {
     if (r < 0) return { char: arr[Math.floor(Math.random() * arr.length)] };
   }
   return { char: pool[Math.floor(Math.random() * pool.length)] };
+}
+
+// ===== Alva: Zufälligen neuen Zauberwelt-Sticker vergeben =====
+function grantRandomSticker(profileKey) {
+  if (typeof ALVA_STICKERS === 'undefined') return null;
+  const p = State.data.profiles[profileKey];
+  const missing = ALVA_STICKERS.filter(s => !p.unlocked.includes(s.id));
+  if (missing.length === 0) {
+    // Alles gesammelt: ein Lieblings-Sticker kommt zu Besuch
+    const s = ALVA_STICKERS[Math.floor(Math.random() * ALVA_STICKERS.length)];
+    return { sticker: s, isNew: false };
+  }
+  const s = missing[Math.floor(Math.random() * missing.length)];
+  p.unlocked.push(s.id);
+  State.save();
+  return { sticker: s, isNew: true };
 }
 
 // Gefangenes Pokémon in die bestehende unlocked-Sammlung übernehmen

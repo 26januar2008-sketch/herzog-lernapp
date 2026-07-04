@@ -14,9 +14,23 @@ const TRACE_RAIK = [
   'RING','MUEN','ZE','HOPF','LAUF','SPRING','MARIO','SONIC','YOSHI',
   'NINJA','BLITZ','FEUER','EIS'
 ];
+// Alva (4): einfache Formen (als dicke Spur) + erste Buchstaben + Zahlen 1-5
+const TRACE_ALVA = [
+  {shape:'kreis',      label:'Kreis'},
+  {shape:'welle',      label:'Wellen'},
+  {shape:'zickzack',   label:'Zickzack'},
+  {shape:'herz',       label:'Herz'},
+  {shape:'stern',      label:'Stern'},
+  {shape:'regenbogen', label:'Regenbogen'},
+  {shape:'krone',      label:'Krone'},
+  {text:'A'},{text:'L'},{text:'V'},{text:'O'},{text:'M'},{text:'I'},{text:'U'},
+  {text:'1'},{text:'2'},{text:'3'},{text:'4'},{text:'5'},
+  {text:'ALVA', label:'Dein Name!'}
+];
 
 let traceCanvas = null;
 let traceCtx = null;
+let traceItem = null; // {text} oder {shape,label}
 let traceText = '';
 let strokes = []; // [{x,y}] arrays
 let traceCoveredPath = 0; // einfacher Score
@@ -26,18 +40,27 @@ function renderTraceTask() {
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
 
-  const pool = currentProfile === 'liam' ? TRACE_LIAM : TRACE_RAIK;
-  traceText = pool[Math.floor(Math.random() * pool.length)];
+  const isAlva = currentProfile === 'alva';
+  const pool = currentProfile === 'liam' ? TRACE_LIAM : isAlva ? TRACE_ALVA : TRACE_RAIK;
+  const rawItem = pool[Math.floor(Math.random() * pool.length)];
+  traceItem = typeof rawItem === 'string' ? { text: rawItem } : rawItem;
+  traceText = traceItem.text || traceItem.label || '';
 
   const top = el('div',{class:'topbar'},
-    el('button',{class:'back', text:'⬅️', onclick: renderHome}),
-    el('div',{text:'✏️ Schreiben'}),
-    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+    el('button',{class:'back', text:'⬅️', onclick: isAlva ? renderAlvaHome : renderHome}),
+    el('div',{text: isAlva ? '✏️ Malen' : '✏️ Schreiben'}),
+    isAlva
+      ? el('div',{class:'score'}, el('span',{class:'icon',text:'🌟'}), el('span',{text:p.unlocked.length}))
+      : el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
   );
   root.appendChild(top);
 
   const wrap = el('div',{attrs:{style:'flex:1;display:flex;flex-direction:column;padding:14px;gap:10px;align-items:center'}});
-  wrap.appendChild(el('div',{text:'Fahre mit dem Finger die Buchstaben nach!',
+  wrap.appendChild(el('div',{
+    text: isAlva
+      ? (traceItem.shape ? `Fahre ${traceItem.label === 'Wellen' ? 'die Wellen' : (traceItem.label === 'Zickzack' ? 'den Zickzack' : 'die Form')} nach! 💜`
+                         : (traceItem.label ? '✨ ' + traceItem.label + ' ✨' : 'Fahre den Buchstaben nach! 💜'))
+      : 'Fahre mit dem Finger die Buchstaben nach!',
     attrs:{style:'font-size:18px;font-weight:700;text-align:center;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3)'}}));
 
   const canvas = el('canvas', {attrs:{width:'600',height:'300',style:'background:#fff;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.4);width:95%;max-width:700px;height:auto;touch-action:none'}});
@@ -88,10 +111,78 @@ function resetTrace() {
   fingerStrokes = {};
 }
 
+// Formen-Pfade für Alva (Kreis, Wellen, Zickzack, Herz, Stern, Regenbogen, Krone)
+function traceShapePath(ctx, shape, w, h) {
+  const cx = w/2, cy = h/2;
+  ctx.beginPath();
+  if (shape === 'kreis') {
+    ctx.arc(cx, cy, Math.min(w,h)*0.36, 0, Math.PI*2);
+  } else if (shape === 'welle') {
+    const amp = h*0.16, x0 = w*0.08, x1 = w*0.92, n = 3, seg = (x1-x0)/n;
+    ctx.moveTo(x0, cy);
+    for (let i=0;i<n;i++){
+      ctx.quadraticCurveTo(x0+seg*(i+0.25), cy-amp*2, x0+seg*(i+0.5), cy);
+      ctx.quadraticCurveTo(x0+seg*(i+0.75), cy+amp*2, x0+seg*(i+1), cy);
+    }
+  } else if (shape === 'zickzack') {
+    const y0 = h*0.7, y1 = h*0.3, x0 = w*0.08, x1 = w*0.92, n = 4, seg = (x1-x0)/n;
+    ctx.moveTo(x0, y0);
+    for (let i=1;i<=n;i++) ctx.lineTo(x0+seg*i, i%2 ? y1 : y0);
+  } else if (shape === 'herz') {
+    const s = Math.min(w,h)*0.42;
+    ctx.moveTo(cx, cy + s*0.75);
+    ctx.bezierCurveTo(cx - s*1.4, cy - s*0.1, cx - s*0.6, cy - s*1.05, cx, cy - s*0.35);
+    ctx.bezierCurveTo(cx + s*0.6, cy - s*1.05, cx + s*1.4, cy - s*0.1, cx, cy + s*0.75);
+  } else if (shape === 'stern') {
+    const R = Math.min(w,h)*0.44, r = R*0.45;
+    for (let i=0;i<10;i++){
+      const ang = -Math.PI/2 + i*Math.PI/5;
+      const rad = i%2===0 ? R : r;
+      const x = cx + Math.cos(ang)*rad, y = cy + Math.sin(ang)*rad;
+      if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+  } else if (shape === 'regenbogen') {
+    const R = Math.min(w*0.4, h*0.75), yB = h*0.85;
+    ctx.arc(cx, yB, R, Math.PI, 0);
+    ctx.moveTo(cx + R*0.6, yB);
+    ctx.arc(cx, yB, R*0.6, 0, Math.PI, true);
+  } else if (shape === 'krone') {
+    const x0 = w*0.18, x1 = w*0.82, yB = h*0.75, yT = h*0.25, yM = h*0.45;
+    ctx.moveTo(x0, yB);
+    ctx.lineTo(x0, yM);
+    ctx.lineTo(x0 + (x1-x0)*0.166, yT);
+    ctx.lineTo(x0 + (x1-x0)*0.333, yM);
+    ctx.lineTo(cx, yT);
+    ctx.lineTo(x0 + (x1-x0)*0.666, yM);
+    ctx.lineTo(x0 + (x1-x0)*0.833, yT);
+    ctx.lineTo(x1, yM);
+    ctx.lineTo(x1, yB);
+    ctx.closePath();
+  }
+}
+
 function drawTraceTemplate() {
   if (!traceCtx) return;
   const w = traceCanvas.width, h = traceCanvas.height;
   traceCtx.clearRect(0, 0, w, h);
+
+  // Alva-Formen: breite helle Spur + gestrichelte Mittellinie
+  if (traceItem && traceItem.shape) {
+    traceCtx.lineCap = 'round'; traceCtx.lineJoin = 'round';
+    traceCtx.strokeStyle = '#f3e5f5';
+    traceCtx.lineWidth = 30;
+    traceShapePath(traceCtx, traceItem.shape, w, h);
+    traceCtx.stroke();
+    traceCtx.strokeStyle = '#ce93d8';
+    traceCtx.lineWidth = 3;
+    traceCtx.setLineDash([12, 9]);
+    traceShapePath(traceCtx, traceItem.shape, w, h);
+    traceCtx.stroke();
+    traceCtx.setLineDash([]);
+    return;
+  }
+
   // Faint grid (Schreiblinien)
   traceCtx.strokeStyle = '#eceff1';
   traceCtx.lineWidth = 1;
@@ -132,12 +223,16 @@ function traceColor() {
   return currentProfile === 'liam' ? '#1b5e20' : currentProfile === 'alva' ? '#ad1457' : '#0277bd';
 }
 
+function traceLineWidth() {
+  return currentProfile === 'alva' ? 13 : 8; // Alva malt dicker
+}
+
 // Alles neu zeichnen (Vorlage + alle gespeicherten Striche) –
 // wird gebraucht, wenn ein Handballen-Fehlstrich verworfen wird
 function redrawAllStrokes() {
   drawTraceTemplate();
   traceCtx.strokeStyle = traceColor();
-  traceCtx.lineWidth = 8;
+  traceCtx.lineWidth = traceLineWidth();
   traceCtx.lineCap = 'round';
   traceCtx.lineJoin = 'round';
   for (const stroke of strokes) {
@@ -180,6 +275,21 @@ function isClearlyBetter(e, info) {
   return e.clientY < info.y - 40; // Stiftspitze deutlich über dem Handballen
 }
 
+// Glitzer-Spur hinter dem Stift (Alva): kleine Funkel-Sterne, die verpuffen
+let _lastSparkle = 0;
+function spawnSparkle(clientX, clientY) {
+  const now = Date.now();
+  if (now - _lastSparkle < 90) return; // gedrosselt, damit das Tablet nicht schwitzt
+  _lastSparkle = now;
+  const s = document.createElement('div');
+  s.className = 'trace-sparkle';
+  s.textContent = ['✨','⭐','💫'][Math.floor(Math.random()*3)];
+  s.style.left = (clientX - 10 + Math.random()*20) + 'px';
+  s.style.top = (clientY - 10 + Math.random()*20) + 'px';
+  document.body.appendChild(s);
+  setTimeout(()=> s.remove(), 800);
+}
+
 function setupTraceListeners() {
   traceCanvas.style.touchAction = 'none';
   traceCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -189,7 +299,7 @@ function setupTraceListeners() {
     const last = stroke[stroke.length - 2];
     if (last) {
       traceCtx.strokeStyle = traceColor();
-      traceCtx.lineWidth = 8;
+      traceCtx.lineWidth = traceLineWidth();
       traceCtx.lineCap = 'round';
       traceCtx.lineJoin = 'round';
       traceCtx.beginPath();
@@ -239,11 +349,13 @@ function setupTraceListeners() {
       if (!stroke) return;
       e.preventDefault();
       drawTo(stroke, getPosFromEvent(e));
+      if (currentProfile === 'alva') spawnSparkle(e.clientX, e.clientY);
       return;
     }
     if (e.pointerId !== activePointerId || !activeStroke) return;
     e.preventDefault();
     drawTo(activeStroke, getPosFromEvent(e));
+    if (currentProfile === 'alva') spawnSparkle(e.clientX, e.clientY);
   };
 
   const onEnd = (e) => {
@@ -268,21 +380,28 @@ function setupTraceListeners() {
 }
 
 function finishTrace() {
-  // Bewertung: wie viele schwarze/Vorlagen-Pixel sind durch farbige Linie überdeckt?
+  // Bewertung: wie viele Vorlagen-Pixel sind durch farbige Linie überdeckt?
   const w = traceCanvas.width, h = traceCanvas.height;
-  // Erstelle "Soll-Maske" mit Buchstaben
+  // Erstelle "Soll-Maske" (Buchstaben oder Alva-Form)
   const off = document.createElement('canvas'); off.width = w; off.height = h;
   const oc = off.getContext('2d');
-  const fontSize = Math.min(180, Math.floor(h * 0.62));
-  oc.font = `900 ${fontSize}px "Segoe UI Black", Arial Black, sans-serif`;
-  oc.textAlign = 'center'; oc.textBaseline = 'middle';
-  oc.fillStyle = '#000';
-  oc.fillText(traceText, w/2, h/2);
+  if (traceItem && traceItem.shape) {
+    oc.strokeStyle = '#000'; oc.lineWidth = 34; oc.lineCap = 'round'; oc.lineJoin = 'round';
+    traceShapePath(oc, traceItem.shape, w, h);
+    oc.stroke();
+  } else {
+    const fontSize = Math.min(180, Math.floor(h * 0.62));
+    oc.font = `900 ${fontSize}px "Segoe UI Black", Arial Black, sans-serif`;
+    oc.textAlign = 'center'; oc.textBaseline = 'middle';
+    oc.fillStyle = '#000';
+    oc.fillText(traceText, w/2, h/2);
+  }
   const sollData = oc.getImageData(0,0,w,h).data;
   // User-Striche als Maske: rendere Strokes solo
   const off2 = document.createElement('canvas'); off2.width = w; off2.height = h;
   const oc2 = off2.getContext('2d');
-  oc2.strokeStyle = '#000'; oc2.lineWidth = 24; oc2.lineCap = 'round'; oc2.lineJoin = 'round';
+  oc2.strokeStyle = '#000'; oc2.lineWidth = currentProfile === 'alva' ? 32 : 24;
+  oc2.lineCap = 'round'; oc2.lineJoin = 'round';
   for (const stroke of strokes) {
     if (!stroke.length) continue;
     oc2.beginPath();
@@ -300,8 +419,27 @@ function finishTrace() {
     }
   }
   const ratio = soll ? hits / soll : 0;
-  const success = ratio >= 0.45 && strokes.length > 0;
-  const veryGood = ratio >= 0.70;
+  // Alva (4): sehr niedrige Hürde – ab 30 % ist es geschafft, Jubel ab 55 %
+  const minOk = currentProfile === 'alva' ? 0.30 : 0.45;
+  const success = ratio >= minOk && strokes.length > 0;
+  const veryGood = ratio >= (currentProfile === 'alva' ? 0.55 : 0.70);
+
+  // Alva: Sticker statt Münzen, danach evtl. Kuschel-Pause
+  if (currentProfile === 'alva') {
+    if (success) {
+      const g = grantRandomSticker('alva');
+      const p = State.data.profiles.alva;
+      p.sessionCount = (p.sessionCount||0) + 1;
+      State.save();
+      if (typeof sfxUnlock === 'function') sfxUnlock();
+      if (typeof schedulePush === 'function') schedulePush('alva');
+      showAlvaStickerReward(g);
+    } else {
+      if (typeof playSound === 'function') playSound('yoshi'); // sanft, nie bestrafend
+      showTraceResult(false, ratio, 0, null);
+    }
+    return;
+  }
 
   // Belohnung (mit Abwechslungs-Bonus-System gegen einseitiges Farmen)
   if (success) {
@@ -322,6 +460,7 @@ function finishTrace() {
 
 function showTraceResult(ok, ratio, reward, adj) {
   let sub = ok ? `+${reward} 🪙 verdient!` : `Treffer: ${Math.round(ratio*100)}%`;
+  if (currentProfile === 'alva' && !ok) sub = 'Du schaffst das! 💜';
   if (ok && adj && adj.bonus) sub += ' (🌈 Abwechslungs-Bonus dabei!)';
   const overlay = el('div',{class:'reward'},
     el('div',{class:'big', text: ok ? '🎉' : '💪'}),

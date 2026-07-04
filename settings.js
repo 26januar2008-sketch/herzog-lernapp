@@ -37,7 +37,8 @@ const DEFAULT_SETTINGS = {
   // ===== Pro-Profil-Settings =====
   per_profile: {
     liam: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' },
-    raik: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' }
+    raik: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' },
+    alva: { task_block_remaining: 0, time_used_today: 0, last_active_day: '', learn_time_today: 0, game_tokens: 0, custom_avatar: '' }
   }
 };
 
@@ -100,6 +101,10 @@ const Settings = {
     // Merge defaults so neue Keys nach Update da sind
     for (const k of Object.keys(DEFAULT_SETTINGS)) {
       if (!(k in this.data)) this.data[k] = structuredClone(DEFAULT_SETTINGS[k]);
+    }
+    // Migration: Alva-Profil in bestehenden Installationen nachrüsten
+    for (const pk of ['liam','raik','alva']) {
+      if (!this.data.per_profile[pk]) this.data.per_profile[pk] = structuredClone(DEFAULT_SETTINGS.per_profile[pk]);
     }
   },
   save() { localStorage.setItem('herzog_lernapp_settings', JSON.stringify(this.data)); },

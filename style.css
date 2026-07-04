@@ -40,6 +40,29 @@ body.theme-raik .topbar{background:rgba(0,0,40,.6)}
 .theme-raik .subject{background:#cc0000;color:#fff}
 .theme-raik .subject.read{background:#ffcc00;color:#000}
 
+/* Alva-Theme (Zauberwelt: rosa/lila/türkis) */
+body.theme-alva{background:linear-gradient(180deg,#f48fb1 0%,#ce93d8 45%,#80deea 100%)}
+body.theme-alva .topbar{background:rgba(123,31,162,.45)}
+.theme-alva .subject{background:rgba(255,255,255,.92);color:#7b1fa2;border-radius:26px}
+.card-alva{background:linear-gradient(160deg,#f48fb1 0%,#ba68c8 55%,#4dd0e1 100%)}
+.alva-tile{padding:34px 24px;font-size:24px}
+.alva-tile .em{font-size:56px}
+
+/* Alva: Sticker-Sammlung */
+.sticker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;padding-bottom:24px}
+.sticker-item{border-radius:22px;padding:14px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:transform .12s}
+.sticker-item.got{cursor:pointer}
+.sticker-item.got:active{transform:scale(.93)}
+.sticker-item.missing{background:rgba(255,255,255,.25);opacity:.65;box-shadow:none}
+.sticker-item .big{font-size:44px;line-height:1}
+.sticker-item .nm{font-size:12px;font-weight:800;color:#4a148c}
+.sticker-item.missing .nm{color:#fff}
+.sticker-big{font-size:96px;width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:popIn .5s ease-out;line-height:1}
+
+/* Alva: Glitzer-Spur beim Malen */
+.trace-sparkle{position:fixed;font-size:18px;pointer-events:none;z-index:60;animation:sparkleFly .8s ease-out forwards}
+@keyframes sparkleFly{from{opacity:1;transform:scale(.6) translateY(0)}to{opacity:0;transform:scale(1.4) translateY(-26px)}}
+
 /* ===== Aufgabe ===== */
 .task{flex:1;display:flex;flex-direction:column;padding:24px;justify-content:space-between}
 .task-text{font-size:36px;font-weight:700;text-align:center;padding:24px;background:rgba(255,255,255,.1);border-radius:20px;margin-bottom:24px;line-height:1.4;min-height:140px;display:flex;align-items:center;justify-content:center}

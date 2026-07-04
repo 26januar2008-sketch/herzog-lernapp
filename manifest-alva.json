@@ -1,0 +1,14 @@
+{
+  "name": "Alva – Zauberwelt",
+  "short_name": "Alva",
+  "start_url": "./alva.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#f48fb1",
+  "theme_color": "#f48fb1",
+  "icons": [
+    { "src": "img/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

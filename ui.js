@@ -44,6 +44,11 @@ function renderPicker(){
     el('div',{class:'name', text:'Raik'}),
     el('div',{class:'age', text:'7 Jahre · Speed Run'})
   ));
+  wrap.appendChild(el('div',{class:'profile-card card-alva', onclick: ()=>openProfile('alva')},
+    el('div',{class:'emoji', text:'🦄'}),
+    el('div',{class:'name', text:'Alva'}),
+    el('div',{class:'age', text:'4 Jahre · Zauberwelt'})
+  ));
   const parent = el('button',{class:'parent-btn', text:'👨 Eltern', onclick: askPin});
   wrap.appendChild(parent);
   root.appendChild(wrap);
@@ -58,14 +63,16 @@ function openProfile(key){
     if (document.hidden) stopLearnTimer?.(currentProfile);
     else startLearnTimer?.();
   });
-  renderHome();
+  const renderStart = ()=> key === 'alva' ? renderAlvaHome() : renderHome();
+  renderStart();
   if (typeof hydrateFromRemote === 'function') {
-    hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderHome(); });
+    hydrateFromRemote(key).then(()=> { if (currentProfile === key) renderStart(); });
   }
 }
 
 // ===== Home =====
 function renderHome(){
+  if (currentProfile === 'alva') return renderAlvaHome();
   clear();
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
@@ -742,9 +749,9 @@ function showCatchMoment(wild, then){
   overlay.addEventListener('click', ()=> { if (!thrown) doThrow(); });
 }
 
-function showPauseScreen(then){
+function showPauseScreen(then, msgText){
   const overlay = el('div',{class:'pause'});
-  const msg = el('div',{class:'text', text:'⚡ Mini-Pause! Steh kurz auf, streck dich!'});
+  const msg = el('div',{class:'text', text: msgText || '⚡ Mini-Pause! Steh kurz auf, streck dich!'});
   msg.style.cssText = 'font-size:32px;font-weight:900;color:#fff;text-align:center;padding:0 24px;text-shadow:0 4px 0 rgba(0,0,0,.3)';
   const cd = el('div',{class:'countdown', text:'10'});
   overlay.appendChild(msg);
@@ -841,6 +848,113 @@ function renderCollection(){
   });
   wrap.appendChild(grid);
   root.appendChild(wrap);
+}
+
+// ===== Alva (4): Zauberwelt-Startseite =====
+function renderAlvaHome(){
+  clear();
+  document.body.className = 'theme-alva';
+  const p = State.data.profiles.alva;
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderPicker}),
+    el('div',{text:'Hallo Alva! 🦄'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🌟'}), el('span',{text: p.unlocked.length}))
+  );
+  root.appendChild(top);
+  const home = el('div',{class:'home'});
+  home.appendChild(el('div',{class:'greeting', text:'🌈 Deine Zauberwelt'}));
+  const subs = el('div',{class:'subjects'});
+  subs.appendChild(el('div',{class:'subject alva-tile', attrs:{style:'grid-column:span 2'}, onclick: renderTraceTask},
+    el('span',{class:'em', text:'✏️'}),
+    document.createTextNode('Malen & Schreiben')
+  ));
+  subs.appendChild(el('div',{class:'subject alva-tile', attrs:{style:'grid-column:span 2'}, onclick: renderAlvaStickers},
+    el('span',{class:'em', text:'🦄'}),
+    document.createTextNode('Meine Sticker'),
+    el('div',{text:`${p.unlocked.length} / ${typeof ALVA_STICKERS !== 'undefined' ? ALVA_STICKERS.length : 0} gesammelt`,
+      attrs:{style:'font-size:13px;margin-top:4px;font-weight:600;opacity:.8'}})
+  ));
+  home.appendChild(subs);
+  root.appendChild(home);
+}
+
+// ===== Alva: Sticker-Sammlung =====
+function renderAlvaStickers(){
+  clear();
+  document.body.className = 'theme-alva';
+  const p = State.data.profiles.alva;
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: renderAlvaHome}),
+    el('div',{text:'🦄 Meine Sticker'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🌟'}), el('span',{text: p.unlocked.length}))
+  );
+  root.appendChild(top);
+  const wrap = el('div',{class:'collection'});
+  wrap.appendChild(el('h2',{text:`${p.unlocked.length} / ${ALVA_STICKERS.length} Sticker gesammelt`}));
+  const grid = el('div',{class:'sticker-grid'});
+  ALVA_STICKERS.forEach(s => {
+    const got = p.unlocked.includes(s.id);
+    const cell = el('div',{class:'sticker-item ' + (got ? 'got' : 'missing'),
+      onclick: got ? ()=> showAlvaStickerDetail(s) : null});
+    if (got) cell.style.background = s.color || '#f8bbd0';
+    cell.appendChild(el('div',{class:'big', text: got ? s.emoji : '❓'}));
+    cell.appendChild(el('div',{class:'nm', text: got ? s.name : '???'}));
+    grid.appendChild(cell);
+  });
+  wrap.appendChild(grid);
+  root.appendChild(wrap);
+}
+
+function showAlvaStickerDetail(s){
+  let done = false;
+  const overlay = el('div',{class:'reward'},
+    el('div',{class:'sticker-big', text: s.emoji, attrs:{style:'background:' + (s.color||'#f8bbd0')}}),
+    el('div',{class:'text', text: s.name}),
+    el('div',{class:'sub', text: s.desc, attrs:{style:'max-width:320px;text-align:center;font-size:17px;line-height:1.5'}}),
+    Settings.isEnabled('tts')
+      ? el('button',{text:'🔊 Vorlesen', onclick: (e)=>{ e.stopPropagation(); speak(s.name + '. ' + s.desc); },
+          attrs:{style:'margin-top:14px;padding:10px 22px;background:#7b1fa2;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:15px'}})
+      : null,
+    el('button',{text:'Toll! 💜', onclick: ()=>{ if (done) return; done = true; overlay.remove(); }})
+  );
+  document.body.appendChild(overlay);
+  if (typeof playSound === 'function') playSound('shiny');
+}
+
+// ===== Alva: Sticker-Belohnung nach geschafftem Motiv =====
+function showAlvaStickerReward(g){
+  const s = g.sticker;
+  let done = false;
+  // Zauber-Enthüllung: erst Funkeln, dann ploppt der Sticker auf
+  const big = el('div',{class:'sticker-big', text:'✨', attrs:{style:'background:rgba(255,255,255,.35)'}});
+  setTimeout(()=>{
+    big.textContent = s.emoji;
+    big.style.background = s.color || '#f8bbd0';
+    big.style.animation = 'none';
+    void big.offsetWidth; // Animation neu starten
+    big.style.animation = 'popIn .45s ease-out';
+    if (typeof sfxUnlock === 'function') sfxUnlock();
+  }, 600);
+  const overlay = el('div',{class:'reward'},
+    big,
+    el('div',{class:'text', text: g.isNew ? 'Ein neuer Sticker für dich!' : s.name + ' besucht dich!'}),
+    el('div',{class:'sub', text: s.emoji + ' ' + s.name, attrs:{style:'font-size:26px;font-weight:900'}}),
+    el('button',{text:'Weiter malen! 🖍️', onclick: ()=>{
+      if (done) return; done = true;
+      overlay.remove();
+      const p = State.data.profiles.alva;
+      if ((p.sessionCount||0) >= 5) {
+        p.sessionCount = 0;
+        State.save();
+        showPauseScreen(()=> renderTraceTask(), '💜 Kuschel-Pause! Schüttel mal die Hände aus!');
+      } else {
+        renderTraceTask();
+      }
+    }})
+  );
+  spawnConfetti(overlay);
+  document.body.appendChild(overlay);
+  if (typeof playSound === 'function') playSound('shiny');
 }
 
 // ===== Pokédex-Ansicht (Raik) =====
@@ -1608,12 +1722,10 @@ function renderWeeklyReport(){
   root.appendChild(wrap);
 }
 
-// Start: Wenn auto-profile gesetzt (liam.html / raik.html), direkt rein.
+// Start: Wenn auto-profile gesetzt (liam.html / raik.html / alva.html), direkt rein.
 // Sonst Profil-Auswahl.
-if (typeof window !== 'undefined' && window.__autoProfile === 'liam') {
-  openProfile('liam');
-} else if (typeof window !== 'undefined' && window.__autoProfile === 'raik') {
-  openProfile('raik');
+if (typeof window !== 'undefined' && ['liam','raik','alva'].includes(window.__autoProfile)) {
+  openProfile(window.__autoProfile);
 } else {
   renderPicker();
 }
