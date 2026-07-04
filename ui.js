@@ -23,9 +23,6 @@ function clear(){
   if (typeof memoryState !== 'undefined' && memoryState) memoryState.aborted = true;
   if (typeof focusState !== 'undefined' && focusState) focusState.alive = false;
   if (typeof runnerState !== 'undefined' && runnerState) runnerState.alive = false;
-  if (typeof farmState !== 'undefined' && farmState && farmState._timer) {
-    clearInterval(farmState._timer); farmState._timer = null;
-  }
   root.innerHTML='';
   document.body.className='';
 }
@@ -146,20 +143,35 @@ function renderHome(){
     document.createTextNode(currentProfile==='liam' ? 'Meine Garage' : 'Meine Charaktere')
   ));
 
-  // SPIEL-Button (mit Token-Anzeige)
-  const tokens = getGameTokens(currentProfile);
-  const gameTitle = currentProfile==='liam' ? '🚜 Mein Hof' : '🏃 Speed Run';
-  const gameDesc = tokens > 0 ? `${tokens} × 5 Min Spielzeit verfügbar` : 'Lerne 10 Min für 5 Min Spielen';
-  const gameBtn = el('div',{
-    class:'subject',
-    attrs:{style:`grid-column:span 2;background:${tokens>0?'linear-gradient(135deg,#ffd700,#ff9800)':'rgba(255,255,255,.15)'};color:${tokens>0?'#222':'#fff'};border:3px solid ${tokens>0?'#ff9800':'rgba(255,255,255,.3)'}`},
-    onclick: () => currentProfile==='liam' ? renderFarmGame() : renderRunnerGame()
-  },
-    el('span',{class:'em', text: tokens > 0 ? '🎮' : '🔒'}),
-    document.createTextNode(gameTitle),
-    el('div',{text: gameDesc, attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
-  );
-  subs.appendChild(gameBtn);
+  // SPIEL-Button: Liam → großer Bauernhof (hof.html), Raik → Speed Run mit Tokens
+  if (currentProfile === 'liam') {
+    const hofBtn = el('div',{
+      class:'subject',
+      attrs:{style:'grid-column:span 2;background:linear-gradient(135deg,#8bc34a,#33691e);color:#fff;border:3px solid #aed581'},
+      onclick: () => {
+        if (!Settings.isEnabled('hof_dojo')) { alert('In Einstellungen aktivieren'); return; }
+        window.location.href = 'hof.html';
+      }
+    },
+      el('span',{class:'em', text:'🚜'}),
+      document.createTextNode('Mein Hof'),
+      el('div',{text:'Dein großer Bauernhof – Lern-Münzen sind dort Geld wert!', attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
+    );
+    subs.appendChild(hofBtn);
+  } else {
+    const tokens = getGameTokens(currentProfile);
+    const gameDesc = tokens > 0 ? `${tokens} × 5 Min Spielzeit verfügbar` : 'Lerne 10 Min für 5 Min Spielen';
+    const gameBtn = el('div',{
+      class:'subject',
+      attrs:{style:`grid-column:span 2;background:${tokens>0?'linear-gradient(135deg,#ffd700,#ff9800)':'rgba(255,255,255,.15)'};color:${tokens>0?'#222':'#fff'};border:3px solid ${tokens>0?'#ff9800':'rgba(255,255,255,.3)'}`},
+      onclick: () => renderRunnerGame()
+    },
+      el('span',{class:'em', text: tokens > 0 ? '🎮' : '🔒'}),
+      document.createTextNode('🏃 Speed Run'),
+      el('div',{text: gameDesc, attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
+    );
+    subs.appendChild(gameBtn);
+  }
 
   // 🎲 Überraschungs-Runde: Zufallsmix quer durch alle Fächer
   subs.appendChild(el('div',{
