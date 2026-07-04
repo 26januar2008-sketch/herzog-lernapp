@@ -316,9 +316,11 @@ function pickWildPokemon(profileKey) {
   const common = pool.filter(c => c.price <= 45);
   const medium = pool.filter(c => c.price > 45 && c.price <= 90);
   const rare   = pool.filter(c => c.price > 90);
+  // 🎲 Überraschungs-Runde: zählt wie 10 zusätzliche richtige → bessere Fang-Chancen
+  const eff = today.correct + ((typeof window !== 'undefined' && window._surpriseActive) ? 10 : 0);
   let wC = 70, wM = 25, wR = 5;
-  if (today.correct >= 25)      { wC = 35; wM = 40; wR = 25; }
-  else if (today.correct >= 15) { wC = 50; wM = 35; wR = 15; }
+  if (eff >= 25)      { wC = 35; wM = 40; wR = 25; }
+  else if (eff >= 15) { wC = 50; wM = 35; wR = 15; }
   const buckets = [[common, wC], [medium, wM], [rare, wR]].filter(b => b[0].length > 0);
   if (buckets.length === 0) return { char: pool[Math.floor(Math.random() * pool.length)] };
   const total = buckets.reduce((s, b) => s + b[1], 0);

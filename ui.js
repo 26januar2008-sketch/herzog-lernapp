@@ -73,6 +73,7 @@ function openProfile(key){
 // ===== Home =====
 function renderHome(){
   if (currentProfile === 'alva') return renderAlvaHome();
+  window._surpriseActive = false;
   clear();
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
@@ -159,12 +160,27 @@ function renderHome(){
     el('div',{text: gameDesc, attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
   );
   subs.appendChild(gameBtn);
+
+  // 🎲 Überraschungs-Runde: Zufallsmix quer durch alle Fächer
+  subs.appendChild(el('div',{
+    class:'subject',
+    attrs:{style:'grid-column:span 2;background:linear-gradient(135deg,#7e57c2,#26c6da);color:#fff;border:3px solid rgba(255,255,255,.35)'},
+    onclick: renderSurpriseRound
+  },
+    el('span',{class:'em', text:'🎲'}),
+    document.createTextNode('Überraschungs-Runde'),
+    el('div',{text: currentProfile==='raik'
+        ? 'Alle Fächer gemischt · Bonus-Münzen · bessere Fang-Chancen!'
+        : 'Alle Fächer gemischt · Bonus-Münzen!',
+      attrs:{style:'font-size:11px;margin-top:4px;font-weight:600'}})
+  ));
   home.appendChild(subs);
   root.appendChild(home);
 }
 
 // ===== Sub-Fach-Hub: zeigt z.B. 7 Mathe-Bereiche =====
 function renderSubjectHub(topKey){
+  window._surpriseActive = false;
   clear();
   const p = State.data.profiles[currentProfile];
   document.body.className = 'theme-' + p.theme;
@@ -209,6 +225,7 @@ function startSub(topKey, sub) {
     if (!Settings.isEnabled('machine_diary')) { alert('In Einstellungen aktivieren'); return renderHome(); }
     return renderMachineDiaryTask(topKey, sub);
   }
+  if (sub.special === 'schlau') return renderSchlauTask(topKey, sub);
   if (sub.special === 'odd') return renderQuizTask(topKey, sub, ODD_ONE_OUT, 'extra');
   if (sub.special === 'spot') return renderSpotTask();
   if (sub.special === 'focus') return renderFocusTask();
@@ -848,6 +865,197 @@ function renderCollection(){
   });
   wrap.appendChild(grid);
   root.appendChild(wrap);
+}
+
+// ===== Straßenschläue 🦊: Alltags-Szenarien mit Warum-Erklärung =====
+function renderSchlauTask(topKey, sub){
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const pool = currentProfile === 'liam' ? SCHLAU_LIAM : SCHLAU_RAIK;
+  const key = currentProfile + ':schlau';
+  if (!_quizRecent[key]) _quizRecent[key] = [];
+  const recent = _quizRecent[key];
+  let avail = pool.map((_,i) => i).filter(i => !recent.includes(i));
+  if (avail.length === 0) avail = pool.map((_,i) => i);
+  const idx = avail[Math.floor(Math.random() * avail.length)];
+  recent.push(idx);
+  const maxRecent = Math.min(15, Math.floor(pool.length * 0.7));
+  while (recent.length > maxRecent) recent.shift();
+  const item = pool[idx];
+  currentTask = { subject: 'schlau', item, fiftyUsed: false };
+
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=> renderSubjectHub(topKey)}),
+    el('div',{text:'🦊 Schlaufuchs'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+  const task = el('div',{class:'task schlau-task'});
+  const head = el('div',{class:'task-text'});
+  const headInner = el('div');
+  if (item.img) headInner.appendChild(el('div',{text:item.img, attrs:{style:'font-size:60px;margin-bottom:8px'}}));
+  headInner.appendChild(el('div',{text:item.q, attrs:{style:'font-size:20px'}}));
+  head.appendChild(headInner);
+  task.appendChild(head);
+  const opts = el('div',{class:'options'});
+  item.options.forEach((o,i) => {
+    opts.appendChild(el('button',{class:'opt', text:o,
+      attrs:{style:'font-size:18px;padding:18px 12px'},
+      onclick:(e)=> schlauAnswer(e.target, i, item, ()=> renderSchlauTask(topKey, sub))}));
+  });
+  task.appendChild(opts);
+  root.appendChild(task);
+}
+
+// Antwort + Warum-Box (die Erklärung ist der eigentliche Lernkern)
+function schlauAnswer(btn, i, item, next){
+  const correct = i === item.correct;
+  const buttons = btn.parentElement.querySelectorAll('button');
+  buttons.forEach(b => b.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  buttons[item.correct].classList.add('correct');
+  const result = recordAnswer(currentProfile, 'schlau', correct);
+  if (correct) showCoinToast(result);
+  trackLearnTime?.(currentProfile, 30);
+  if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
+  if (typeof schedulePush === 'function') schedulePush(currentProfile);
+  const task = document.querySelector('.task');
+  if (!task) return;
+  const box = el('div',{class:'why-box'},
+    el('div',{class:'why-title', text: correct ? '🦊 Genau! Und warum?' : '🦊 Kein Problem – hier ist der Trick:'}),
+    el('div',{class:'why-text', text: item.why || ''}),
+    el('button',{class:'why-btn', text:'Verstanden – weiter!', onclick:(e)=>{
+      e.target.disabled = true;
+      maybePauseOrContinue('schlau', next);
+    }})
+  );
+  task.appendChild(box);
+  setTimeout(()=> box.scrollIntoView({behavior:'smooth', block:'end'}), 100);
+}
+
+// ===== 🎲 Überraschungs-Runde: Zufallsmix quer durch alle Fächer =====
+function renderSurpriseRound(){
+  window._surpriseActive = true;
+  renderSurpriseTask();
+}
+
+function surpriseSources(){
+  if (currentProfile === 'liam') return [
+    {subject:'math',  pool: typeof LIAM_MATH !== 'undefined' ? LIAM_MATH : null},
+    {subject:'math',  pool: typeof LIAM_MAL_GETEILT !== 'undefined' ? LIAM_MAL_GETEILT : null},
+    {subject:'math',  pool: typeof LIAM_ZAHLENRAUM !== 'undefined' ? LIAM_ZAHLENRAUM : null},
+    {subject:'read',  pool: typeof LIAM_STORIES !== 'undefined' ? LIAM_STORIES : null},
+    {subject:'read',  pool: typeof LIAM_RECHTSCHREIBUNG !== 'undefined' ? LIAM_RECHTSCHREIBUNG : null},
+    {subject:'read',  pool: typeof LIAM_WORTSCHATZ !== 'undefined' ? LIAM_WORTSCHATZ : null},
+    {subject:'sach',  pool: typeof LIAM_SACH !== 'undefined' ? LIAM_SACH : null},
+    {subject:'musik', pool: typeof LIAM_MUSIK !== 'undefined' ? LIAM_MUSIK : null},
+    {subject:'schlau',pool: typeof SCHLAU_LIAM !== 'undefined' ? SCHLAU_LIAM : null}
+  ];
+  return [
+    {subject:'math',  pool: typeof RAIK_MATH !== 'undefined' ? RAIK_MATH : null},
+    {subject:'math',  pool: typeof RAIK_ZAHLENRAUM !== 'undefined' ? RAIK_ZAHLENRAUM : null},
+    {subject:'read',  pool: typeof RAIK_READING !== 'undefined' ? RAIK_READING : null},
+    {subject:'read',  pool: typeof RAIK_WORTSCHATZ !== 'undefined' ? RAIK_WORTSCHATZ : null},
+    {subject:'sach',  pool: typeof RAIK_SACH !== 'undefined' ? RAIK_SACH : null},
+    {subject:'musik', pool: typeof RAIK_MUSIK !== 'undefined' ? RAIK_MUSIK : null},
+    {subject:'schlau',pool: typeof SCHLAU_RAIK !== 'undefined' ? SCHLAU_RAIK : null}
+  ];
+}
+
+function renderSurpriseTask(){
+  window._surpriseActive = true;
+  clear();
+  const p = State.data.profiles[currentProfile];
+  document.body.className = 'theme-' + p.theme;
+  const sources = surpriseSources().filter(s => Array.isArray(s.pool) && s.pool.length > 0);
+  if (sources.length === 0) return renderHome();
+  const src = sources[Math.floor(Math.random() * sources.length)];
+  const item = src.pool[Math.floor(Math.random() * src.pool.length)];
+  currentTask = { subject: src.subject, item, fiftyUsed: false };
+
+  const tb = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=>{ window._surpriseActive = false; renderHome(); }}),
+    el('div',{text:'🎲 Überraschung!'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'🪙'}), el('span',{text:p.coins}))
+  );
+  root.appendChild(tb);
+  const task = el('div',{class:'task schlau-task'});
+  if (item.text) task.appendChild(el('div',{class:'task-text' + (item.text.length > 60 ? ' story' : ''), text: item.text}));
+  if (item.img || item.q) {
+    const head = el('div',{class:'task-text'});
+    const inner = el('div');
+    if (item.img) inner.appendChild(el('div',{text:item.img, attrs:{style:'font-size:60px;margin-bottom:8px'}}));
+    if (item.q) inner.appendChild(el('div',{text:item.q, attrs:{style:'font-size:20px'}}));
+    head.appendChild(inner);
+    task.appendChild(head);
+  }
+  const finishTo = ()=> maybePauseOrContinue(src.subject, renderSurpriseTask);
+  const adventureBonus = (result)=>{
+    p.coins += 1;
+    State.save();
+    if (result && result.bonus) { showCoinToast(result); return; }
+    const t = el('div',{class:'coin-toast', text:'🎲 Abenteuer-Bonus! +1 🪙'});
+    document.body.appendChild(t);
+    setTimeout(()=> t.remove(), 1800);
+  };
+
+  if (item.options && typeof item.correct === 'number') {
+    const opts = el('div',{class:'options'});
+    item.options.forEach((o,i) => {
+      opts.appendChild(el('button',{class:'opt', text:o, onclick:(e)=>{
+        const correct = i === item.correct;
+        const bs = e.target.parentElement.querySelectorAll('button');
+        bs.forEach(b => b.disabled = true);
+        e.target.classList.add(correct ? 'correct' : 'wrong');
+        bs[item.correct].classList.add('correct');
+        const result = recordAnswer(currentProfile, src.subject, correct);
+        if (correct) adventureBonus(result);
+        trackLearnTime?.(currentProfile, 30);
+        if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
+        if (typeof schedulePush === 'function') schedulePush(currentProfile);
+        if (item.why) {
+          const box = el('div',{class:'why-box'},
+            el('div',{class:'why-title', text: correct ? '🦊 Genau! Und warum?' : '🦊 Kein Problem – hier ist der Trick:'}),
+            el('div',{class:'why-text', text: item.why}),
+            el('button',{class:'why-btn', text:'Verstanden – weiter!', onclick:(ev)=>{ ev.target.disabled = true; finishTo(); }})
+          );
+          task.appendChild(box);
+          setTimeout(()=> box.scrollIntoView({behavior:'smooth', block:'end'}), 100);
+        } else {
+          setTimeout(finishTo, correct ? 900 : 1800);
+        }
+      }}));
+    });
+    task.appendChild(opts);
+  } else if (typeof item.a === 'number') {
+    const inputBox = el('div',{class:'input-task'});
+    const input = el('input',{attrs:{type:'tel', inputmode:'numeric'}});
+    const btn = el('button',{text:'✓ Fertig'});
+    btn.addEventListener('click', ()=>{
+      if (btn.disabled) return;
+      btn.disabled = true;
+      const val = parseInt(input.value, 10);
+      const correct = val === item.a;
+      btn.style.background = correct ? '#4caf50' : '#e53935';
+      btn.textContent = correct ? '✓ Richtig!' : `✗ Richtig: ${item.a}`;
+      const result = recordAnswer(currentProfile, src.subject, correct);
+      if (correct) adventureBonus(result);
+      trackLearnTime?.(currentProfile, 30);
+      if (typeof sfxCorrect === 'function') correct ? sfxCorrect() : sfxWrong();
+      if (typeof schedulePush === 'function') schedulePush(currentProfile);
+      setTimeout(finishTo, correct ? 800 : 1800);
+    });
+    input.addEventListener('keyup', e => { if (e.key === 'Enter') btn.click(); });
+    inputBox.appendChild(input);
+    inputBox.appendChild(btn);
+    task.appendChild(inputBox);
+    setTimeout(()=> input.focus(), 100);
+  } else {
+    // Unbekanntes Format: einfach nächste Überraschung
+    return renderSurpriseTask();
+  }
+  root.appendChild(task);
 }
 
 // ===== Alva (4): Zauberwelt-Startseite =====
