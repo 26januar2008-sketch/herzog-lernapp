@@ -1,4 +1,4 @@
-const CACHE = 'lernapp-v27';
+const CACHE = 'lernapp-v28';
 const ASSETS = [
   '.', 'index.html', 'liam.html', 'raik.html', 'alva.html',
   'hof.html', 'hof.js', 'hof.css',
@@ -7,7 +7,13 @@ const ASSETS = [
   'img/icons/icon-192.png', 'img/icons/icon-512.png',
   'img/icons/liam-192.png', 'img/icons/liam-512.png',
   'img/icons/raik-192.png', 'img/icons/raik-512.png',
-  'img/icons/alva-192.png', 'img/icons/alva-512.png'
+  'img/icons/alva-192.png', 'img/icons/alva-512.png',
+  // Echte Farm-Sprites (Kenney Tiny Farm, CC0) für Liams Hof
+  'img/farm/kuh.png', 'img/farm/huhn.png', 'img/farm/schaf.png', 'img/farm/ei.png',
+  'img/farm/weizen.png', 'img/farm/mais.png', 'img/farm/ruebe.png', 'img/farm/karotte.png',
+  'img/farm/tomate.png', 'img/farm/spross.png', 'img/farm/kohl.png',
+  'img/farm/baum_tanne.png', 'img/farm/baum_laub.png', 'img/farm/busch.png',
+  'img/farm/heu.png', 'img/farm/sonnenblume.png', 'img/farm/stein.png'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(()=>self.skipWaiting()));

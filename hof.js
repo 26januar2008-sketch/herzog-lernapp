@@ -327,7 +327,38 @@ function emojiCode(em) {
     .map(cp => cp.toString(16))
     .join('-');
 }
+
+// === Echte Farm-Sprites (Kenney "Tiny Farm", CC0) — ersetzen Twemoji wo vorhanden ===
+// Datei + Seitenverhältnis (b/h) damit die Pixel-Grafik nicht verzerrt.
+// Emoji ohne Eintrag fallen automatisch auf Twemoji zurück (bewusst: z.B. 🐷 hat kein Sprite).
+const FARM_BASE = 'img/farm';
+const SPRITE_MAP = {
+  '🐄': {f:'kuh',        ar:64/56},
+  '🐔': {f:'huhn',       ar:56/52},
+  '🐑': {f:'schaf',      ar:64/56},
+  '🥚': {f:'ei',         ar:1},
+  '🌾': {f:'weizen',     ar:56/56},
+  '🌽': {f:'mais',       ar:56/56},
+  '🍠': {f:'ruebe',      ar:64/60},
+  '🥕': {f:'karotte',    ar:40/64},
+  '🍅': {f:'tomate',     ar:56/56},
+  '🌱': {f:'spross',     ar:1},
+  '🥬': {f:'kohl',       ar:56/44},
+  '🌲': {f:'baum_tanne', ar:64/56},
+  '🌳': {f:'baum_laub',  ar:56/60},
+  '🌿': {f:'busch',      ar:56/48},
+  '🍃': {f:'heu',        ar:48/32},
+  '🌻': {f:'sonnenblume',ar:48/64},
+  '🪨': {f:'stein',      ar:56/48}
+};
 function imgEmoji(em, cx, cy, size) {
+  const sp = SPRITE_MAP[em];
+  if (sp) {
+    // Seitenverhältnis erhalten, in size-Box zentriert einpassen
+    let w = size, h = size;
+    if (sp.ar >= 1) h = size / sp.ar; else w = size * sp.ar;
+    return `<image href="${FARM_BASE}/${sp.f}.png" x="${cx - w/2}" y="${cy - h/2}" width="${w}" height="${h}" style="image-rendering:pixelated"/>`;
+  }
   return `<image href="${TWEMOJI_BASE}/${emojiCode(em)}.svg" x="${cx - size/2}" y="${cy - size/2}" width="${size}" height="${size}"/>`;
 }
 function epocheIdx(eid) { return EPOCHEN.findIndex(e => e.id === eid); }

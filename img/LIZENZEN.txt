@@ -1,0 +1,24 @@
+LIZENZEN der Grafik-Assets in diesem Ordner
+============================================
+
+img/farm/  — Farm-Sprites für Liams Hof (hof.js)
+------------------------------------------------
+Paket:   Kenney "Tiny Farm" (Version 1.0)
+Quelle:  https://kenney.nl/assets/tiny-farm
+Autor:   Kenney (www.kenney.nl)
+Lizenz:  Creative Commons Zero (CC0 1.0 Public Domain)
+         http://creativecommons.org/publicdomain/zero/1.0/
+         Frei nutzbar in privaten, schulischen und kommerziellen Projekten.
+Verwendet: einzelne 16x16-Tiles (verlustfrei 4x hochskaliert, Pixel-Art),
+           nur die tatsächlich benutzten PNGs (kuh, huhn, schaf, ei, weizen,
+           mais, ruebe, karotte, tomate, spross, kohl, baum_tanne, baum_laub,
+           busch, heu, sonnenblume, stein) — nicht das komplette ZIP,
+           um den PWA-Cache klein zu halten.
+
+img/twemoji/ — Emoji-SVGs als Fallback (wo kein Farm-Sprite passt)
+------------------------------------------------------------------
+Paket:   Twemoji
+Autor:   Twitter, Inc. und Mitwirkende
+Lizenz:  Grafiken CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+Hinweis: Weiterhin genutzt für Emoji ohne passendes CC0-Sprite
+         (z.B. 🐷 Schwein, 🥔 Kartoffel, Gebäude-Icons).
