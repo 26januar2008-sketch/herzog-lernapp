@@ -135,9 +135,32 @@ function runnerLoop() {
   const remainMs = rs.sessionEnd - Date.now();
   if (remainMs <= 0) { rs.alive = false; finishRunner(); return; }
   rs.ctx.clearRect(0,0,rs.W,rs.H);
+  // Parallax-Wolken (dekorativ, langsam nach links)
+  rs.bg = (rs.bg || 0) + rs.speed * 0.25;
+  rs.ctx.fillStyle = 'rgba(255,255,255,.85)';
+  for (let k = 0; k < 3; k++) {
+    const cx = ((rs.W + 200) - ((rs.bg * 0.5 + k * 280) % (rs.W + 200)));
+    const cy = 40 + (k % 2) * 26;
+    rs.ctx.beginPath();
+    rs.ctx.arc(cx, cy, 18, 0, Math.PI*2);
+    rs.ctx.arc(cx + 20, cy + 4, 22, 0, Math.PI*2);
+    rs.ctx.arc(cx + 44, cy, 16, 0, Math.PI*2);
+    rs.ctx.fill();
+  }
+  // sanfte Hügel hinten
+  rs.ctx.fillStyle = 'rgba(93,138,58,.45)';
+  rs.ctx.beginPath();
+  rs.ctx.moveTo(0, rs.groundY);
+  for (let x = 0; x <= rs.W; x += 40) {
+    rs.ctx.lineTo(x, rs.groundY - 26 - Math.sin((x + rs.bg * 0.3) / 90) * 22);
+  }
+  rs.ctx.lineTo(rs.W, rs.groundY); rs.ctx.closePath(); rs.ctx.fill();
   // Boden
   rs.ctx.fillStyle = '#3d2817';
   rs.ctx.fillRect(0, rs.groundY, rs.W, rs.H - rs.groundY);
+  // Gras-Kante
+  rs.ctx.fillStyle = '#5d8a3a';
+  rs.ctx.fillRect(0, rs.groundY, rs.W, 8);
   // Charakter physik
   rs.vy += 0.7;
   rs.charY += rs.vy;
@@ -171,11 +194,16 @@ function runnerLoop() {
   for (let i = rs.obstacles.length - 1; i >= 0; i--) {
     const o = rs.obstacles[i];
     o.x -= rs.speed;
-    rs.ctx.fillStyle = '#cc0000';
-    rs.ctx.fillRect(o.x, o.y, o.w, o.h);
-    rs.ctx.fillStyle = '#fff';
-    rs.ctx.font = 'bold 24px sans-serif';
-    rs.ctx.fillText('⚠️', o.x+3, o.y+30);
+    // Kaktus-Hindernis (gleiche Hitbox o.x/o.y/o.w/o.h)
+    rs.ctx.fillStyle = '#2e7d32';
+    const stemX = o.x + o.w/2 - 5;
+    rs.ctx.fillRect(stemX, o.y, 10, o.h);                 // Stamm
+    rs.ctx.fillRect(o.x, o.y + 12, 6, 5);                 // linker Arm
+    rs.ctx.fillRect(o.x, o.y + 4, 5, 13);
+    rs.ctx.fillRect(o.x + o.w - 6, o.y + 8, 6, 5);        // rechter Arm
+    rs.ctx.fillRect(o.x + o.w - 5, o.y, 5, 13);
+    rs.ctx.fillStyle = 'rgba(255,255,255,.25)';
+    rs.ctx.fillRect(stemX + 1, o.y + 2, 3, o.h - 4);      // Glanz
     if (o.x + o.w > 80 && o.x < 140 && rs.charY + 60 > o.y) {
       rs.alive = false;
       sfxWrong?.();
