@@ -59,6 +59,20 @@ body.theme-alva .topbar{background:rgba(123,31,162,.45)}
 .sticker-item.missing .nm{color:#fff}
 .sticker-big{font-size:96px;width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:popIn .5s ease-out;line-height:1}
 
+/* Alva: Einhorn-Magie-Minispiel */
+.uni-stage{flex:1;position:relative;overflow:hidden;background:linear-gradient(180deg,#b39ddb 0%,#f8bbd0 55%,#80deea 100%)}
+.uni-hint{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.35);color:#fff;font-size:13px;font-weight:700;padding:8px 14px;border-radius:12px;text-align:center;max-width:88%;z-index:5;pointer-events:none}
+.uni-unicorn{position:absolute;left:10px;top:0;width:140px;height:120px;pointer-events:none;transition:transform .18s ease-out;filter:drop-shadow(0 8px 14px rgba(74,20,140,.35));z-index:3}
+.uni-beam{position:absolute;left:128px;right:14px;height:26px;border-radius:13px;pointer-events:none;transition:top .18s ease-out;z-index:2;opacity:.92;background:linear-gradient(180deg,#ef5350 0%,#ffa726 20%,#ffee58 40%,#66bb6a 60%,#42a5f5 80%,#ab47bc 100%);box-shadow:0 0 18px 4px rgba(255,255,255,.55);animation:beamShimmer 1.2s ease-in-out infinite}
+@keyframes beamShimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+.uni-fairy{position:absolute;right:14px;top:0;width:86px;height:95px;pointer-events:none;transition:transform .1s linear;z-index:3;filter:drop-shadow(0 6px 10px rgba(49,27,146,.4))}
+.uni-fairy.zapped{animation:fairyZap .9s ease-in forwards}
+@keyframes fairyZap{30%{transform:rotate(360deg) scale(1.15);opacity:1}100%{transform:rotate(900deg) scale(0);opacity:0}}
+.uni-fairy-name{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:#311b92;background:rgba(255,255,255,.75);padding:1px 8px;border-radius:8px;white-space:nowrap}
+.uni-burst{position:absolute;font-size:26px;pointer-events:none;z-index:6;animation:burstFly 1s ease-out forwards}
+@keyframes burstFly{from{transform:translate(0,0) scale(.6);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1.4);opacity:0}}
+.uni-giggle{position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#fff;color:#4a148c;font-size:14px;font-weight:900;padding:4px 10px;border-radius:12px;white-space:nowrap;animation:bubble .3s ease-out}
+
 /* Alva: Glitzer-Spur beim Malen */
 .trace-sparkle{position:fixed;font-size:18px;pointer-events:none;z-index:60;animation:sparkleFly .8s ease-out forwards}
 @keyframes sparkleFly{from{opacity:1;transform:scale(.6) translateY(0)}to{opacity:0;transform:scale(1.4) translateY(-26px)}}

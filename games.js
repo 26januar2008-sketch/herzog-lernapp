@@ -482,3 +482,170 @@ function finishRunner() {
   s.textContent = `@keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1)} 100%{opacity:0;transform:translate(-50%,-150%) scale(1.5)} }`;
   document.head.appendChild(s);
 })();
+
+// ============================================================
+// EINHORN-MAGIE (Alva, 4): Einhorn Funkelstern gegen die
+// Schattenfee Wuselwolke. Finger hoch/runter = Einhorn fliegt,
+// der Regenbogen-Strahl leuchtet immer. Trifft er die Fee,
+// wird sie in Blumen und Schmetterlinge verglitzert – sie
+// kichert und kommt neu. Man kann NICHT verlieren.
+// ============================================================
+let unicornState = null;
+
+function unicornSVG() {
+  return `<svg viewBox="0 0 140 120" width="140" height="120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="hornGrad" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#ffd54f"/><stop offset="1" stop-color="#fff8e1"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="60" cy="78" rx="34" ry="24" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
+    <rect x="34" y="92" width="9" height="22" rx="4" fill="#fff" stroke="#f3e5f5"/>
+    <rect x="52" y="96" width="9" height="20" rx="4" fill="#fff" stroke="#f3e5f5"/>
+    <rect x="70" y="96" width="9" height="20" rx="4" fill="#fff" stroke="#f3e5f5"/>
+    <rect x="84" y="92" width="9" height="22" rx="4" fill="#fff" stroke="#f3e5f5"/>
+    <path d="M28 82 Q10 88 14 102 Q22 96 26 90" fill="none" stroke="#ce93d8" stroke-width="6" stroke-linecap="round"/>
+    <path d="M30 86 Q16 94 20 106" fill="none" stroke="#80deea" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="94" cy="52" r="22" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
+    <ellipse cx="112" cy="58" rx="12" ry="9" fill="#fff" stroke="#f3e5f5" stroke-width="2"/>
+    <ellipse cx="116" cy="60" rx="3" ry="2.2" fill="#f8bbd0"/>
+    <circle cx="97" cy="48" r="3.5" fill="#4a148c"/>
+    <circle cx="98.4" cy="46.8" r="1.2" fill="#fff"/>
+    <ellipse cx="90" cy="58" rx="4" ry="2.5" fill="#f8bbd0" opacity=".7"/>
+    <path d="M86 32 L98 32 L104 20 Z" fill="#fff" stroke="#f3e5f5"/>
+    <path d="M100 34 L124 6 L108 30 Z" fill="url(#hornGrad)" stroke="#ffc107" stroke-width="1.5"/>
+    <path d="M78 40 Q66 30 72 52 Q60 44 66 62 Q56 58 64 72" fill="none" stroke="#f48fb1" stroke-width="7" stroke-linecap="round"/>
+    <path d="M74 44 Q64 38 68 56 Q60 52 66 66" fill="none" stroke="#ba68c8" stroke-width="5" stroke-linecap="round"/>
+    <path d="M72 50 Q64 48 68 62" fill="none" stroke="#4dd0e1" stroke-width="4" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function shadowFairySVG() {
+  return `<svg viewBox="0 0 100 110" width="86" height="95" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="30" cy="45" rx="26" ry="16" fill="#b39ddb" opacity=".55" transform="rotate(-25 30 45)"/>
+    <ellipse cx="70" cy="45" rx="26" ry="16" fill="#b39ddb" opacity=".55" transform="rotate(25 70 45)"/>
+    <path d="M50 38 L30 96 Q50 106 70 96 Z" fill="#5e35b1"/>
+    <path d="M38 72 Q50 80 62 72 L70 96 Q50 106 30 96 Z" fill="#4527a0"/>
+    <circle cx="50" cy="30" r="17" fill="#7e57c2"/>
+    <path d="M36 22 Q40 8 50 12 Q62 4 64 20 Q70 16 66 26 L36 26 Z" fill="#311b92"/>
+    <circle cx="44" cy="30" r="3.6" fill="#fff"/>
+    <circle cx="56" cy="30" r="3.6" fill="#fff"/>
+    <circle cx="44.8" cy="30.8" r="1.7" fill="#311b92"/>
+    <circle cx="56.8" cy="30.8" r="1.7" fill="#311b92"/>
+    <path d="M45 39 Q50 42 55 39" fill="none" stroke="#311b92" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="50" cy="8" r="3" fill="#ffd54f"/>
+  </svg>`;
+}
+
+function renderUnicornGame() {
+  clear();
+  document.body.className = 'theme-alva';
+  const p = State.data.profiles.alva;
+
+  const top = el('div',{class:'topbar'},
+    el('button',{class:'back', text:'⬅️', onclick: ()=>{ if (unicornState) unicornState.running = false; renderAlvaHome(); }}),
+    el('div',{text:'🌈 Einhorn-Magie'}),
+    el('div',{class:'score'}, el('span',{class:'icon',text:'✨'}), el('span',{attrs:{id:'uni-score'}, text:'0'}))
+  );
+  root.appendChild(top);
+
+  const stage = el('div',{class:'uni-stage'});
+  stage.appendChild(el('div',{class:'uni-hint', text:'Zieh deinen Finger hoch und runter – triff Wuselwolke mit dem Regenbogen!'}));
+
+  const beam = el('div',{class:'uni-beam'});
+  const uni = el('div',{class:'uni-unicorn', html: unicornSVG()});
+  const fairy = el('div',{class:'uni-fairy', html: shadowFairySVG()});
+  const fairyName = el('div',{class:'uni-fairy-name', text:'Wuselwolke'});
+  fairy.appendChild(fairyName);
+  stage.appendChild(beam);
+  stage.appendChild(uni);
+  stage.appendChild(fairy);
+  root.appendChild(stage);
+
+  const st = unicornState = {
+    running: true,
+    score: 0,
+    uniY: 0.5,       // 0..1 relativ zur Stage
+    fairyY: 0.3,
+    t: Math.random() * 100,
+    speed: 0.55,
+    hitCooldown: 0,
+    fairyGone: false
+  };
+
+  // Finger folgen: irgendwo auf der Bühne ziehen
+  const follow = (e) => {
+    const r = stage.getBoundingClientRect();
+    st.uniY = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    e.preventDefault();
+  };
+  stage.addEventListener('pointerdown', follow);
+  stage.addEventListener('pointermove', (e)=>{ if (e.buttons || e.pointerType === 'touch') follow(e); });
+  stage.style.touchAction = 'none';
+
+  function burst(x, y) {
+    const symbols = ['🌸','🦋','✨','🌼','💮','⭐'];
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'uni-burst';
+      s.textContent = symbols[i % symbols.length];
+      s.style.left = x + 'px';
+      s.style.top = y + 'px';
+      s.style.setProperty('--dx', (Math.cos(i/10*Math.PI*2) * (60 + Math.random()*50)) + 'px');
+      s.style.setProperty('--dy', (Math.sin(i/10*Math.PI*2) * (60 + Math.random()*50)) + 'px');
+      stage.appendChild(s);
+      setTimeout(()=> s.remove(), 1000);
+    }
+  }
+
+  function giggle() {
+    const g = el('div',{class:'uni-giggle', text:['Hihi!','Huch!','Kicher!','Bis gleich!'][Math.floor(Math.random()*4)]});
+    fairy.appendChild(g);
+    setTimeout(()=> g.remove(), 900);
+  }
+
+  function loop() {
+    if (!st.running || !stage.isConnected) return;
+    const r = stage.getBoundingClientRect();
+    const H = r.height, W = r.width;
+
+    // Einhorn sanft zur Fingerhöhe gleiten
+    const uniTop = st.uniY * (H - 140);
+    uni.style.transform = `translateY(${uniTop}px)`;
+
+    // Strahl auf Horn-Höhe
+    const beamY = uniTop + 30;
+    beam.style.top = beamY + 'px';
+
+    // Fee wuselt (zwei Sinus-Wellen übereinander)
+    if (!st.fairyGone) {
+      st.t += 0.016 * st.speed * 60 / 60;
+      st.fairyY = 0.5 + 0.42 * Math.sin(st.t * 1.1) * Math.cos(st.t * 0.37);
+      const fairyTop = Math.min(1, Math.max(0, st.fairyY)) * (H - 120);
+      fairy.style.transform = `translateY(${fairyTop}px)`;
+
+      // Treffer? (Strahl-Höhe vs. Feen-Mitte)
+      if (st.hitCooldown <= 0 && Math.abs((fairyTop + 50) - (beamY + 13)) < 52) {
+        st.fairyGone = true;
+        st.hitCooldown = 60;
+        st.score++;
+        document.getElementById('uni-score').textContent = st.score;
+        fairy.classList.add('zapped');
+        if (typeof playSound === 'function') playSound('sparkle');
+        burst(W - 90, fairyTop + 45);
+        giggle();
+        setTimeout(()=>{
+          if (!st.running) return;
+          fairy.classList.remove('zapped');
+          st.fairyGone = false;
+          st.t = Math.random() * 100;
+          st.speed = Math.min(2.1, st.speed * 1.07); // wird ganz sacht flinker
+          if (typeof playSound === 'function') playSound('shiny');
+        }, 950);
+      }
+    }
+    if (st.hitCooldown > 0) st.hitCooldown--;
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}

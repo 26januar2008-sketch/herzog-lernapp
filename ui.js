@@ -874,6 +874,13 @@ function renderAlvaHome(){
     el('div',{text:`${p.unlocked.length} / ${typeof ALVA_STICKERS !== 'undefined' ? ALVA_STICKERS.length : 0} gesammelt`,
       attrs:{style:'font-size:13px;margin-top:4px;font-weight:600;opacity:.8'}})
   ));
+  if (typeof renderUnicornGame === 'function') {
+    subs.appendChild(el('div',{class:'subject alva-tile', attrs:{style:'grid-column:span 2;background:linear-gradient(135deg,#fff,#e1bee7)'}, onclick: renderUnicornGame},
+      el('span',{class:'em', text:'🌈'}),
+      document.createTextNode('Einhorn-Magie'),
+      el('div',{text:'Verglitzer die Schattenfee Wuselwolke!', attrs:{style:'font-size:13px;margin-top:4px;font-weight:600;opacity:.8'}})
+    ));
+  }
   home.appendChild(subs);
   root.appendChild(home);
 }
