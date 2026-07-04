@@ -18,9 +18,7 @@ const TRACE_RAIK = [
 let traceCanvas = null;
 let traceCtx = null;
 let traceText = '';
-let drawing = false;
 let strokes = []; // [{x,y}] arrays
-let currentStroke = null;
 let traceCoveredPath = 0; // einfacher Score
 
 function renderTraceTask() {
@@ -49,8 +47,8 @@ function renderTraceTask() {
   const modeRow = el('div',{attrs:{style:'display:flex;gap:8px;justify-content:center;margin-top:4px'}});
   const fingerBtn = el('button',{text:'👆 Finger', attrs:{style:`padding:10px 18px;font-size:14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;background:${traceMode==='alle'?'#4caf50':'rgba(255,255,255,.2)'};color:${traceMode==='alle'?'#fff':'#fff'}`}});
   const penBtn = el('button',{text:'✏️ Stift (Hand auflegen ok)', attrs:{style:`padding:10px 18px;font-size:14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;background:${traceMode==='stift'?'#4caf50':'rgba(255,255,255,.2)'};color:#fff`}});
-  fingerBtn.onclick = ()=>{ traceMode='alle'; activePointerId=null; renderTraceTask(); };
-  penBtn.onclick = ()=>{ traceMode='stift'; activePointerId=null; renderTraceTask(); };
+  fingerBtn.onclick = ()=>{ traceMode='alle'; resetTrace(); renderTraceTask(); };
+  penBtn.onclick = ()=>{ traceMode='stift'; resetTrace(); renderTraceTask(); };
   modeRow.appendChild(fingerBtn);
   modeRow.appendChild(penBtn);
   wrap.appendChild(modeRow);
@@ -66,8 +64,8 @@ function renderTraceTask() {
 
   const hint = el('div',{
     text: traceMode==='stift'
-      ? '✏️ Stift-Modus: Hand auflegen ok, nur erster Touch schreibt. Falls nicht funktioniert: 👆 Finger probieren!'
-      : '👆 Finger-Modus: jeder Touch schreibt. Falls Hand stört: ✏️ Stift-Modus probieren!',
+      ? '✏️ Stift-Modus: Du kannst die Hand ganz normal auflegen – nur die Stiftspitze schreibt!'
+      : '👆 Finger-Modus: Jeder Finger malt. Wenn deine Hand stört: ✏️ Stift-Modus!',
     attrs:{style:'font-size:13px;color:rgba(255,255,255,.9);text-align:center;padding:0 16px;background:rgba(0,0,0,.3);border-radius:8px;padding:8px 12px'}
   });
   wrap.appendChild(hint);
@@ -83,10 +81,11 @@ function renderTraceTask() {
 
 function resetTrace() {
   strokes = [];
-  currentStroke = null;
   traceCoveredPath = 0;
   activePointerId = null;
-  drawing = false;
+  activeInfo = null;
+  activeStroke = null;
+  fingerStrokes = {};
 }
 
 function drawTraceTemplate() {
@@ -116,37 +115,80 @@ function drawTraceTemplate() {
 }
 
 function clearTraceStrokes() {
-  strokes = []; currentStroke = null; traceCoveredPath = 0;
+  strokes = []; activeStroke = null; activePointerId = null; activeInfo = null; fingerStrokes = {};
+  traceCoveredPath = 0;
   drawTraceTemplate();
 }
 
-function getCanvasPos(e) {
+function getPosFromEvent(e) {
   const rect = traceCanvas.getBoundingClientRect();
-  const scaleX = traceCanvas.width / rect.width;
-  const scaleY = traceCanvas.height / rect.height;
-  let cx, cy;
-  if (e.touches && e.touches.length) {
-    cx = e.touches[0].clientX; cy = e.touches[0].clientY;
-  } else {
-    cx = e.clientX; cy = e.clientY;
-  }
-  return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+  return {
+    x: (e.clientX - rect.left) * (traceCanvas.width / rect.width),
+    y: (e.clientY - rect.top) * (traceCanvas.height / rect.height)
+  };
 }
 
-// PALM REJECTION mit Modi:
-// - "alle": jeder Touch schreibt (Finger-Modus, default)
-// - "stift": nur EIN Pointer gleichzeitig (Hand auflegen mit Stift)
+function traceColor() {
+  return currentProfile === 'liam' ? '#1b5e20' : currentProfile === 'alva' ? '#ad1457' : '#0277bd';
+}
+
+// Alles neu zeichnen (Vorlage + alle gespeicherten Striche) –
+// wird gebraucht, wenn ein Handballen-Fehlstrich verworfen wird
+function redrawAllStrokes() {
+  drawTraceTemplate();
+  traceCtx.strokeStyle = traceColor();
+  traceCtx.lineWidth = 8;
+  traceCtx.lineCap = 'round';
+  traceCtx.lineJoin = 'round';
+  for (const stroke of strokes) {
+    if (stroke.length < 2) continue;
+    traceCtx.beginPath();
+    traceCtx.moveTo(stroke[0].x, stroke[0].y);
+    for (let i = 1; i < stroke.length; i++) traceCtx.lineTo(stroke[i].x, stroke[i].y);
+    traceCtx.stroke();
+  }
+}
+
+// ============================================================
+// PALM REJECTION (Stift-Modus, Standard):
+// Die Kinder schreiben mit Kugelschreiber-Touchpens und legen
+// die Hand auf. Der Fire-Silk-Browser meldet den Stift meist als
+// normalen Touch – deshalb Heuristik:
+//   1. pointerType 'pen' gewinnt immer (falls gemeldet)
+//   2. sonst: kleinste Kontaktfläche (width*height) gewinnt
+//   3. Fallback ohne Flächen-Angabe: der höhere Touch gewinnt
+//      (die Stiftspitze ist praktisch immer über dem Handballen)
+// Landet erst der Handballen und dann die Stiftspitze, wird der
+// Fehlstrich des Ballens verworfen und neu gezeichnet.
+// Finger-Modus: jeder Finger malt seine eigene Linie.
+// ============================================================
 let activePointerId = null;
-let traceMode = 'alle'; // wird per Toggle umgeschaltet
+let activeInfo = null;    // {size, y} des aktiven Pointers
+let activeStroke = null;
+let fingerStrokes = {};   // Finger-Modus: pointerId -> stroke
+let traceMode = 'stift';  // Standard: Stift mit Handauflegen
+
+function pointerSize(e) {
+  const s = (e.width || 0) * (e.height || 0);
+  return s > 1 ? s : null; // <=1 bedeutet: Browser meldet keine echte Fläche
+}
+
+function isClearlyBetter(e, info) {
+  if (e.pointerType === 'pen') return true;
+  const ns = pointerSize(e);
+  if (ns !== null && info.size !== null) return ns < info.size * 0.7;
+  return e.clientY < info.y - 40; // Stiftspitze deutlich über dem Handballen
+}
 
 function setupTraceListeners() {
   traceCanvas.style.touchAction = 'none';
+  traceCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
-  const draw = (pos) => {
-    currentStroke.push(pos);
-    const last = currentStroke[currentStroke.length - 2];
+  const drawTo = (stroke, pos) => {
+    stroke.push(pos);
+    const last = stroke[stroke.length - 2];
     if (last) {
-      traceCtx.strokeStyle = currentProfile === 'liam' ? '#1b5e20' : '#0277bd';
+      traceCtx.strokeStyle = traceColor();
       traceCtx.lineWidth = 8;
       traceCtx.lineCap = 'round';
       traceCtx.lineJoin = 'round';
@@ -157,38 +199,67 @@ function setupTraceListeners() {
     }
   };
 
+  const adoptPointer = (e) => {
+    activePointerId = e.pointerId;
+    activeInfo = { size: pointerSize(e), y: e.clientY };
+    activeStroke = [];
+    strokes.push(activeStroke);
+    drawTo(activeStroke, getPosFromEvent(e));
+  };
+
+  const discardActiveStroke = () => {
+    const idx = strokes.indexOf(activeStroke);
+    if (idx >= 0) strokes.splice(idx, 1);
+    redrawAllStrokes();
+  };
+
   const onStart = (e) => {
     e.preventDefault();
-    if (traceMode === 'stift') {
-      // Pen-Events haben absolute Priorität
-      if (e.pointerType === 'pen') {
-        activePointerId = e.pointerId;
-      } else if (activePointerId !== null && e.pointerId !== activePointerId) {
-        // schon ein Pointer aktiv, ignoriere weitere
-        return;
-      } else {
-        activePointerId = e.pointerId;
-      }
+    if (traceMode === 'alle') {
+      const stroke = [];
+      strokes.push(stroke);
+      fingerStrokes[e.pointerId] = stroke;
+      drawTo(stroke, getPosFromEvent(e));
+      return;
     }
-    // Modus "alle": jeder Pointer schreibt
-    drawing = true;
-    currentStroke = [];
-    strokes.push(currentStroke);
-    draw(getCanvasPos(e));
+    // Stift-Modus
+    if (activePointerId === null) {
+      adoptPointer(e);
+    } else if (e.pointerId !== activePointerId && isClearlyBetter(e, activeInfo)) {
+      // Der Handballen kam zuerst: Fehlstrich verwerfen, auf Stift umschalten
+      discardActiveStroke();
+      adoptPointer(e);
+    }
+    // sonst: zusätzlicher Touch = Handballen → komplett ignorieren
   };
+
   const onMove = (e) => {
-    if (!drawing) return;
-    if (traceMode === 'stift' && activePointerId !== null && e.pointerId !== activePointerId) return;
+    if (traceMode === 'alle') {
+      const stroke = fingerStrokes[e.pointerId];
+      if (!stroke) return;
+      e.preventDefault();
+      drawTo(stroke, getPosFromEvent(e));
+      return;
+    }
+    if (e.pointerId !== activePointerId || !activeStroke) return;
     e.preventDefault();
-    draw(getCanvasPos(e));
+    drawTo(activeStroke, getPosFromEvent(e));
   };
+
   const onEnd = (e) => {
-    if (!drawing) return;
-    if (traceMode === 'stift' && activePointerId !== null && e.pointerId !== activePointerId) return;
     e.preventDefault();
-    drawing = false;
-    activePointerId = null;
+    if (traceMode === 'alle') {
+      delete fingerStrokes[e.pointerId];
+      return;
+    }
+    if (e.pointerId === activePointerId) {
+      activePointerId = null;
+      activeInfo = null;
+      activeStroke = null;
+    }
+    // Handballen hebt ab → interessiert uns nicht
   };
+
   traceCanvas.addEventListener('pointerdown', onStart);
   traceCanvas.addEventListener('pointermove', onMove);
   traceCanvas.addEventListener('pointerup', onEnd);
