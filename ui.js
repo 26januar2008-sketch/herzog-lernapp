@@ -1633,25 +1633,30 @@ function renderDashboard(){
   nav.appendChild(el('button',{text:'📊 Wochen-Report', onclick: renderWeeklyReport, attrs:{style:'padding:10px 18px;background:#43a047;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
   nav.appendChild(el('button',{text:'👤 Profilbilder', onclick: renderAvatarPicker, attrs:{style:'padding:10px 18px;background:#ec407a;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer'}}));
   wrap.appendChild(nav);
-  for (const k of ['liam','raik']) {
+  for (const k of ['liam','raik','alva']) {
     const p = State.data.profiles[k];
+    if (!p) continue;
     const today = todayStats(k);
     const card = el('div',{attrs:{style:'background:rgba(255,255,255,.08);padding:16px;border-radius:16px;margin-bottom:16px'}});
-    card.appendChild(el('h3',{text:`${p.name} (${p.age}, Klasse ${p.class})`, attrs:{style:'margin-bottom:12px'}}));
+    const stufe = k === 'alva' ? 'Zauberwelt' : `Klasse ${p.class}`;
+    card.appendChild(el('h3',{text:`${p.name} (${p.age}, ${stufe})`, attrs:{style:'margin-bottom:12px'}}));
     card.appendChild(rowDash('Heute Aufgaben', `${today.total} (${today.correct} richtig)`));
-    const subjLabels = {read:'📖 Lesen', math:'➕ Rechnen', sach:'🌍 Sachkunde', musik:'🎵 Musik'};
-    for (const sk of ['read','math','sach','musik']) {
+    const subjLabels = {read:'📖 Lesen', math:'➕ Rechnen', sach:'🌍 Sachkunde', musik:'🎵 Musik', schlau:'🦊 Straßenschläue'};
+    const subjKeys = k === 'alva' ? ['read','math','sach','musik'] : ['read','math','sach','musik','schlau'];
+    for (const sk of subjKeys) {
       const s = p.stats[sk] || {tries:0,correct:0,level:0};
       const ratio = s.tries ? Math.round(s.correct/s.tries*100) : 0;
       card.appendChild(rowDash(subjLabels[sk], `${s.tries} Aufgaben · ${ratio}% richtig · Lvl ${s.level}`));
     }
     card.appendChild(rowDash('Münzen', p.coins + ' 🪙'));
-    card.appendChild(rowDash('Freigeschaltet', `${p.unlocked.length} / ${(k==='liam'?MACHINES:CHARS).length}`));
+    const sammlung = k === 'liam' ? MACHINES : (k === 'alva' ? (typeof ALVA_STICKERS !== 'undefined' ? ALVA_STICKERS : []) : CHARS);
+    const sammelName = k === 'alva' ? 'Sticker gesammelt' : 'Freigeschaltet';
+    card.appendChild(rowDash(sammelName, `${p.unlocked.length} / ${sammlung.length}`));
     wrap.appendChild(card);
   }
   wrap.appendChild(el('button',{text:'⬅️ Zurück', onclick: renderPicker, attrs:{style:'padding:14px 32px;font-size:18px;border:none;border-radius:12px;background:#666;color:#fff'}}));
   wrap.appendChild(el('button',{text:'🗑️ Alles zurücksetzen', onclick:()=>{
-    if (confirm('Wirklich ALLE Fortschritte beider Kinder löschen?')) { State.reset(); renderPicker(); }
+    if (confirm('Wirklich ALLE Fortschritte aller Kinder löschen?')) { State.reset(); renderPicker(); }
   }, attrs:{style:'margin-left:12px;padding:14px 32px;font-size:18px;border:none;border-radius:12px;background:#e53935;color:#fff'}}));
   root.appendChild(wrap);
 }
