@@ -259,8 +259,8 @@ function toast(msg, color) {
 }
 function formatGeld(g) { return Math.round(g).toLocaleString('de-DE') + ' €'; }
 
-// === Twemoji-Bibliothek: Emoji → detailliertes SVG-Bild ===
-const TWEMOJI_BASE = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg';
+// === Twemoji-Bibliothek: Emoji → detailliertes SVG-Bild (lokal, offline-fähig) ===
+const TWEMOJI_BASE = 'img/twemoji';
 function emojiCode(em) {
   return [...em].map(c => c.codePointAt(0))
     .filter(cp => cp !== 0xfe0f)
