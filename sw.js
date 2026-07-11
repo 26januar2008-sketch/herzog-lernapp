@@ -1,4 +1,4 @@
-const CACHE = 'lernapp-v28';
+const CACHE = 'lernapp-v29';
 const ASSETS = [
   '.', 'index.html', 'liam.html', 'raik.html', 'alva.html',
   'hof.html', 'hof.js', 'hof.css',

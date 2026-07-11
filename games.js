@@ -395,8 +395,26 @@ function renderUnicornGame() {
   document.body.className = 'theme-alva';
   const p = State.data.profiles.alva;
 
+  // Alva-Spielstand sichern: gesammelte Sterne landen als Münzen (einziges
+  // synchronisiertes Zahlen-Feld) + History, damit ihr Fortschritt – wie bei
+  // den Jungs – nach Supabase gepusht wird. localStorage sofort (billig,
+  // übersteht Tablet-Zuklappen), Netz-Push debounced.
+  let uniPushTimer = null;
+  function queueUnicornSave() {
+    State.save();                              // sofort lokal sichern
+    clearTimeout(uniPushTimer);
+    uniPushTimer = setTimeout(() => {
+      if (typeof schedulePush === 'function') schedulePush('alva');
+    }, 1200);
+  }
+  function commitUnicornNow() {
+    clearTimeout(uniPushTimer);
+    State.save();
+    if (typeof schedulePush === 'function') schedulePush('alva');
+  }
+
   const top = el('div',{class:'topbar'},
-    el('button',{class:'back', text:'⬅️', onclick: ()=>{ if (unicornState) unicornState.running = false; renderAlvaHome(); }}),
+    el('button',{class:'back', text:'⬅️', onclick: ()=>{ if (unicornState) unicornState.running = false; commitUnicornNow(); renderAlvaHome(); }}),
     el('div',{text:'🌈 Einhorn-Magie'}),
     el('div',{class:'score'}, el('span',{class:'icon',text:'✨'}), el('span',{attrs:{id:'uni-score'}, text:'0'}))
   );
@@ -482,6 +500,13 @@ function renderUnicornGame() {
         st.fairyGone = true;
         st.hitCooldown = 60;
         st.score++;
+        // Fortschritt festhalten: Stern gutschreiben (synchronisierbares
+        // coins-Feld) + History-Eintrag, dann debounced pushen.
+        p.coins = (p.coins || 0) + 1;
+        if (!Array.isArray(p.history)) p.history = [];
+        p.history.push({ ts: Date.now(), subject: 'trace', correct: true });
+        if (p.history.length > 200) p.history = p.history.slice(-200);
+        queueUnicornSave();
         document.getElementById('uni-score').textContent = st.score;
         fairy.classList.add('zapped');
         if (typeof playSound === 'function') playSound('sparkle');

@@ -239,7 +239,7 @@ async function syncToSupabase() {
     await fetch(`${SUPABASE_URL}/rest/v1/lernapp_state?profile_key=eq.liam`, {
       method:'PATCH',
       headers:{apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY, 'Content-Type':'application/json', Prefer:'return=minimal'},
-      body: JSON.stringify({char_outfits: outfits})
+      body: JSON.stringify({char_outfits: outfits, updated_at: new Date().toISOString()})
     });
   } catch (e) {}
 }

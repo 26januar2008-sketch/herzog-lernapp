@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grafik-Probe für Liams Hof</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    padding: 40px 24px 60px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: #fbbf24;
+  }
+  p.sub {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 40px;
+  }
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
+    max-width: 1500px;
+    margin: 0 auto 60px;
+  }
+  .card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 20px;
+    width: 270px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .card img {
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+    /* Schachbrett, damit man echte Transparenz erkennt */
+    background:
+      repeating-conic-gradient(#334155 0% 25%, #475569 0% 50%) 0 0 / 24px 24px;
+    border-radius: 10px;
+  }
+  .card h3 { margin-top: 14px; font-size: 1.05rem; }
+  .card .note { font-size: .82rem; color: #94a3b8; margin-top: 6px; min-height: 2.2em; }
+  .badge { display: inline-block; margin-top: 8px; font-size: .75rem; padding: 3px 10px; border-radius: 99px; }
+  .ok   { background: #14532d; color: #86efac; }
+  .warn { background: #7f1d1d; color: #fca5a5; }
+
+  h2 {
+    text-align: center;
+    color: #86efac;
+    margin-bottom: 6px;
+  }
+  p.sub2 { text-align: center; color: #94a3b8; margin-bottom: 24px; }
+  .wiese {
+    max-width: 1100px;
+    margin: 0 auto;
+    border-radius: 20px;
+    padding: 40px 30px;
+    background: linear-gradient(180deg, #86c232 0%, #61892f 55%, #4a6d24 100%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-end;
+    box-shadow: inset 0 0 60px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.5);
+  }
+  .wiese img { height: 130px; filter: drop-shadow(0 6px 6px rgba(0,0,0,.35)); }
+  .wiese figure { text-align: center; }
+  .wiese figcaption { font-size: .75rem; color: #f0fdf4; margin-top: 6px; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+</style>
+</head>
+<body>
+  <h1>Grafik-Probe für Liams Hof — gefällt dir der Stil?</h1>
+  <p class="sub">5 Probe-Grafiken, groß auf Schachbrett (zeigt echte Transparenz) und klein auf Wiese (Spiel-Wirkung)</p>
+
+  <div class="grid">
+    <div class="card">
+      <img src="kuh.png" alt="Kuh">
+      <h3>Kuh</h3>
+      <div class="note">Niedlicher Cartoon-Stil, leichter Glow-Rand</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="huhn.png" alt="Huhn">
+      <h3>Huhn</h3>
+      <div class="note">Passt perfekt zur Kuh (Farben, Augen, Licht)</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="weizen_jung.png" alt="Weizen jung">
+      <h3>Weizen (jung)</h3>
+      <div class="note">Junge Triebe mit Erdhügel, grüner Glow-Halo</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="weizen_reif.png" alt="Weizen reif">
+      <h3>Weizen (reif)</h3>
+      <div class="note">Goldenes Bündel, deutlicher Leucht-Halo</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="huette_steinzeit.png" alt="Steinzeit-Hütte">
+      <h3>Hütte (Steinzeit)</h3>
+      <div class="note">Bester Spielgrafik-Look — ABER Schachbrett ist ins Bild eingebacken, kein echter Alphakanal!</div>
+      <span class="badge warn">Keine Transparenz</span>
+    </div>
+  </div>
+
+  <h2>So wirkt es im Spiel (auf grüner Wiese)</h2>
+  <p class="sub2">Kleine Größe wie später auf dem Hof-Spielfeld</p>
+  <div class="wiese">
+    <figure><img src="kuh.png" alt="Kuh klein"><figcaption>Kuh</figcaption></figure>
+    <figure><img src="huhn.png" alt="Huhn klein"><figcaption>Huhn</figcaption></figure>
+    <figure><img src="weizen_jung.png" alt="Weizen jung klein"><figcaption>Weizen jung</figcaption></figure>
+    <figure><img src="weizen_reif.png" alt="Weizen reif klein"><figcaption>Weizen reif</figcaption></figure>
+    <figure><img src="huette_steinzeit.png" alt="Hütte klein"><figcaption>Hütte (Schachbrett sichtbar!)</figcaption></figure>
+  </div>
+
+  <hr style="max-width:1100px; margin:60px auto; border:none; border-top:1px solid #334155;">
+
+  <h1 style="margin-top:0;">Etappe 2 — Neue Grafiken im Hütte-Stil (v2)</h1>
+  <p class="sub">Kuh, Huhn und reifer Weizen komplett neu im hochwertigen 3D-Mobile-Game-Look der Steinzeit-Hütte — jeweils Original und freigestellte Fassung (_frei).</p>
+
+  <div class="grid">
+    <div class="card">
+      <img src="kuh_v2.png" alt="Kuh v2">
+      <h3>Kuh v2 (Original)</h3>
+      <div class="note">3D-Render im Hütte-Stil, echter Alphakanal direkt aus ChatGPT</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="kuh_v2_frei.png" alt="Kuh v2 freigestellt">
+      <h3>Kuh v2 (_frei)</h3>
+      <div class="note">Mit rembg neu freigestellt: Boden-Schatten entfernt, sauberer Cutout (echter Alphakanal)</div>
+      <span class="badge ok">rembg · transparent</span>
+    </div>
+    <div class="card">
+      <img src="huhn_v2.png" alt="Huhn v2">
+      <h3>Huhn v2 (Original)</h3>
+      <div class="note">Passt zur Kuh: gleiche Beleuchtung, satte Farben, echter Alphakanal</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="huhn_v2_frei.png" alt="Huhn v2 freigestellt">
+      <h3>Huhn v2 (_frei)</h3>
+      <div class="note">Mit rembg neu freigestellt: Boden-Schatten entfernt, sauberer Cutout (echter Alphakanal)</div>
+      <span class="badge ok">rembg · transparent</span>
+    </div>
+    <div class="card">
+      <img src="weizen_reif_v2.png" alt="Weizen reif v2">
+      <h3>Weizen reif v2 (Original)</h3>
+      <div class="note">Goldenes Bündel mit Bindfaden, warme Goldtöne, echter Alphakanal</div>
+      <span class="badge ok">Transparenz OK</span>
+    </div>
+    <div class="card">
+      <img src="weizen_reif_v2_frei.png" alt="Weizen reif v2 freigestellt">
+      <h3>Weizen reif v2 (_frei)</h3>
+      <div class="note">Original-Alpha behalten: rembg getestet, zerstört aber die hellen Ähren (schneidet sie als Hintergrund weg) → Original war schon sauber transparent</div>
+      <span class="badge ok">transparent (Original)</span>
+    </div>
+  </div>
+
+  <h2>Bodenkacheln (nahtlos kachelbar)</h2>
+  <p class="sub2">256×256, prozedural mit PIL erzeugt — jede Kachel als 3×3-Feld gezeigt, damit man sieht: keine sichtbaren Nähte</p>
+  <div class="grid">
+    <div class="card">
+      <div style="width:100%; height:230px; border-radius:10px; background:url('boden_acker.png'); background-size:77px 77px;"></div>
+      <h3>boden_acker.png</h3>
+      <div class="note">Brauner Ackerboden mit Pflugfurchen und Erdklumpen, nahtlos tileable</div>
+      <span class="badge ok">Nahtlos · fertig</span>
+    </div>
+    <div class="card">
+      <div style="width:100%; height:230px; border-radius:10px; background:url('boden_wiese.png'); background-size:77px 77px;"></div>
+      <h3>boden_wiese.png</h3>
+      <div class="note">Saftig-grüne Wiese mit leichter Halm-Struktur, nahtlos tileable</div>
+      <span class="badge ok">Nahtlos · fertig</span>
+    </div>
+  </div>
+
+  <h2>So wirkt Etappe 2 im Spiel (auf der echten Wiesen-Kachel)</h2>
+  <p class="sub2">Freigestellte Tiere auf der neuen boden_wiese.png-Textur — so sieht es später auf dem Hof-Spielfeld aus</p>
+  <div class="wiese" style="background:url('boden_wiese.png'); background-size:150px 150px;">
+    <figure><img src="kuh_v2_frei.png" alt="Kuh v2 klein"><figcaption>Kuh v2</figcaption></figure>
+    <figure><img src="huhn_v2_frei.png" alt="Huhn v2 klein"><figcaption>Huhn v2</figcaption></figure>
+    <figure><img src="weizen_reif_v2_frei.png" alt="Weizen reif v2 klein"><figcaption>Weizen reif v2</figcaption></figure>
+  </div>
+  <p class="sub2" style="margin-top:24px">…und auf dem Acker (boden_acker.png):</p>
+  <div class="wiese" style="background:url('boden_acker.png'); background-size:150px 150px;">
+    <figure><img src="kuh_v2_frei.png" alt="Kuh v2 auf Acker"><figcaption>Kuh v2</figcaption></figure>
+    <figure><img src="huhn_v2_frei.png" alt="Huhn v2 auf Acker"><figcaption>Huhn v2</figcaption></figure>
+    <figure><img src="weizen_reif_v2_frei.png" alt="Weizen reif v2 auf Acker"><figcaption>Weizen reif v2</figcaption></figure>
+  </div>
+</body>
+</html>
