@@ -10,3 +10,10 @@ PWA-Lernspiel für Liam (9, Klasse 3) und Raik (7, Klasse 1).
 
 Statisches PWA, kein Build-Step. Hosting: Cloudflare Pages.
 Backend: Supabase `nrmqdhcrshyoigesqapm`, Schema `lernapp`.
+
+## Yggdrasil · Kurz raus (`/pause/`)
+
+Eigene PWA für Michael: Pausen (Atmen, Beckenboden, Bewegen, Dehnen), Arbeitsblock, Tagestraining,
+Yoga, Fahrt-Modus (`/pause/#fahrt`), Waldläufer, Für uns, Notizen mit PIN, Einstellungen.
+Statisch, kein Build. Eigener Service Worker und eigenes Manifest unter `/pause/`.
+Inhalte in `pause/data.js`, private Texte kodiert in `pause/privat.js`. Daten nur lokal im Handy (localStorage).

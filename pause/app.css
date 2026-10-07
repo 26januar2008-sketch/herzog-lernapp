@@ -1,0 +1,198 @@
+/* ============================================================
+   Yggdrasil · Gestaltung
+   Farben: Kiefer (dunkelgrün), Birke (hell grau-weiß), Eisen (dunkelgrau),
+   Glut (Bernstein), Moos. Hell/Dunkel, abends automatisch dunkel.
+   ============================================================ */
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-condensed-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-condensed-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Source Sans 3';font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-sans-3-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Source Sans 3';font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-sans-3-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Noto Sans Runic';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/noto-sans-runic-400-runic.woff2) format('woff2');unicode-range:U+16A0-16F8}
+
+:root{
+  --birke:#EEF0E9; --birke-2:#F8F9F5; --eisen:#22282A; --eisen-2:#5B6660;
+  --kiefer:#1F3A2E; --kiefer-2:#2B4F3E; --moos:#6B8F5E; --moos-2:#8FB07F; --glut:#D9A93B; --glut-2:#B8862A;
+  --holz:#7A5A3A; --holz-2:#5C4329; --wasser:#4F7F93;
+  --bg:var(--birke); --card:var(--birke-2); --ink:var(--eisen); --soft:var(--eisen-2); --line:#D3D9CE;
+  --pine:var(--kiefer); --moss:var(--moos); --resin:var(--glut); --on-pine:#F2F5EE; --knot:#8E9A90;
+  --shadow:0 1px 2px rgba(31,42,36,.06),0 6px 18px -10px rgba(31,42,36,.18);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#10171A; --card:#192320; --ink:#E6EBE4; --soft:#9AA79E; --line:#2A3733;
+  --pine:#2F5A45; --moss:#8FB47F; --resin:#E6BC57; --on-pine:#F2F5EE; --knot:#4E5F58;
+  --holz:#9A7A55; --holz-2:#6E5438;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px -12px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:400 17px/1.5 "Source Sans 3",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(120% 60% at 50% -10%,color-mix(in srgb,var(--moss) 14%,transparent),transparent 60%)}
+main{max-width:480px;margin:0 auto;padding:14px 16px 36px;min-height:100vh;display:flex;flex-direction:column}
+section{display:none;flex-direction:column;flex:1}
+section.show{display:flex}
+h1,h2,h3,.cond{font-family:"Barlow Condensed",sans-serif;font-weight:700;letter-spacing:.2px}
+h1{font-size:40px;line-height:1;margin:0}
+h2{font-size:26px;line-height:1.1;margin:22px 0 10px}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-user-select:none;user-select:none}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--resin);outline-offset:2px}
+.soft{color:var(--soft)}
+.small{font-size:14.5px}
+.ital{font-style:italic}
+.runic{font-family:"Noto Sans Runic","Segoe UI Historic","Segoe UI Symbol",serif;font-weight:400}
+
+/* ---- Kopf */
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head .brand{display:flex;flex-direction:column;gap:2px}
+.head .brand small{color:var(--soft);font-size:14px}
+.icon-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;box-shadow:var(--shadow)}
+.icon-btn svg{width:22px;height:22px}
+.knot{display:block;width:100%;height:18px;margin:10px 0 6px;color:var(--knot)}
+.knot.foot{margin:26px 0 0}
+
+/* ---- Yggdrasil-Held */
+.hero{position:relative;display:grid;grid-template-columns:1fr;justify-items:center;gap:6px;padding:4px 0 2px}
+.hero svg.tree{width:min(66vw,236px);height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(31,42,36,.12))}
+.stats{display:flex;align-items:baseline;gap:10px;justify-content:center}
+.stats b{font:700 46px/1 "Barlow Condensed",sans-serif;color:var(--moss)}
+.stats span{color:var(--soft)}
+.streak{text-align:center;color:var(--soft);font-size:15px}
+.week{display:flex;gap:7px;justify-content:center;margin-top:4px}
+.week span{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font:600 12.5px "Source Sans 3",sans-serif;color:var(--soft);background:var(--card)}
+.week span.on{background:var(--moss);border-color:var(--moss);color:#fff}
+.week span.goal{background:var(--pine);border-color:var(--pine);color:#fff}
+.week span.now{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--resin)}
+.badge{background:color-mix(in srgb,var(--resin) 14%,var(--card));border:1px solid var(--resin);border-radius:14px;padding:10px 14px;margin:12px 0 0;font-size:15.5px}
+
+/* ---- Rune des Tages */
+.rune{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;margin:14px 0 0;box-shadow:var(--shadow)}
+.glyph{font:400 46px/1 "Noto Sans Runic","Segoe UI Historic","Segoe UI Symbol",serif;color:var(--pine);min-width:48px;text-align:center}
+:root[data-theme="dark"] .glyph{color:var(--moss)}
+.rname{font:700 22px/1.1 "Barlow Condensed",sans-serif}
+.rtext{color:var(--soft);font-size:15px;margin-top:2px}
+.rhint{font-size:12.5px;color:var(--soft);margin-top:4px;opacity:.85}
+
+/* ---- Wahl-Tasten */
+.choices{display:grid;gap:10px}
+.choice{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:15px 18px;min-height:64px;box-shadow:var(--shadow);transition:transform .08s}
+.choice:active{transform:scale(.985)}
+.choice strong{display:block;font:700 23px/1.1 "Barlow Condensed",sans-serif}
+.choice small{color:var(--soft);font-size:14.5px;display:block;margin-top:2px}
+.choice .min{font:500 19px "Barlow Condensed",sans-serif;color:var(--soft);white-space:nowrap;flex:none}
+.choice.all{background:linear-gradient(160deg,var(--kiefer-2),var(--pine));border-color:var(--pine);color:var(--on-pine)}
+.choice.all small,.choice.all .min{color:#CFE0D3}
+.choice.pomo{border:2px solid var(--resin)}
+.choice.sm{padding:12px 14px;min-height:54px}
+.choice.sm strong{font-size:20px}
+.choice[aria-pressed="true"]{border:2px solid #B5543F}
+.pomoRow{display:flex;gap:8px}
+.pomoRow .choice{flex:1}
+.len{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:0 12px;font:600 15px "Source Sans 3",sans-serif;box-shadow:var(--shadow)}
+.bmenu{display:grid;gap:8px;padding-left:14px;border-left:3px solid var(--resin)}
+.group{margin-top:8px}
+.group h2{display:flex;align-items:center;gap:10px}
+.group h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.note{margin-top:26px;color:var(--soft);font-size:14px}
+
+/* ---- Übungs-Ansicht */
+.top{width:100%;display:flex;justify-content:space-between;align-items:center;color:var(--soft);font-size:15px;gap:10px}
+.top .cond{font-size:22px;color:var(--ink)}
+.stop{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:9px 16px;box-shadow:var(--shadow)}
+.center{align-items:center;text-align:center}
+.stage{position:relative;width:min(78vw,320px);aspect-ratio:1;margin:30px 0 22px;display:grid;place-items:center}
+.stage::before{content:"";position:absolute;inset:-6%;border-radius:50%;border:1px dashed var(--line)}
+.ring{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,var(--moss),var(--pine) 72%);transform:scale(.55);transition:transform 1s ease-in-out;box-shadow:0 14px 30px -14px rgba(31,42,36,.5)}
+.count{position:relative;font:700 76px/1 "Barlow Condensed",sans-serif;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.25)}
+.label{font:700 36px/1.1 "Barlow Condensed",sans-serif}
+.sub{color:var(--soft);margin:8px auto 0;max-width:32ch;min-height:3em}
+.progress{width:100%;height:6px;background:var(--line);border-radius:3px;margin-top:auto;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--resin);transition:width .4s}
+.big{font:700 56px/1 "Barlow Condensed",sans-serif;color:var(--moss)}
+.back{margin-top:18px;background:var(--pine);color:var(--on-pine);border:0;border-radius:999px;padding:15px 28px;font:600 17px "Source Sans 3",sans-serif;box-shadow:var(--shadow)}
+.saying{max-width:32ch;margin:14px auto 0;font-style:italic;font-size:18px}
+.saying small{display:block;font-style:normal;color:var(--soft);font-size:13.5px;margin-top:4px}
+.clock{font:700 min(26vw,120px)/1 "Barlow Condensed",sans-serif;margin:56px 0 10px;color:var(--pine)}
+:root[data-theme="dark"] .clock{color:var(--moss)}
+.feel{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.feel button{width:50px;height:50px;border-radius:50%;border:1px solid var(--line);background:var(--card);font:700 19px "Barlow Condensed",sans-serif}
+.feel button[aria-pressed="true"]{background:var(--pine);color:#fff;border-color:var(--pine)}
+
+/* ---- Fahrt-Modus */
+.dwarn{background:var(--card);border:1px solid var(--resin);border-radius:14px;padding:10px 14px;margin:18px 0 0;font-size:15px}
+.dnow{font:700 40px/1.15 "Barlow Condensed",sans-serif;margin:36px 0 6px;color:var(--pine)}
+:root[data-theme="dark"] .dnow{color:var(--moss)}
+.dbig{margin-top:auto;width:100%;min-height:120px;padding:28px;border:0;border-radius:24px;background:var(--pine);color:var(--on-pine);font:700 40px "Barlow Condensed",sans-serif;box-shadow:var(--shadow)}
+.dbig.on{background:#8A3B2E}
+
+/* ---- Für uns / Notizen */
+.ideaCard{margin-top:10px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--resin);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.ideaCard p{margin:0 0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+.cat{color:var(--soft);font-size:14px;margin:0 0 4px!important}
+.favhead{font:700 22px "Barlow Condensed",sans-serif;margin:18px 0 6px}
+.favs{margin:0;padding-left:18px}
+.favs li{margin-bottom:8px}
+.favs button{background:none;border:0;color:var(--soft);font-size:14px;padding:0 0 0 6px}
+.pin{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:40px}
+.pin .dots{display:flex;gap:12px;height:20px}
+.pin .dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--soft)}
+.pin .dots i.on{background:var(--pine);border-color:var(--pine)}
+.pad{display:grid;grid-template-columns:repeat(3,76px);gap:12px}
+.pad button{height:68px;border-radius:50%;border:1px solid var(--line);background:var(--card);font:600 26px "Barlow Condensed",sans-serif;box-shadow:var(--shadow)}
+.pad button.ghost{border:0;background:none;box-shadow:none;font-size:16px;font-family:"Source Sans 3",sans-serif;color:var(--soft)}
+
+/* ---- Waldläufer */
+.runes{display:flex;gap:6px;margin:16px 0 6px;flex-wrap:wrap}
+.runes button{width:48px;height:54px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--soft);font:400 26px "Noto Sans Runic","Segoe UI Historic",serif;box-shadow:var(--shadow)}
+.runes button.done{background:var(--pine);border-color:var(--pine);color:#fff}
+.runes button.cur{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--resin)}
+.runes button:disabled{opacity:.4;cursor:default}
+.wtitle{font:700 28px/1.1 "Barlow Condensed",sans-serif;margin:8px 0 10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font-size:15px}
+.tab[aria-selected="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px;font:700 22px/1.15 "Barlow Condensed",sans-serif}
+.card.today{border-left:4px solid var(--resin)}
+.muted{color:var(--soft);font-size:14px;margin:0 0 8px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.opt.right{border-color:var(--moss);background:color-mix(in srgb,var(--moss) 20%,var(--card))}
+.opt.wrong{border-color:#B5543F;background:color-mix(in srgb,#B5543F 15%,var(--card))}
+.chk{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer}
+.chk input{width:22px;height:22px;margin-top:2px;accent-color:var(--pine);flex:none}
+.chk b{display:block}
+.chk small{color:var(--soft)}
+.gear h3{margin:14px 0 6px;font:700 20px "Barlow Condensed",sans-serif}
+
+/* ---- Einstellungen */
+.set{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.set h3{margin:0 0 6px;font:700 21px "Barlow Condensed",sans-serif}
+.set .hint{color:var(--soft);font-size:14px;margin:4px 0 8px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:8px 14px;font-size:15px}
+.seg button[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+.plan{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center}
+.plan label{font:700 18px "Barlow Condensed",sans-serif}
+.plan select{font:inherit;font-size:15px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:none;border:0;padding:6px 0;text-align:left}
+.switch i{width:50px;height:30px;border-radius:15px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch[aria-checked="true"] i{background:var(--moss)}
+.switch[aria-checked="true"] i::after{left:23px}
+.log{margin:0;padding:0;list-style:none}
+.log li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:15px}
+.log li:first-child{border-top:0}
+.log .f{color:var(--resin);letter-spacing:1px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--eisen);color:#fff;padding:10px 16px;border-radius:999px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9}
+.toast.show{opacity:.95}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.ring{transition:none}.choice{transition:none}}
