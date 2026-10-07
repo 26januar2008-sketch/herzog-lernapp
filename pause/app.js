@@ -15,7 +15,7 @@
     set(k, v) { try { localStorage.setItem('ygg.' + k, JSON.stringify(v)); } catch (e) {} },
     keys() { const out = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('ygg.')) out.push(k); } } catch (e) {} return out; }
   };
-  const DEF = { ziel: 4, plan: D.dayDrill.slice(), noLegs: false, theme: 'auto', pomo: 25, ton: true };
+  const DEF = { ziel: 4, plan: D.dayDrill.slice(), noLegs: false, theme: 'auto', pomo: 25, ton: true, driveGap: 3, driveChime: true };
   let settings = Object.assign({}, DEF, S.get('settings', {}));
   if (!Array.isArray(settings.plan) || settings.plan.length !== 7) settings.plan = D.dayDrill.slice();
   function saveSettings() { S.set('settings', settings); }
@@ -190,26 +190,70 @@
   $('pomoStop').addEventListener('click', () => { clearInterval(pomoTimer); pomoTimer = null; release(); showCount(); view('home'); });
   $('brkSkip').addEventListener('click', () => { showCount(); view('home'); });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') { if (pomoTimer) { keepAwake(); pomoTick(); } if (timer) keepAwake(); if (driveOn) keepAwake(); }
+    if (document.visibilityState === 'visible') { if (pomoTimer) { keepAwake(); pomoTick(); } if (timer) keepAwake(); if (driveOn) { keepAwake(); driveStep(); } }
     else if (curView === 'priv' || curView === 'pin') { lockPriv(); }
   });
 
   // ---------- Fahrt-Modus: nur Sprachansagen ----------
-  let driveOn = false, driveT = [];
-  function say(t) { try { const u = new SpeechSynthesisUtterance(t); u.lang = 'de-DE'; u.rate = .95; speechSynthesis.speak(u); } catch (e) {} $('driveNow').textContent = t; }
-  function at(ms, fn) { driveT.push(setTimeout(() => { if (driveOn) fn(); }, ms)); }
-  function runBlock(b) {
-    say(b.intro);
-    if (b.reps) for (let i = 0; i < b.reps; i++) { at(b.start + i * b.period, () => say(b.on)); at(b.start + b.offAt + i * b.period, () => say(b.off)); }
-    return b.dur;
+  // Ablauf nach Uhrzeit geplant (nicht als Kette von Timern), damit der Modus
+  // auch nach gedrosselten Timern weiterläuft. Vor jeder Ansage ein kurzer Gong
+  // über ein Audio-Element: Android gibt dann der App den Ton und dämpft oder
+  // pausiert Musik-Apps wie Spotify für die Ansage.
+  let driveOn = false, driveQ = [], driveTimer = null, nextBlockAt = 0, driveIdx = 0, driveSpoken = [];
+  const utterKeep = [];
+  let chime = null;
+  function makeChime() {
+    if (chime) return chime;
+    try {
+      const sr = 22050, len = Math.floor(sr * .55), buf = new ArrayBuffer(44 + len * 2), v = new DataView(buf);
+      const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+      w(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+      v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, len * 2, true);
+      for (let i = 0; i < len; i++) { const t = i / sr; const env = Math.min(1, t * 40) * Math.exp(-t * 5); const x = (Math.sin(2 * Math.PI * 660 * t) * .7 + Math.sin(2 * Math.PI * 990 * t) * .3) * env * .6; v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, x)) * 32767, true); }
+      chime = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }))); chime.preload = 'auto'; chime.volume = 1;
+    } catch (e) { chime = null; }
+    return chime;
   }
-  function driveLoop() { let i = 0;
-    const next = () => { if (!driveOn) return; const b = D.driveBlocks[i % D.driveBlocks.length]; driveT.push(setTimeout(() => { if (!driveOn) return; const dur = runBlock(b); i++; driveT.push(setTimeout(next, dur + 180000)); }, 0)); };
-    next(); }
-  function driveStart() { driveOn = true; keepAwake(); $('driveGo').textContent = 'Stopp'; $('driveGo').classList.add('on'); say('Fahrt-Modus gestartet. Gute Fahrt. Die erste Übung kommt gleich.'); driveT.push(setTimeout(() => { if (driveOn) driveLoop(); }, 8000)); }
-  function driveStop() { driveOn = false; driveT.forEach(clearTimeout); driveT = []; try { speechSynthesis.cancel(); } catch (e) {} release(); $('driveGo').textContent = 'Start'; $('driveGo').classList.remove('on'); $('driveNow').textContent = 'Bereit'; }
+  function voiceDE() { try { const vs = speechSynthesis.getVoices(); return vs.find(v => /^de[-_]DE/i.test(v.lang) && /google|natural|premium|enhanced/i.test(v.name)) || vs.find(v => /^de[-_]DE/i.test(v.lang)) || vs.find(v => /^de/i.test(v.lang)) || null; } catch (e) { return null; } }
+  try { speechSynthesis.onvoiceschanged = () => { voiceDE(); }; } catch (e) {}
+  function speak(t) {
+    try { if (speechSynthesis.paused) speechSynthesis.resume(); speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(t); u.lang = 'de-DE'; const v = voiceDE(); if (v) u.voice = v; u.rate = .95; u.volume = 1;
+      utterKeep.push(u); if (utterKeep.length > 30) utterKeep.shift(); speechSynthesis.speak(u); } catch (e) {}
+    $('driveNow').textContent = t;
+  }
+  function say(t) {
+    const c = settings.driveChime ? makeChime() : null;
+    if (c) { try { c.currentTime = 0; const pr = c.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {} setTimeout(() => speak(t), 450); }
+    else speak(t);
+  }
+  function startBlock(b, now) {
+    driveQ = [{ at: now, text: b.intro }];
+    if (b.reps) for (let i = 0; i < b.reps; i++) { driveQ.push({ at: now + b.start + i * b.period, text: b.on }); driveQ.push({ at: now + b.start + b.offAt + i * b.period, text: b.off }); }
+    nextBlockAt = now + b.dur + settings.driveGap * 60000;
+  }
+  function driveStep() {
+    if (!driveOn) return;
+    const now = Date.now();
+    const due = driveQ.filter(e => e.at <= now); driveQ = driveQ.filter(e => e.at > now);
+    if (due.length) { const last = due[due.length - 1]; if (now - last.at < 15000) say(last.text); }
+    if (!driveQ.length && now >= nextBlockAt) { startBlock(D.driveBlocks[driveIdx % D.driveBlocks.length], now); driveIdx++; }
+    if (!driveQ.length) { const r = Math.max(0, nextBlockAt - now); const m = Math.floor(r / 60000), sec = Math.floor(r / 1000) % 60;
+      $('driveNext').textContent = 'Nächste Übung in ' + m + ':' + String(sec).padStart(2, '0'); } else $('driveNext').textContent = '';
+  }
+  function driveStart() {
+    driveOn = true; driveIdx = 0; driveQ = []; keepAwake(); makeChime();
+    $('driveGo').textContent = 'Stopp'; $('driveGo').classList.add('on');
+    say('Fahrt-Modus gestartet. Gute Fahrt. Die erste Übung kommt gleich.');
+    nextBlockAt = Date.now() + 8000; clearInterval(driveTimer); driveTimer = setInterval(driveStep, 500);
+  }
+  function driveStop() {
+    driveOn = false; clearInterval(driveTimer); driveTimer = null; driveQ = []; try { speechSynthesis.cancel(); } catch (e) {} release();
+    $('driveGo').textContent = 'Start'; $('driveGo').classList.remove('on'); $('driveNow').textContent = 'Bereit'; $('driveNext').textContent = '';
+  }
+  function driveInfo() { $('driveSub').textContent = 'Alle ' + settings.driveGap + ' Minuten sagt die App eine kurze Übung an: Beckenboden, ruhiges Atmen, aufrecht sitzen. Am besten an der roten Ampel oder auf gerader Strecke mitmachen. Bildschirm anlassen, die App im Vordergrund.'; }
   $('driveGo').addEventListener('click', () => { driveOn ? driveStop() : driveStart(); });
-  $('driveBtn').addEventListener('click', () => view('drive'));
+  $('driveBtn').addEventListener('click', () => { driveInfo(); view('drive'); });
   $('driveClose').addEventListener('click', () => { driveStop(); showCount(); view('home'); });
 
   // ---------- Für uns ----------
@@ -328,6 +372,11 @@
     const pl = document.createElement('p'); pl.className = 'hint'; pl.style.marginTop = '8px'; pl.textContent = 'Arbeitsblock'; x.appendChild(pl);
     x.appendChild(seg([[25, '25 Minuten'], [50, '50 Minuten']], settings.pomo, v => { settings.pomo = v; saveSettings(); })); b.appendChild(x);
 
+    x = box('Fahrt-Modus', 'Abstand zwischen zwei Ansage-Blöcken.');
+    x.appendChild(seg([[1, '1 Min'], [2, '2 Min'], [3, '3 Min'], [5, '5 Min']], settings.driveGap, v => { settings.driveGap = v; saveSettings(); }));
+    x.appendChild(sw('Gong vor jeder Ansage', 'Holt den Ton zur App, Musik wird dafür leiser oder pausiert.', settings.driveChime, v => { settings.driveChime = v; saveSettings(); }));
+    b.appendChild(x);
+
     x = box('Darstellung', 'Automatisch: dunkel abends ab 20 Uhr und wenn dein Handy dunkel eingestellt ist.');
     x.appendChild(seg([['auto', 'Automatisch'], ['hell', 'Hell'], ['dunkel', 'Dunkel']], settings.theme, v => { settings.theme = v; saveSettings(); applyTheme(); })); b.appendChild(x);
 
@@ -366,7 +415,7 @@
   $('setClose').addEventListener('click', () => { showCount(); view('home'); });
 
   // ---------- Start ----------
-  function route() { if (location.hash === '#fahrt') view('drive'); }
+  function route() { if (location.hash === '#fahrt') { driveInfo(); view('drive'); } }
   window.addEventListener('hashchange', route);
   runeToday(); showCount(); view('home'); route();
   if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
