@@ -58,8 +58,24 @@
   }
   function beep() { if (!settings.ton) return; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); [0, .35, .7].forEach(t => { const o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = 660; g.gain.value = .15; o.connect(g); g.connect(AC.destination); o.start(AC.currentTime + t); o.stop(AC.currentTime + t + .2); }); } catch (e) {} }
   let lock = null;
-  async function keepAwake() { try { if ('wakeLock' in navigator) lock = await navigator.wakeLock.request('screen'); } catch (e) {} }
-  function release() { try { lock && lock.release(); } catch (e) {} lock = null; }
+  // Bildschirm wach halten: Wake Lock, bei Verweigerung (z. B. Energiesparmodus)
+  // Ersatzweg über ein winziges, stummes Video. Wird nach Unterbrechung neu angefordert.
+  let wakeWanted = false;
+  const wakeVid = $('wakeVid');
+  function wakeStatus(t) { const el = $('wakeInfo'); if (el) el.textContent = t; }
+  async function keepAwake() {
+    wakeWanted = true; if (document.visibilityState !== 'visible') return;
+    let ok = false;
+    if ('wakeLock' in navigator) {
+      if (lock) ok = true;
+      else try { lock = await navigator.wakeLock.request('screen'); ok = true;
+        lock.addEventListener('release', () => { lock = null; if (wakeWanted) setTimeout(keepAwake, 400); }); } catch (e) { ok = false; }
+    }
+    if (ok) { try { wakeVid.pause(); wakeVid.hidden = true; } catch (e) {} wakeStatus('Bildschirm bleibt an.'); }
+    else { try { wakeVid.hidden = false; const pr = wakeVid.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {}
+      wakeStatus('Bildschirm wird über Ersatzweg wach gehalten. Geht er trotzdem aus: Energiesparmodus ausschalten.'); }
+  }
+  function release() { wakeWanted = false; try { lock && lock.release(); } catch (e) {} lock = null; try { wakeVid.pause(); wakeVid.hidden = true; } catch (e) {} wakeStatus(''); }
   function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
@@ -372,7 +388,7 @@
     const pl = document.createElement('p'); pl.className = 'hint'; pl.style.marginTop = '8px'; pl.textContent = 'Arbeitsblock'; x.appendChild(pl);
     x.appendChild(seg([[25, '25 Minuten'], [50, '50 Minuten']], settings.pomo, v => { settings.pomo = v; saveSettings(); })); b.appendChild(x);
 
-    x = box('Fahrt-Modus', 'Abstand zwischen zwei Ansage-Blöcken.');
+    x = box('Fahrt-Modus', 'Abstand zwischen zwei Ansage-Blöcken. Die App hält den Bildschirm wach, solange sie im Vordergrund ist. Verlässlicher: in Tasker beim Verbinden mit dem Auto die Display-Zeit hochsetzen.');
     x.appendChild(seg([[1, '1 Min'], [2, '2 Min'], [3, '3 Min'], [5, '5 Min']], settings.driveGap, v => { settings.driveGap = v; saveSettings(); }));
     x.appendChild(sw('Gong vor jeder Ansage', 'Holt den Ton zur App, Musik wird dafür leiser oder pausiert.', settings.driveChime, v => { settings.driveChime = v; saveSettings(); }));
     b.appendChild(x);

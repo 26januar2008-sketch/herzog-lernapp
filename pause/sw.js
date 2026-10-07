@@ -1,8 +1,8 @@
 // Yggdrasil · Service Worker: alles für offline vorhalten
-const CACHE = 'yggdrasil-v2';
+const CACHE = 'yggdrasil-v3';
 const ASSETS = [
   './', 'index.html', 'app.css', 'app.js', 'data.js', 'privat.js', 'tree.js',
-  'manifest.json', 'icon.svg', 'icon-192.png', 'icon-512.png',
+  'manifest.json', 'icon.svg', 'icon-192.png', 'icon-512.png', 'wach.webm',
   'fonts/barlow-condensed-500-latin.woff2', 'fonts/barlow-condensed-500-latin-ext.woff2',
   'fonts/barlow-condensed-700-latin.woff2', 'fonts/barlow-condensed-700-latin-ext.woff2',
   'fonts/source-sans-3-latin.woff2', 'fonts/source-sans-3-latin-ext.woff2',

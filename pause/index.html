@@ -157,6 +157,7 @@ document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e
     <p class="dwarn">Nur im Stand starten. Während der Fahrt nicht aufs Handy schauen oder tippen – alles kommt als Ansage.</p>
     <p class="dnow" id="driveNow">Bereit</p>
     <p class="soft" id="driveNext"></p>
+    <p class="soft small" id="wakeInfo"></p>
     <p class="sub" id="driveSub">Alle paar Minuten sagt die App eine kurze Übung an: Beckenboden, ruhiges Atmen, aufrecht sitzen. Am besten an der roten Ampel oder auf gerader Strecke mitmachen.</p>
     <button class="dbig" id="driveGo">Start</button>
   </section>
@@ -205,6 +206,7 @@ document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e
 
 </main>
 <div class="toast" id="toast" role="status"></div>
+<video id="wakeVid" src="wach.webm" loop muted playsinline hidden aria-hidden="true" style="position:fixed;right:6px;bottom:6px;width:28px;height:28px;opacity:.2;border-radius:6px;pointer-events:none"></video>
 <script src="data.js"></script>
 <script src="privat.js"></script>
 <script src="tree.js"></script>
