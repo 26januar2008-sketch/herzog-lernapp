@@ -165,8 +165,11 @@ document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e
   <!-- ============ Waldläufer ============ -->
   <section id="wald">
     <div class="top"><span class="cond">Waldläufer</span><button class="stop" id="waldClose">Zurück</button></div>
+    <div class="chips" id="wWer" aria-label="Wer spielt"></div>
+    <p class="soft small" id="wPunkte"></p>
     <div class="runes" id="waldRunes"></div>
     <h2 class="wtitle" id="wTitle"></h2>
+    <p class="muted" id="wEntwurf" hidden>Entwurf: Inhalte fachlich noch nicht geprüft.</p>
     <div class="tabs" role="tablist">
       <button class="tab" data-tab="lernen">Lernen</button><button class="tab" data-tab="quiz">Quiz</button><button class="tab" data-tab="aufgaben">Aufgaben</button><button class="tab" data-tab="ausruestung">Ausrüstung</button>
     </div>

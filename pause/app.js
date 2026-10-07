@@ -102,8 +102,8 @@
     const w = $('week'); w.innerHTML = ''; const today = new Date(); const dow = (today.getDay() + 6) % 7; const names = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
     for (let i = 0; i < 7; i++) { const d = new Date(today); d.setDate(today.getDate() - dow + i); const c = cnt(d); const sp = document.createElement('span');
       sp.textContent = names[i]; if (c >= G) sp.className = 'goal'; else if (c > 0) sp.className = 'on'; if (i === dow) sp.classList.add('now'); sp.title = c + ' Pausen'; w.appendChild(sp); }
-    const lvl = D.pelvicLevel(beckenCount());
-    $('pelvicSmall').textContent = 'Stufe ' + lvl.stufe + ': maximal anspannen, ' + lvl.hold + ' Sekunden halten' + (lvl.stufe >= 2 ? ', Aufzug' : '') + ', Schnellkraft';
+    const bc = beckenCount(), lvl = D.pelvicLevel(bc), nxt = lvl.stufe === 1 ? 10 : (lvl.stufe === 2 ? 25 : null);
+    $('pelvicSmall').textContent = 'Stufe ' + lvl.stufe + ': ' + lvl.hold + ' Sekunden halten' + (lvl.stufe >= 2 ? ', Aufzug' : '') + ', Schnellkraft' + (nxt ? ' · noch ' + (nxt - bc) + ' bis Stufe ' + (lvl.stufe + 1) : ' · höchste Stufe');
     const dr = todayDrill(); $('drillSmall').textContent = dr.n + ': ' + dr.d; $('drillMin').textContent = dr.m;
     showLeg(); setLenUI();
     $('homeNote').textContent = 'Tagestraining: ' + planText() + '. Bei Übungen nie die Luft anhalten. Beim Beckenboden immer weiteratmen. Bei den Halte-Phasen der Atemübungen die Luft nur locker halten, nicht pressen. Wird dir schwindelig: normal weiteratmen.';
@@ -318,16 +318,25 @@
   const W = D.W, GEAR = D.GEAR;
   function wget(k, d) { const w = S.get('wald', {}); return w[k] === undefined ? d : w[k]; }
   function wset(k, v) { const w = S.get('wald', {}); w[k] = v; S.set('wald', w); }
-  let wStage = 0, wTab = 'lernen', qState = null;
+  let wStage = 0, wTab = 'lernen', qState = null, wWer = 'Michael';
+  const KIDS = ['Liam', 'Raik'];
+  function isKid() { return KIDS.includes(wWer); }
+  function renderWer() {
+    const box = $('wWer'); box.innerHTML = '';
+    ['Michael'].concat(KIDS).forEach(n => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = n; b.setAttribute('aria-pressed', n === wWer);
+      b.onclick = () => { wWer = n; qState = null; if (isKid() && (wTab === 'aufgaben' || wTab === 'ausruestung')) wTab = 'lernen'; renderWald(); }; box.appendChild(b); });
+    const pts = wget('kinder_punkte', {}); $('wPunkte').textContent = isKid() ? KIDS.map(k => k + ' ' + (pts[k] || 0)).join(' · ') + ' Punkte. Wer hat am Ende der Woche mehr?' : '';
+  }
   function tasksDone(i) { const d = wget('tasks', {}); return (W[i].tasks || []).every((t, j) => d[i + '-' + j]); }
   function curStage() { let i = 0; while (i < W.length && W[i].tasks && tasksDone(i)) i++; return Math.min(i, W.length - 1); }
   function renderRunes() { const box = $('waldRunes'); box.innerHTML = '';
     W.forEach((st, i) => { const b = document.createElement('button'); b.textContent = st.r; b.title = st.n; b.setAttribute('aria-label', 'Stufe ' + (i + 1) + ': ' + st.n);
       if (st.tasks && tasksDone(i)) b.className = 'done'; if (i === wStage) b.classList.add('cur');
-      if (st.locked) b.disabled = true; b.onclick = () => { wStage = i; qState = null; renderWald(); }; box.appendChild(b); }); }
+      if (i > curStage()) { b.disabled = true; b.title = st.n + ' (erst die vorherige Stufe schaffen)'; } b.onclick = () => { wStage = i; qState = null; renderWald(); }; box.appendChild(b); }); }
   function renderWald() {
-    renderRunes(); const st = W[wStage]; $('wTitle').textContent = 'Stufe ' + (wStage + 1) + ': ' + st.n + ' · ' + st.rn;
-    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === wTab));
+    renderWer(); renderRunes(); const st = W[wStage]; $('wTitle').textContent = 'Stufe ' + (wStage + 1) + ': ' + st.n + ' · ' + st.rn;
+    $('wEntwurf').hidden = !st.entwurf;
+    document.querySelectorAll('.tab').forEach(t => { t.setAttribute('aria-selected', t.dataset.tab === wTab); t.hidden = isKid() && (t.dataset.tab === 'aufgaben' || t.dataset.tab === 'ausruestung'); });
     const b = $('wBody');
     if (wTab === 'ausruestung') { let h = '<div class="gear">'; GEAR.forEach(g => { h += '<h3>' + esc(g[0]) + '</h3>';
         g[1].forEach((it, j) => { const k = 'g-' + g[0] + '-' + j; const on = wget('gear', {})[k];
@@ -347,22 +356,25 @@
   function renderQuiz() { const st = W[wStage], b = $('wBody');
     if (!qState || qState.stage !== wStage) {
       // Korrektur aus Auftrag B2.10: alle falschen zuerst und vollständig behalten, dann auffüllen
-      const wrong = (wget('wrong', {})[wStage] || []).filter(i => i < st.quiz.length);
-      const rest = st.quiz.map((q, i) => i).filter(i => !wrong.includes(i)).sort(() => Math.random() - .5);
-      const order = [...wrong, ...rest].slice(0, Math.max(5, wrong.length)); qState = { stage: wStage, order, i: 0, score: 0 }; }
-    if (qState.i >= qState.order.length) { b.innerHTML = '<div class="card"><h3>' + qState.score + ' von ' + qState.order.length + ' richtig</h3><p>Was du falsch hattest, kommt beim nächsten Quiz zuerst wieder.</p></div><button class="back" id="qAgain">Nochmal</button>';
+      const kid = isKid(), wk = kid ? 'wrong_' + wWer : 'wrong';
+      const pool = st.quiz.map((q, i) => i).filter(i => !kid || !/pilz/i.test(st.quiz[i][0] + ' ' + st.quiz[i][1].join(' ')));
+      const wrong = (wget(wk, {})[wStage] || []).filter(i => pool.includes(i));
+      const rest = pool.filter(i => !wrong.includes(i)).sort(() => Math.random() - .5);
+      const order = [...wrong, ...rest].slice(0, Math.max(kid ? 3 : 5, wrong.length)); qState = { stage: wStage, order, i: 0, score: 0, wk, kid }; }
+    if (qState.i >= qState.order.length) { const pts = wget('kinder_punkte', {});
+      b.innerHTML = '<div class="card"><h3>' + qState.score + ' von ' + qState.order.length + ' richtig</h3><p>' + (qState.kid ? esc(wWer) + ' hat jetzt ' + (pts[wWer] || 0) + ' Punkte. ' : '') + 'Was du falsch hattest, kommt beim nächsten Quiz zuerst wieder.</p></div><button class="back" id="qAgain">Nochmal</button>';
       $('qAgain').onclick = () => { qState = null; renderQuiz(); }; return; }
     const qi = qState.order[qState.i], q = st.quiz[qi];
     let h = '<p class="muted">Frage ' + (qState.i + 1) + ' von ' + qState.order.length + '</p><div class="card"><h3>' + esc(q[0]) + '</h3></div>';
     q[1].forEach((o, j) => { h += '<button class="opt" data-o="' + j + '">' + esc(o) + '</button>'; }); h += '<p id="qExp" class="muted" style="margin-top:10px"></p>'; b.innerHTML = h; b.dataset.answered = '';
     b.querySelectorAll('.opt').forEach(btn => btn.onclick = () => { if (b.dataset.answered === '1') return; b.dataset.answered = '1';
-      const j = +btn.dataset.o, ok = j === q[2]; const w = wget('wrong', {}); w[wStage] = (w[wStage] || []).filter(x => x !== qi); if (!ok) w[wStage].push(qi); wset('wrong', w);
-      if (ok) qState.score++; b.querySelectorAll('.opt')[q[2]].classList.add('right'); if (!ok) btn.classList.add('wrong');
+      const j = +btn.dataset.o, ok = j === q[2]; const w = wget(qState.wk, {}); w[wStage] = (w[wStage] || []).filter(x => x !== qi); if (!ok) w[wStage].push(qi); wset(qState.wk, w);
+      if (ok) { qState.score++; if (qState.kid) { const pts = wget('kinder_punkte', {}); pts[wWer] = (pts[wWer] || 0) + 1; wset('kinder_punkte', pts); renderWer(); } } b.querySelectorAll('.opt')[q[2]].classList.add('right'); if (!ok) btn.classList.add('wrong');
       $('qExp').textContent = (ok ? 'Richtig. ' : 'Nicht ganz. ') + q[3];
       const nx = document.createElement('button'); nx.className = 'back'; nx.textContent = 'Weiter'; nx.onclick = () => { b.dataset.answered = ''; qState.i++; renderQuiz(); }; b.appendChild(nx); }); }
   function updWaldBtn() { const c = curStage(); $('waldRune').textContent = W[c].r; $('waldSmall').textContent = 'Stufe ' + (c + 1) + ': ' + W[c].n + '. Wissen, Quiz, Aufgaben'; }
   document.querySelectorAll('.tab').forEach(t => t.onclick = () => { wTab = t.dataset.tab; qState = null; renderWald(); });
-  $('waldBtn').addEventListener('click', () => { wStage = curStage(); if (W[wStage].locked) wStage = Math.max(0, wStage - 1); view('wald'); renderWald(); });
+  $('waldBtn').addEventListener('click', () => { wStage = curStage(); view('wald'); renderWald(); });
   $('waldClose').addEventListener('click', () => { updWaldBtn(); showCount(); view('home'); });
 
   // ---------- Einstellungen ----------

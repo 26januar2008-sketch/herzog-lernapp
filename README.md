@@ -17,3 +17,4 @@ Eigene PWA für Michael: Pausen (Atmen, Beckenboden, Bewegen, Dehnen), Arbeitsbl
 Yoga, Fahrt-Modus (`/pause/#fahrt`), Waldläufer, Für uns, Notizen mit PIN, Einstellungen.
 Statisch, kein Build. Eigener Service Worker und eigenes Manifest unter `/pause/`.
 Inhalte in `pause/data.js`, private Texte kodiert in `pause/privat.js`. Daten nur lokal im Handy (localStorage).
+Anleitung (Installieren, Tasker): `pause/ANLEITUNG.md`. Waldläufer-Stufen 3–6 sind Entwurf: `pause/ENTWURF-Waldlaeufer-3-6.md`.

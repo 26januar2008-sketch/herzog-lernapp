@@ -127,7 +127,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .dwarn{background:var(--card);border:1px solid var(--resin);border-radius:14px;padding:10px 14px;margin:18px 0 0;font-size:15px}
 .dnow{font:700 40px/1.15 "Barlow Condensed",sans-serif;margin:36px 0 6px;color:var(--pine)}
 :root[data-theme="dark"] .dnow{color:var(--moss)}
-.dbig{margin-top:auto;width:100%;min-height:120px;padding:28px;border:0;border-radius:24px;background:var(--pine);color:var(--on-pine);font:700 40px "Barlow Condensed",sans-serif;box-shadow:var(--shadow)}
+.dbig{margin-top:auto;width:100%;min-height:38vh;padding:28px;border:0;border-radius:28px;background:var(--pine);color:var(--on-pine);font:700 52px "Barlow Condensed",sans-serif;box-shadow:var(--shadow)}
 .dbig.on{background:#8A3B2E}
 
 /* ---- Für uns / Notizen */
@@ -151,7 +151,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .pad button.ghost{border:0;background:none;box-shadow:none;font-size:16px;font-family:"Source Sans 3",sans-serif;color:var(--soft)}
 
 /* ---- Waldläufer */
-.runes{display:flex;gap:6px;margin:16px 0 6px;flex-wrap:wrap}
+.runes{display:flex;gap:6px;margin:10px 0 6px;flex-wrap:wrap}
 .runes button{width:48px;height:54px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--soft);font:400 26px "Noto Sans Runic","Segoe UI Historic",serif;box-shadow:var(--shadow)}
 .runes button.done{background:var(--pine);border-color:var(--pine);color:#fff}
 .runes button.cur{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--resin)}
