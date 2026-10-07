@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yggdrasil · Kurz raus</title>
+<meta name="description" content="Pausen, Atmen, Training und Waldläufer. Mit jeder Pause wächst dein Yggdrasil.">
+<meta name="theme-color" content="#1F3A2E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Yggdrasil">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="app.css">
+<script>
+// Thema so früh wie möglich setzen, damit nichts aufblitzt
+(function(){try{var s=JSON.parse(localStorage.getItem('ygg.settings')||'{}');var m=s.theme||'auto';var h=new Date().getHours();
+var dark=m==='dunkel'||(m==='auto'&&((window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)||h>=20||h<7));
+document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e){}})();
+</script>
+</head>
+<body>
+<main>
+
+  <!-- ============ Startseite ============ -->
+  <section id="home" class="show">
+    <header class="head">
+      <div class="brand">
+        <h1>Kurz raus</h1>
+        <small>Mit jeder Pause wächst dein Yggdrasil.</small>
+      </div>
+      <button class="icon-btn" id="gearBtn" aria-label="Einstellungen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </header>
+    <svg class="knot" aria-hidden="true"></svg>
+
+    <div class="hero">
+      <svg class="tree" id="tree" role="img" aria-label="Yggdrasil"></svg>
+      <div class="stats"><b id="countToday">0</b><span id="countText">von 4 Pausen heute</span></div>
+      <p class="streak" id="streak"></p>
+      <div class="week" id="week" aria-label="Diese Woche"></div>
+    </div>
+
+    <div class="rune" id="rune">
+      <div class="glyph" id="runeGlyph"></div>
+      <div>
+        <p class="rname" id="runeName"></p>
+        <p class="rtext" id="runeText"></p>
+        <p class="rhint">Moderne Deutung</p>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Pausen</h2>
+      <div class="choices">
+        <div class="pomoRow">
+          <button class="choice pomo" id="pomoStart"><span><strong>Arbeitsblock starten</strong><small id="pomoSmall">25 Minuten arbeiten, dann meldet sich die Pause</small></span><span class="min" id="pomoMin">25 Min</span></button>
+          <button class="len" id="pomoLen" aria-label="Länge des Arbeitsblocks wechseln">25 / 50</button>
+        </div>
+        <button class="choice all" data-plan="alles"><span><strong>Alles am Stück</strong><small>Atmen, Beckenboden, Bewegen</small></span><span class="min">6 Min</span></button>
+        <button class="choice" id="surprise"><span><strong>Überrasch mich</strong><small>Die App wählt für dich</small></span><span class="min">🎲</span></button>
+        <button class="choice" id="breathBtn"><span><strong>Atmen</strong><small>Önd, der Atem: wähle je nach Situation</small></span><span class="min">▾</span></button>
+        <div class="bmenu" id="breathMenu" hidden>
+          <button class="choice sm" data-plan="resonanz"><span><strong>Ruhe & Blutdruck</strong><small>5 Sekunden ein, 6 aus. Am besten für den Blutdruck</small></span><span class="min">2 Min</span></button>
+          <button class="choice sm" data-plan="seufzer"><span><strong>Akuter Stress</strong><small>Doppelt einatmen, lang aus. Beruhigt am schnellsten</small></span><span class="min">1 Min</span></button>
+          <button class="choice sm" data-plan="box"><span><strong>Fokus (Box-Atmung)</strong><small>4 ein, 4 halten, 4 aus, 4 halten. Wie bei den Navy SEALs</small></span><span class="min">2 Min</span></button>
+          <button class="choice sm" data-plan="schlaf"><span><strong>Einschlafen (4-7-8)</strong><small>4 ein, 7 halten, 8 aus</small></span><span class="min">1 Min</span></button>
+        </div>
+        <button class="choice" data-plan="becken"><span><strong>Beckenboden</strong><small id="pelvicSmall">Maximal anspannen, halten, lösen</small></span><span class="min">4 Min</span></button>
+        <button class="choice" data-plan="bewegen"><span><strong>Bewegen</strong><small>Aufstehen und durchbewegen</small></span><span class="min">2 Min</span></button>
+        <button class="choice" data-plan="dehnen"><span><strong>Dehnen</strong><small>Hüfte, Beine, Brust, Unterarme, Nacken</small></span><span class="min">5 Min</span></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Training</h2>
+      <div class="choices">
+        <button class="choice pomo" id="drillBtn"><span><strong>Tagestraining</strong><small id="drillSmall"></small></span><span class="min" id="drillMin"></span></button>
+        <button class="choice" data-plan="yoga"><span><strong>Yoga</strong><small>Ruhiger Flow für Rücken, Hüfte und Kopf</small></span><span class="min">10 Min</span></button>
+        <button class="choice sm" id="legBtn" aria-pressed="false"><span><strong id="legTitle">Beine schonen: aus</strong><small>Antippen bei Verletzung. Dann keine Bein-Übungen</small></span><span class="min" id="legIcon">🦵</span></button>
+        <button class="choice" id="driveBtn"><span><strong>Fahrt-Modus</strong><small>Nur Sprachansagen, ohne Hinschauen</small></span><span class="min">🚗</span></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Draußen</h2>
+      <div class="choices">
+        <button class="choice" id="waldBtn"><span><strong>Waldläufer</strong><small id="waldSmall">Survival lernen: Wissen, Quiz, Aufgaben im Wald</small></span><span class="min glyph" id="waldRune" style="font-size:30px;min-width:0">ᚲ</span></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Für uns</h2>
+      <div class="choices">
+        <button class="choice" id="ideaBtn"><span><strong>Idee für uns</strong><small>Eine Überraschung, für die sie nichts planen muss</small></span><span class="min">♥</span></button>
+        <div class="ideaCard" id="ideaCard" hidden><p id="ideaText"></p><button class="stop" id="ideaNext">Andere Idee</button></div>
+        <button class="choice sm" id="privBtn"><span><strong>Notizen</strong><small>Nur für dich</small></span><span class="min">☾</span></button>
+      </div>
+    </div>
+
+    <p class="note" id="homeNote">Bei Übungen nie die Luft anhalten. Beim Beckenboden immer weiteratmen. Bei den Halte-Phasen der Atemübungen die Luft nur locker halten, nicht pressen. Wird dir schwindelig: normal weiteratmen.</p>
+    <svg class="knot foot" aria-hidden="true"></svg>
+  </section>
+
+  <!-- ============ Übung läuft ============ -->
+  <section id="session" class="center">
+    <div class="top"><span id="stepInfo"></span><button class="stop" id="stop">Beenden</button></div>
+    <div class="stage"><div class="ring" id="ring"></div><div class="count" id="count"></div></div>
+    <p class="label" id="label"></p>
+    <p class="sub" id="sub"></p>
+    <div class="progress"><i id="bar"></i></div>
+  </section>
+
+  <!-- ============ Arbeitsblock ============ -->
+  <section id="pomo" class="center">
+    <div class="top"><span class="cond">Arbeitsblock</span><button class="stop" id="pomoStop">Beenden</button></div>
+    <div class="clock" id="pomoClock">25:00</div>
+    <p class="sub" id="pomoSub">Arbeite in Ruhe. Lass die Seite offen, der Bildschirm bleibt an.</p>
+    <div class="progress"><i id="pomoBar"></i></div>
+  </section>
+
+  <!-- ============ Pause nach Arbeitsblock ============ -->
+  <section id="brk" class="center">
+    <div class="big" style="margin-top:24px">Pause</div>
+    <p class="soft" style="margin:6px 0 18px">Block geschafft. Wähle eine Pause.</p>
+    <div class="choices" style="width:100%">
+      <button class="choice all" data-plan="alles"><span><strong>Alles am Stück</strong></span><span class="min">6 Min</span></button>
+      <button class="choice" data-plan="resonanz"><span><strong>Atmen</strong></span><span class="min">2 Min</span></button>
+      <button class="choice" data-plan="becken"><span><strong>Beckenboden</strong></span><span class="min">4 Min</span></button>
+      <button class="choice" data-plan="bewegen"><span><strong>Bewegen</strong></span><span class="min">2 Min</span></button>
+      <button class="choice" data-plan="dehnen"><span><strong>Dehnen</strong></span><span class="min">5 Min</span></button>
+    </div>
+    <button class="stop" id="brkSkip" style="margin-top:16px">Pause auslassen</button>
+  </section>
+
+  <!-- ============ Erledigt ============ -->
+  <section id="done" class="center" style="justify-content:center;gap:10px">
+    <svg class="tree" id="treeDone" aria-hidden="true" style="width:min(50vw,180px)"></svg>
+    <div class="big">Erledigt</div>
+    <p id="doneText" class="soft"></p>
+    <p class="badge" id="badge" hidden></p>
+    <div id="feelBox" hidden>
+      <p class="soft small" style="margin-top:14px">Wie hat es sich angefühlt?</p>
+      <div class="feel" id="feel"><button data-f="1">1</button><button data-f="2">2</button><button data-f="3">3</button><button data-f="4">4</button><button data-f="5">5</button></div>
+    </div>
+    <p class="saying" id="saying"></p>
+    <button class="back" id="back">Zurück</button>
+    <button class="stop" id="again" style="margin-top:6px">Nächsten Arbeitsblock starten</button>
+  </section>
+
+  <!-- ============ Fahrt-Modus ============ -->
+  <section id="drive" class="center">
+    <div class="top"><span class="cond">Fahrt-Modus</span><button class="stop" id="driveClose">Zurück</button></div>
+    <p class="dwarn">Nur im Stand starten. Während der Fahrt nicht aufs Handy schauen oder tippen – alles kommt als Ansage.</p>
+    <p class="dnow" id="driveNow">Bereit</p>
+    <p class="soft" id="driveNext"></p>
+    <p class="soft small" id="wakeInfo"></p>
+    <p class="sub" id="driveSub">Alle paar Minuten sagt die App eine kurze Übung an: Beckenboden, ruhiges Atmen, aufrecht sitzen. Am besten an der roten Ampel oder auf gerader Strecke mitmachen.</p>
+    <button class="dbig" id="driveGo">Start</button>
+  </section>
+
+  <!-- ============ Waldläufer ============ -->
+  <section id="wald">
+    <div class="top"><span class="cond">Waldläufer</span><button class="stop" id="waldClose">Zurück</button></div>
+    <div class="chips" id="wWer" aria-label="Wer spielt"></div>
+    <p class="soft small" id="wPunkte"></p>
+    <div class="runes" id="waldRunes"></div>
+    <h2 class="wtitle" id="wTitle"></h2>
+    <p class="muted" id="wEntwurf" hidden>Entwurf: Inhalte fachlich noch nicht geprüft.</p>
+    <div class="tabs" role="tablist">
+      <button class="tab" data-tab="lernen">Lernen</button><button class="tab" data-tab="quiz">Quiz</button><button class="tab" data-tab="aufgaben">Aufgaben</button><button class="tab" data-tab="ausruestung">Ausrüstung</button>
+    </div>
+    <div id="wBody" class="wbody"></div>
+  </section>
+
+  <!-- ============ PIN ============ -->
+  <section id="pin" class="center">
+    <div class="top"><span class="cond">Notizen</span><button class="stop" id="pinClose">Zurück</button></div>
+    <div class="pin">
+      <p id="pinText" class="soft">PIN eingeben</p>
+      <div class="dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+      <div class="pad" id="pad">
+        <button>1</button><button>2</button><button>3</button>
+        <button>4</button><button>5</button><button>6</button>
+        <button>7</button><button>8</button><button>9</button>
+        <button class="ghost" data-k="reset">Vergessen</button><button>0</button><button class="ghost" data-k="del">⌫</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Notizen (Privat) ============ -->
+  <section id="priv">
+    <div class="top"><span class="cond">Notizen</span><button class="stop" id="privClose">Zurück</button></div>
+    <div class="chips" id="chips"></div>
+    <div class="ideaCard"><p class="cat" id="tipCat"></p><p id="tipText"></p>
+      <div class="row"><button class="stop" id="tipNext">Nächster Tipp</button><button class="stop" id="tipFav">☆ Merken</button></div></div>
+    <p class="favhead" id="favHead" hidden>Gemerkt</p>
+    <ul class="favs" id="favs"></ul>
+  </section>
+
+  <!-- ============ Einstellungen ============ -->
+  <section id="settings">
+    <div class="top"><span class="cond">Einstellungen</span><button class="stop" id="setClose">Zurück</button></div>
+    <div id="setBody" style="margin-top:14px"></div>
+  </section>
+
+</main>
+<div class="toast" id="toast" role="status"></div>
+<video id="wakeVid" src="wach.webm" loop muted playsinline hidden aria-hidden="true" style="position:fixed;right:6px;bottom:6px;width:28px;height:28px;opacity:.2;border-radius:6px;pointer-events:none"></video>
+<script src="data.js"></script>
+<script src="privat.js"></script>
+<script src="tree.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
