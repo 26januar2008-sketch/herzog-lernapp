@@ -2,7 +2,7 @@
 
 ## Installieren (Android, Chrome)
 
-1. Die Adresse der Lernapp öffnen und `/pause/` anhängen, also `https://DEINE-ADRESSE/pause/`.
+1. Diese Adresse in Chrome öffnen: **https://26januar2008-sketch.github.io/herzog-lernapp/pause/**
 2. Oben rechts auf die drei Punkte, dann **„Zum Startbildschirm hinzufügen“** oder **„App installieren“**.
 3. Einmal öffnen, kurz warten. Danach läuft die App auch ohne Netz (Flugmodus-Test: App schließen, Flugmodus an, App öffnen).
 
@@ -10,7 +10,7 @@ Nach einem Update: App schließen und neu öffnen, beim zweiten Start ist die ne
 
 ## Fahrt-Modus mit Tasker
 
-Der Link für Tasker: `https://DEINE-ADRESSE/pause/#fahrt`
+Der Link für Tasker: `https://26januar2008-sketch.github.io/herzog-lernapp/pause/#fahrt`
 
 Tasker-Profil „Auto“:
 
@@ -43,4 +43,4 @@ Der Knopf „Notizen“ ist der Bereich „Privat“. Beim ersten Öffnen wähls
 
 ## Repository privat stellen (empfohlen)
 
-Die Texte aus „Notizen“ und „Für uns“ liegen kodiert im Code. Wer gezielt sucht, kann sie lesen. Auf GitHub: Repository → Settings → ganz unten „Danger Zone“ → **Change visibility → Private**. Cloudflare Pages baut auch aus privaten Repositories weiter.
+Die Texte aus „Notizen“ und „Für uns“ liegen kodiert im Code. Wer gezielt sucht, kann sie lesen. Auf GitHub: Repository → Settings → ganz unten „Danger Zone“ → **Change visibility → Private**. Achtung: Die App läuft über GitHub Pages, und das ist beim kostenlosen Konto nur für öffentliche Repositories möglich. Privat stellen würde die App abschalten. Also entweder öffentlich lassen, oder die App auf ein anderes Hosting umziehen. Sag Bescheid, wenn du das willst.

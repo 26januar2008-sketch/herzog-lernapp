@@ -8,12 +8,12 @@ PWA-Lernspiel für Liam (9, Klasse 3) und Raik (7, Klasse 1).
 - **Belohnung:** Maschinen-Garage / Charakter-Sammlung freischalten
 - **Adaptive Schwierigkeit** + **Eltern-Dashboard** (PIN 1979)
 
-Statisches PWA, kein Build-Step. Hosting: Cloudflare Pages.
+Statisches PWA, kein Build-Step. Hosting: GitHub Pages (https://26januar2008-sketch.github.io/herzog-lernapp/).
 Backend: Supabase `nrmqdhcrshyoigesqapm`, Schema `lernapp`.
 
 ## Yggdrasil · Kurz raus (`/pause/`)
 
-Eigene PWA für Michael: Pausen (Atmen, Beckenboden, Bewegen, Dehnen), Arbeitsblock, Tagestraining,
+Eigene PWA für Michael, Adresse https://26januar2008-sketch.github.io/herzog-lernapp/pause/ : Pausen (Atmen, Beckenboden, Bewegen, Dehnen), Arbeitsblock, Tagestraining,
 Yoga, Fahrt-Modus (`/pause/#fahrt`), Waldläufer, Für uns, Notizen mit PIN, Einstellungen.
 Statisch, kein Build. Eigener Service Worker und eigenes Manifest unter `/pause/`.
 Inhalte in `pause/data.js`, private Texte kodiert in `pause/privat.js`. Daten nur lokal im Handy (localStorage).
