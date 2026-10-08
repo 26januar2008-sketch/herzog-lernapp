@@ -196,3 +196,95 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .toast.show{opacity:.95}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.ring{transition:none}.choice{transition:none}}
+
+/* ============================================================
+   Neue Oberfläche: Reiter unten, Heldenkarte, Kacheln, Verlauf
+   ============================================================ */
+main{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+.pane{display:none;flex-direction:column;flex:1}
+.pane.active{display:flex;animation:fadeUp .28s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ph{font-size:34px;margin:6px 0 4px}
+.greet{font:700 32px/1 "Barlow Condensed",sans-serif;margin:0}
+.head .brand small{text-transform:capitalize}
+.ic{width:24px;height:24px;flex:none}
+
+/* Heldenkarte */
+.herocard{position:relative;margin-top:14px;border-radius:24px;padding:4px 16px 16px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden;
+  background:radial-gradient(120% 90% at 20% 0%,color-mix(in srgb,var(--moss) 22%,var(--card)),var(--card) 60%)}
+:root[data-theme="dark"] .herocard{background:radial-gradient(120% 90% at 20% 0%,color-mix(in srgb,var(--moss) 18%,var(--card)),var(--card) 65%)}
+.herocard .knot{margin:8px 0 0;height:14px;opacity:.8}
+.herobody{display:grid;grid-template-columns:46% 1fr;gap:8px;align-items:center}
+.herobody .tree{width:100%;height:auto;filter:drop-shadow(0 8px 10px rgba(31,42,36,.14));transition:transform .45s cubic-bezier(.2,.8,.2,1.2)}
+.herobody .tree.pop{transform:scale(1.04)}
+.herostats .stats{justify-content:flex-start;align-items:baseline;gap:8px;flex-wrap:wrap}
+.herostats .stats b{font-size:64px}
+.herostats .stats span{font-size:16px;line-height:1.2}
+.herostats .streak{text-align:left;margin-top:2px}
+.herocard .week{justify-content:space-between;margin-top:10px}
+.herocard .week span{width:34px;height:34px}
+.herocard .week span:not(.on):not(.goal){background:var(--bg)}
+
+/* Schnellstart */
+.quick{display:flex;gap:8px;margin-top:14px}
+.qbtn{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);min-height:64px}
+.qbtn.pomo{flex:1;border:2px solid var(--resin)}
+.qbtn.pomo .ic{color:var(--resin)}
+.qbtn strong{display:block;font:700 22px/1.1 "Barlow Condensed",sans-serif}
+.qbtn small{display:block;color:var(--soft);font-size:14px}
+.qbtn .min{margin-left:auto;font:500 18px "Barlow Condensed",sans-serif;color:var(--soft);white-space:nowrap}
+.qbtn.len{padding:0 14px;font:600 15px "Source Sans 3",sans-serif}
+.quickrow{display:flex;gap:10px;overflow-x:auto;padding:12px 2px 6px;margin:0 -2px;scroll-snap-type:x proximity;scrollbar-width:none}
+.quickrow::-webkit-scrollbar{display:none}
+.qtile{flex:0 0 128px;scroll-snap-align:start;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;padding:14px;min-height:118px;border-radius:20px}
+.qtile .ic{width:28px;height:28px;color:var(--moss)}
+.qtile.all .ic{color:var(--resin)}
+.qtile strong{font-size:20px}
+.qtile small{margin:0}
+
+/* Rune als Story-Karte */
+.rune.story{margin-top:14px;padding:14px 16px;border-radius:20px}
+.glyphwrap{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--resin) 16%,var(--card));box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--resin) 60%,transparent)}
+.glyphwrap .glyph{font-size:34px;min-width:0}
+
+/* Kacheln */
+.feedh{font-size:22px;margin:22px 0 8px;color:var(--ink)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice.tile{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px;padding:16px;min-height:132px;border-radius:20px;position:relative}
+.choice.tile .ic{width:30px;height:30px;color:var(--moss);margin-bottom:6px}
+.choice.tile.pomo .ic{color:var(--resin)}
+.choice.tile strong{font-size:22px}
+.choice.tile small{margin:0;font-size:14px;line-height:1.3}
+.choice.tile .min{position:absolute;top:14px;right:14px;font-size:16px}
+.choice.tile.wide{grid-column:1/-1;min-height:0;padding-right:92px}
+.choice.toggle{margin-top:10px;gap:12px}
+.choice.toggle .ic{color:var(--soft)}
+.choice.wald{gap:16px;padding:18px;justify-content:flex-start;text-align:left;border-radius:22px;background:linear-gradient(160deg,var(--kiefer-2),var(--pine));border-color:var(--pine);color:var(--on-pine)}
+.choice.wald small{color:#CFE0D3}
+.glyph.big{font-size:44px;min-width:56px;color:var(--resin)}
+#waldCard{margin-top:12px}
+#waldCard h3{font-size:20px}
+
+/* Verlauf */
+.feed{list-style:none;margin:0;padding:0 2px}
+.feed li{display:grid;grid-template-columns:14px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.feed li:last-child{border-bottom:0}
+.feed i{width:10px;height:10px;border-radius:50%;background:var(--moss);box-shadow:0 0 0 3px color-mix(in srgb,var(--moss) 25%,transparent)}
+.feed li.train i{background:var(--resin);box-shadow:0 0 0 3px color-mix(in srgb,var(--resin) 25%,transparent)}
+.feed b{font:700 18px "Barlow Condensed",sans-serif}
+.feed small{display:block;color:var(--soft);font-size:14px}
+.feed .when{color:var(--soft);font-size:14px;white-space:nowrap}
+.feed .empty{color:var(--soft);padding:10px 0;grid-template-columns:1fr}
+
+/* Reiter unten */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;justify-content:space-around;padding:6px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom,0px));
+  background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tabbar button{flex:1;max-width:96px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 6px;border:0;background:none;color:var(--soft);border-radius:14px;font:600 12px "Source Sans 3",sans-serif}
+.tabbar button .ic{width:24px;height:24px}
+.tabbar button[aria-current="page"]{color:var(--pine)}
+:root[data-theme="dark"] .tabbar button[aria-current="page"]{color:var(--moss)}
+.tabbar button[aria-current="page"] .ic{color:var(--resin)}
+.tabbar button:active{transform:scale(.94)}
+.tabbar[hidden]{display:none}
+@media (min-width:520px){.tabbar{left:50%;transform:translateX(-50%);width:480px;border-radius:22px 22px 0 0;border:1px solid var(--line);border-bottom:0}}
+@media (prefers-reduced-motion:reduce){.pane.active{animation:none}.herobody .tree{transition:none}}

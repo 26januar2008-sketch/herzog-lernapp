@@ -82,7 +82,46 @@
   // ---------- Ansichten ----------
   const VIEWS = ['home', 'session', 'pomo', 'brk', 'done', 'drive', 'wald', 'pin', 'priv', 'settings'];
   let curView = 'home';
-  function view(v) { curView = v; VIEWS.forEach(id => $(id).classList.toggle('show', id === v)); window.scrollTo(0, 0); }
+  function view(v) { curView = v; VIEWS.forEach(id => $(id).classList.toggle('show', id === v)); $('tabbar').hidden = !(v === 'home' || v === 'settings');
+    if (v === 'settings') markTab('mehr'); else if (v === 'home') markTab(curTab); window.scrollTo(0, 0); }
+
+  // ---------- Reiter unten ----------
+  let curTab = S.get('tab', 'heute'); if (!['heute', 'ueben', 'wald', 'wir'].includes(curTab)) curTab = 'heute';
+  function markTab(name) { document.querySelectorAll('#tabbar button').forEach(b => { if (b.dataset.tab === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); }); }
+  function tab(name) {
+    if (name === 'mehr') { renderSettings(); view('settings'); return; }
+    curTab = name; S.set('tab', name);
+    document.querySelectorAll('#home .pane').forEach(p => p.classList.toggle('active', p.dataset.pane === name));
+    if (curView !== 'home') view('home'); else { markTab(name); window.scrollTo(0, 0); }
+  }
+  document.querySelectorAll('#tabbar button').forEach(b => b.addEventListener('click', () => tab(b.dataset.tab)));
+  document.querySelectorAll('#home .pane').forEach(p => p.classList.toggle('active', p.dataset.pane === curTab));
+
+  const PLAN_NAMES = { resonanz: 'Atmen · Ruhe', atmen: 'Atmen', seufzer: 'Atmen · Seufzer', box: 'Box-Atmung', schlaf: 'Atmen · 4-7-8', becken: 'Beckenboden', bewegen: 'Bewegen', dehnen: 'Dehnen', alles: 'Alles am Stück', yoga: 'Yoga', tag: 'Tagestraining' };
+  function greeting() {
+    const h = new Date().getHours(); const g = h < 5 ? 'Gute Nacht' : h < 11 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend';
+    $('greet').textContent = g + ', Michael.';
+    $('dateLine').textContent = new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  function whenText(iso) {
+    const d = new Date(iso), now = new Date(); const t = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    const dk = dkey(d), today = dkey(now); const y = new Date(now); y.setDate(now.getDate() - 1);
+    if (dk === today) return 'Heute ' + t; if (dk === dkey(y)) return 'Gestern ' + t;
+    return d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' }) + ' ' + t;
+  }
+  function renderFeed() {
+    const ul = $('feed'); ul.innerHTML = '';
+    const items = pausen.map(e => ({ t: e.t, name: PLAN_NAMES[e.plan] || e.plan, sub: Math.round((e.s || 0) / 60) + ' Min', train: false }))
+      .concat(training.map(e => ({ t: e.t, name: e.plan, sub: Math.round((e.s || 0) / 60) + ' Min' + (e.gefuehl ? ' · Gefühl ' + e.gefuehl + '/5' : ''), train: true })))
+      .filter(x => x.t).sort((a, b) => (a.t < b.t ? 1 : -1)).slice(0, 8);
+    if (!items.length) { ul.innerHTML = '<li class="empty">Noch nichts eingetragen. Die erste Pause pflanzt den Baum.</li>'; return; }
+    items.forEach(x => { const li = document.createElement('li'); if (x.train) li.className = 'train';
+      li.innerHTML = '<i></i><span><b>' + esc(x.name) + '</b><small>' + esc(x.sub) + '</small></span><span class="when">' + esc(whenText(x.t)) + '</span>'; ul.appendChild(li); });
+  }
+  function renderWaldCard() {
+    const c = typeof curStage === 'function' ? curStage() : 0; const st = D.W[c]; const n = Math.floor(Date.now() / 864e5); const card = st.cards ? st.cards[n % st.cards.length] : null;
+    $('waldCard').innerHTML = card ? '<p class="muted">Karte des Tages · Stufe ' + (c + 1) + '</p><h3>' + esc(card[0]) + '</h3><p>' + esc(card[1]) + '</p>' : '';
+  }
 
   // ---------- Startseite ----------
   function runeToday() {
@@ -97,7 +136,8 @@
   function showCount() {
     const n = todayCount(), G = settings.ziel;
     $('countToday').textContent = n; $('countText').textContent = 'von ' + G + ' Pausen heute';
-    T.draw($('tree'), stageFor(n), weekDays(), n >= G);
+    const tr = $('tree'); const before = tr.dataset.stage; T.draw(tr, stageFor(n), weekDays(), n >= G);
+    if (before !== undefined && before !== String(stageFor(n))) { tr.classList.add('pop'); setTimeout(() => tr.classList.remove('pop'), 500); } tr.dataset.stage = String(stageFor(n));
     const st = streak(); $('streak').textContent = st > 1 ? st + ' Tage in Folge' : (n > 0 ? 'Heute gestartet' : 'Heute noch keine Pause');
     const w = $('week'); w.innerHTML = ''; const today = new Date(); const dow = (today.getDay() + 6) % 7; const names = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
     for (let i = 0; i < 7; i++) { const d = new Date(today); d.setDate(today.getDate() - dow + i); const c = cnt(d); const sp = document.createElement('span');
@@ -105,7 +145,7 @@
     const bc = beckenCount(), lvl = D.pelvicLevel(bc), nxt = lvl.stufe === 1 ? 10 : (lvl.stufe === 2 ? 25 : null);
     $('pelvicSmall').textContent = 'Stufe ' + lvl.stufe + ': ' + lvl.hold + ' Sekunden halten' + (lvl.stufe >= 2 ? ', Aufzug' : '') + ', Schnellkraft' + (nxt ? ' · noch ' + (nxt - bc) + ' bis Stufe ' + (lvl.stufe + 1) : ' · höchste Stufe');
     const dr = todayDrill(); $('drillSmall').textContent = dr.n + ': ' + dr.d; $('drillMin').textContent = dr.m;
-    showLeg(); setLenUI();
+    showLeg(); setLenUI(); greeting(); renderFeed(); renderWaldCard();
     $('homeNote').textContent = 'Tagestraining: ' + planText() + '. Bei Übungen nie die Luft anhalten. Beim Beckenboden immer weiteratmen. Bei den Halte-Phasen der Atemübungen die Luft nur locker halten, nicht pressen. Wird dir schwindelig: normal weiteratmen.';
     updWaldBtn();
   }
@@ -441,6 +481,7 @@
   }
   $('gearBtn').addEventListener('click', () => { renderSettings(); view('settings'); });
   $('setClose').addEventListener('click', () => { showCount(); view('home'); });
+  $('privClose').addEventListener('click', () => { pinBuf = ''; pinDots(); showCount(); tab('wir'); });
 
   // ---------- Start ----------
   function route() { if (location.hash === '#fahrt') { driveInfo(); view('drive'); } }

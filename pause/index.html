@@ -26,83 +26,98 @@ document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e
 
   <!-- ============ Startseite ============ -->
   <section id="home" class="show">
-    <header class="head">
-      <div class="brand">
-        <h1>Kurz raus</h1>
-        <small>Mit jeder Pause wächst dein Yggdrasil.</small>
+
+    <!-- ===== Reiter: Heute ===== -->
+    <div class="pane active" data-pane="heute">
+      <header class="head">
+        <div class="brand">
+          <p class="greet" id="greet">Guten Tag</p>
+          <small id="dateLine"></small>
+        </div>
+        <button class="icon-btn" id="gearBtn" aria-label="Einstellungen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button>
+      </header>
+
+      <div class="herocard">
+        <svg class="knot" aria-hidden="true"></svg>
+        <div class="herobody">
+          <svg class="tree" id="tree" role="img" aria-label="Yggdrasil"></svg>
+          <div class="herostats">
+            <div class="stats"><b id="countToday">0</b><span id="countText">von 4 Pausen heute</span></div>
+            <p class="streak" id="streak"></p>
+          </div>
+        </div>
+        <div class="week" id="week" aria-label="Diese Woche"></div>
       </div>
-      <button class="icon-btn" id="gearBtn" aria-label="Einstellungen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+
+      <div class="quick" aria-label="Schnellstart">
+        <button class="qbtn pomo" id="pomoStart"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg><span><strong>Arbeitsblock</strong><small id="pomoSmall">25 Minuten arbeiten, dann meldet sich die Pause</small></span><span class="min" id="pomoMin">25 Min</span></button>
+        <button class="qbtn len" id="pomoLen" aria-label="Länge des Arbeitsblocks wechseln">25 / 50</button>
+      </div>
+      <div class="quickrow">
+        <button class="choice qtile all" data-plan="alles"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2"/></svg><strong>Alles am Stück</strong><small>6 Min</small></button>
+        <button class="choice qtile" id="surprise"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.1"/><circle cx="15" cy="15" r="1.1"/><circle cx="15" cy="9" r="1.1"/><circle cx="9" cy="15" r="1.1"/></svg><strong>Überrasch mich</strong><small>Die App wählt</small></button>
+        <button class="choice qtile" data-plan="resonanz"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9a3 3 0 1 0-3-3"/><path d="M3 12h13a3 3 0 1 1-3 3"/><path d="M3 16h7a2.5 2.5 0 1 1-2.5 2.5"/></svg><strong>Atmen</strong><small>2 Min</small></button>
+        <button class="choice qtile" data-plan="becken"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><strong>Beckenboden</strong><small>4 Min</small></button>
+      </div>
+
+      <div class="rune story" id="rune">
+        <div class="glyphwrap"><div class="glyph" id="runeGlyph"></div></div>
+        <div>
+          <p class="rname" id="runeName"></p>
+          <p class="rtext" id="runeText"></p>
+          <p class="rhint">Moderne Deutung</p>
+        </div>
+      </div>
+
+      <h2 class="feedh">Heute dran</h2>
+      <button class="choice tile wide pomo" id="drillBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6l4 4-9 9-4-4z"/><path d="M14 6l2-2 4 4-2 2"/><path d="M5 15l-2 6 6-2"/></svg><strong>Tagestraining</strong><small id="drillSmall"></small><span class="min" id="drillMin"></span></button>
+
+      <h2 class="feedh">Dein Verlauf</h2>
+      <ul class="feed" id="feed"></ul>
+    </div>
+
+    <!-- ===== Reiter: Üben ===== -->
+    <div class="pane" data-pane="ueben">
+      <h1 class="ph">Üben</h1>
+      <h2 class="feedh">Pausen</h2>
+      <div class="tiles">
+        <button class="choice tile" id="breathBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9a3 3 0 1 0-3-3"/><path d="M3 12h13a3 3 0 1 1-3 3"/><path d="M3 16h7a2.5 2.5 0 1 1-2.5 2.5"/></svg><strong>Atmen</strong><small>Önd, der Atem. Vier Arten</small><span class="min">1–2 Min</span></button>
+        <button class="choice tile" data-plan="becken"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><strong>Beckenboden</strong><small id="pelvicSmall">Maximal anspannen, halten, lösen</small><span class="min">4 Min</span></button>
+        <button class="choice tile" data-plan="bewegen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.8"/><path d="M9 21l2-6 3 2 1 4"/><path d="M8 12l3-3 3 1 3 3"/><path d="M11 9l-2 7"/></svg><strong>Bewegen</strong><small>Aufstehen und durchbewegen</small><span class="min">2 Min</span></button>
+        <button class="choice tile" data-plan="dehnen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><strong>Dehnen</strong><small>Hüfte, Beine, Brust, Unterarme, Nacken</small><span class="min">5 Min</span></button>
+      </div>
+      <div class="bmenu" id="breathMenu" hidden>
+        <button class="choice sm" data-plan="resonanz"><span><strong>Ruhe & Blutdruck</strong><small>5 Sekunden ein, 6 aus. Am besten für den Blutdruck</small></span><span class="min">2 Min</span></button>
+        <button class="choice sm" data-plan="seufzer"><span><strong>Akuter Stress</strong><small>Doppelt einatmen, lang aus. Beruhigt am schnellsten</small></span><span class="min">1 Min</span></button>
+        <button class="choice sm" data-plan="box"><span><strong>Fokus (Box-Atmung)</strong><small>4 ein, 4 halten, 4 aus, 4 halten. Wie bei den Navy SEALs</small></span><span class="min">2 Min</span></button>
+        <button class="choice sm" data-plan="schlaf"><span><strong>Einschlafen (4-7-8)</strong><small>4 ein, 7 halten, 8 aus</small></span><span class="min">1 Min</span></button>
+      </div>
+      <h2 class="feedh">Training</h2>
+      <div class="tiles">
+        <button class="choice tile" data-plan="yoga"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-13 0 9-5 14-13 14"/><path d="M5 19l8-8"/></svg><strong>Yoga</strong><small>Ruhiger Flow für Rücken, Hüfte und Kopf</small><span class="min">10 Min</span></button>
+        <button class="choice tile" id="driveBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15v-3l2.5-5h11L20 12v3"/><path d="M3 15h18v3H3z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg><strong>Fahrt-Modus</strong><small>Nur Sprachansagen, ohne Hinschauen</small><span class="min">Auto</span></button>
+      </div>
+      <button class="choice sm toggle" id="legBtn" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-30 12 12)"/><path d="M9 11l1 1M12 9l1 1M14 12l1 1" /></svg><span><strong id="legTitle">Beine schonen: aus</strong><small>Antippen bei Verletzung. Dann keine Bein-Übungen</small></span><span class="min" id="legIcon">🦵</span></button>
+      <p class="note" id="homeNote"></p>
+    </div>
+
+    <!-- ===== Reiter: Wald ===== -->
+    <div class="pane" data-pane="wald">
+      <h1 class="ph">Draußen</h1>
+      <button class="choice wald" id="waldBtn">
+        <span class="glyph big" id="waldRune">ᚲ</span>
+        <span><strong>Waldläufer</strong><small id="waldSmall">Survival lernen: Wissen, Quiz, Aufgaben im Wald</small></span>
       </button>
-    </header>
-    <svg class="knot" aria-hidden="true"></svg>
-
-    <div class="hero">
-      <svg class="tree" id="tree" role="img" aria-label="Yggdrasil"></svg>
-      <div class="stats"><b id="countToday">0</b><span id="countText">von 4 Pausen heute</span></div>
-      <p class="streak" id="streak"></p>
-      <div class="week" id="week" aria-label="Diese Woche"></div>
+      <div class="card" id="waldCard"></div>
     </div>
 
-    <div class="rune" id="rune">
-      <div class="glyph" id="runeGlyph"></div>
-      <div>
-        <p class="rname" id="runeName"></p>
-        <p class="rtext" id="runeText"></p>
-        <p class="rhint">Moderne Deutung</p>
-      </div>
+    <!-- ===== Reiter: Wir ===== -->
+    <div class="pane" data-pane="wir">
+      <h1 class="ph">Für uns</h1>
+      <button class="choice tile wide" id="ideaBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg><strong>Idee für uns</strong><small>Eine Überraschung, für die sie nichts planen muss</small></button>
+      <div class="ideaCard" id="ideaCard" hidden><p id="ideaText"></p><button class="stop" id="ideaNext">Andere Idee</button></div>
+      <button class="choice tile wide" id="privBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><strong>Notizen</strong><small>Nur für dich</small></button>
     </div>
-
-    <div class="group">
-      <h2>Pausen</h2>
-      <div class="choices">
-        <div class="pomoRow">
-          <button class="choice pomo" id="pomoStart"><span><strong>Arbeitsblock starten</strong><small id="pomoSmall">25 Minuten arbeiten, dann meldet sich die Pause</small></span><span class="min" id="pomoMin">25 Min</span></button>
-          <button class="len" id="pomoLen" aria-label="Länge des Arbeitsblocks wechseln">25 / 50</button>
-        </div>
-        <button class="choice all" data-plan="alles"><span><strong>Alles am Stück</strong><small>Atmen, Beckenboden, Bewegen</small></span><span class="min">6 Min</span></button>
-        <button class="choice" id="surprise"><span><strong>Überrasch mich</strong><small>Die App wählt für dich</small></span><span class="min">🎲</span></button>
-        <button class="choice" id="breathBtn"><span><strong>Atmen</strong><small>Önd, der Atem: wähle je nach Situation</small></span><span class="min">▾</span></button>
-        <div class="bmenu" id="breathMenu" hidden>
-          <button class="choice sm" data-plan="resonanz"><span><strong>Ruhe & Blutdruck</strong><small>5 Sekunden ein, 6 aus. Am besten für den Blutdruck</small></span><span class="min">2 Min</span></button>
-          <button class="choice sm" data-plan="seufzer"><span><strong>Akuter Stress</strong><small>Doppelt einatmen, lang aus. Beruhigt am schnellsten</small></span><span class="min">1 Min</span></button>
-          <button class="choice sm" data-plan="box"><span><strong>Fokus (Box-Atmung)</strong><small>4 ein, 4 halten, 4 aus, 4 halten. Wie bei den Navy SEALs</small></span><span class="min">2 Min</span></button>
-          <button class="choice sm" data-plan="schlaf"><span><strong>Einschlafen (4-7-8)</strong><small>4 ein, 7 halten, 8 aus</small></span><span class="min">1 Min</span></button>
-        </div>
-        <button class="choice" data-plan="becken"><span><strong>Beckenboden</strong><small id="pelvicSmall">Maximal anspannen, halten, lösen</small></span><span class="min">4 Min</span></button>
-        <button class="choice" data-plan="bewegen"><span><strong>Bewegen</strong><small>Aufstehen und durchbewegen</small></span><span class="min">2 Min</span></button>
-        <button class="choice" data-plan="dehnen"><span><strong>Dehnen</strong><small>Hüfte, Beine, Brust, Unterarme, Nacken</small></span><span class="min">5 Min</span></button>
-      </div>
-    </div>
-
-    <div class="group">
-      <h2>Training</h2>
-      <div class="choices">
-        <button class="choice pomo" id="drillBtn"><span><strong>Tagestraining</strong><small id="drillSmall"></small></span><span class="min" id="drillMin"></span></button>
-        <button class="choice" data-plan="yoga"><span><strong>Yoga</strong><small>Ruhiger Flow für Rücken, Hüfte und Kopf</small></span><span class="min">10 Min</span></button>
-        <button class="choice sm" id="legBtn" aria-pressed="false"><span><strong id="legTitle">Beine schonen: aus</strong><small>Antippen bei Verletzung. Dann keine Bein-Übungen</small></span><span class="min" id="legIcon">🦵</span></button>
-        <button class="choice" id="driveBtn"><span><strong>Fahrt-Modus</strong><small>Nur Sprachansagen, ohne Hinschauen</small></span><span class="min">🚗</span></button>
-      </div>
-    </div>
-
-    <div class="group">
-      <h2>Draußen</h2>
-      <div class="choices">
-        <button class="choice" id="waldBtn"><span><strong>Waldläufer</strong><small id="waldSmall">Survival lernen: Wissen, Quiz, Aufgaben im Wald</small></span><span class="min glyph" id="waldRune" style="font-size:30px;min-width:0">ᚲ</span></button>
-      </div>
-    </div>
-
-    <div class="group">
-      <h2>Für uns</h2>
-      <div class="choices">
-        <button class="choice" id="ideaBtn"><span><strong>Idee für uns</strong><small>Eine Überraschung, für die sie nichts planen muss</small></span><span class="min">♥</span></button>
-        <div class="ideaCard" id="ideaCard" hidden><p id="ideaText"></p><button class="stop" id="ideaNext">Andere Idee</button></div>
-        <button class="choice sm" id="privBtn"><span><strong>Notizen</strong><small>Nur für dich</small></span><span class="min">☾</span></button>
-      </div>
-    </div>
-
-    <p class="note" id="homeNote">Bei Übungen nie die Luft anhalten. Beim Beckenboden immer weiteratmen. Bei den Halte-Phasen der Atemübungen die Luft nur locker halten, nicht pressen. Wird dir schwindelig: normal weiteratmen.</p>
-    <svg class="knot foot" aria-hidden="true"></svg>
   </section>
 
   <!-- ============ Übung läuft ============ -->
@@ -208,6 +223,13 @@ document.documentElement.setAttribute('data-theme',dark?'dark':'light');}catch(e
   </section>
 
 </main>
+<nav class="tabbar" id="tabbar" aria-label="Bereiche">
+  <button data-tab="heute" aria-current="page"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Heute</span></button>
+  <button data-tab="ueben"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg><span>Üben</span></button>
+  <button data-tab="wald"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-6"/><path d="M8 15h8l-2-4h1l-3-5-3 5h1z"/></svg><span>Wald</span></button>
+  <button data-tab="wir"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 14.3c3 .2 5.5 2.6 5.5 5.7"/></svg><span>Wir</span></button>
+  <button data-tab="mehr"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>Mehr</span></button>
+</nav>
 <div class="toast" id="toast" role="status"></div>
 <video id="wakeVid" src="wach.webm" loop muted playsinline hidden aria-hidden="true" style="position:fixed;right:6px;bottom:6px;width:28px;height:28px;opacity:.2;border-radius:6px;pointer-events:none"></video>
 <script src="data.js"></script>
