@@ -33,6 +33,17 @@ Wenn der Bildschirm trotzdem ausgeht:
 
 Wenn Spotify nicht leiser wird: In den Einstellungen der App ist „Gong vor jeder Ansage“ eingeschaltet. Der Gong holt den Ton zur App. Sag mir, was passiert, wenn es nicht reicht.
 
+## Erinnerung am PC (Windows)
+
+Im Ordner `pause/pc/` liegen zwei Dateien:
+
+- **einrichten.cmd**: einmal doppelklicken. Legt in der Windows-Aufgabenplanung vier Aufgaben an. Werktags um 10:00, 12:00, 14:30 und 16:30 öffnet sich Yggdrasil als eigenes Fenster (Chrome oder Edge im App-Modus). Zeiten ändern: in der Datei die Zeile `ZEITEN` anpassen und noch einmal ausführen.
+- **entfernen.cmd**: nimmt alle diese Aufgaben wieder weg.
+
+Download: https://github.com/26januar2008-sketch/herzog-lernapp/raw/main/pause/pc/einrichten.cmd (Rechtsklick, „Link speichern unter“). Windows warnt beim ersten Start vor einer unbekannten Datei, „Trotzdem ausführen“ wählen.
+
+Feiertage in Baden-Württemberg kennt die Aufgabenplanung nicht, da öffnet sich das Fenster trotzdem.
+
 ## Daten sichern
 
 Alles liegt nur auf deinem Handy. Einstellungen → Daten → **Exportieren** erzeugt eine Datei, die du zum Beispiel in Google Drive legst. Auf einem neuen Handy mit **Importieren** zurückholen. Die PIN der Notizen wird nicht mit exportiert, die wählst du neu.
